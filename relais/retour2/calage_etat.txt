@@ -1,0 +1,29 @@
+﻿--- tableau
+Carnegie_Stage_9.json            -> CS09  Carnegie H712   um/u=0.986   refl=False G/D=- | tube_neural 27.5, aorte_dorsale 58.6
+Carnegie_Stage_10.json           -> CS10  Carnegie 6330   um/u=0.787   refl=False G/D=-0.48 | tube_neural 12.5, aorte_dorsale 11.4
+Carnegie_Stage_11.json           -> CS11  Carnegie 6784   um/u=0.758   refl=False G/D=-0.30 | tube_neural 24.9, aorte_dorsale 34.9, lumiere_coeur 30.1
+Carnegie_Stage_12.json           -> CS12  Carnegie 8505A  um/u=4.471   refl=False G/D=-0.40 | tube_neural 44.5, aorte_dorsale 52.7, lumiere_coeur 57.2
+Carnegie_Stage_13.json           -> CS13  Carnegie 836    um/u=1.101   refl=False G/D=-0.54 | tube_neural 44.4, aorte_dorsale 33.5, lumiere_coeur 28.2, foie 25.5
+Carnegie_Stage_15.json           -> CS15  Carnegie 3512   um/u=0.784   refl=False G/D=-0.45 | tube_neural 113.7, aorte_dorsale 79.5, lumiere_coeur 55.1
+Carnegie_Stage_16.json           -> CS16  Carnegie 6517   um/u=1.058   refl=False G/D=-0.89 | tube_neural 128.8, aorte_dorsale 69.6, lumiere_coeur 55.0
+Carnegie_Stage_17.json           -> CS17  Carnegie 6521   um/u=0.736   refl=False G/D=-0.77 | tube_neural 156.4, aorte_dorsale 158.7, lumiere_coeur 66.8
+Carnegie_Stage_18.json           -> CS18  Carnegie 6524   um/u=0.706   refl=False G/D=-0.78 | tube_neural 167.2, aorte_dorsale 104.1, lumiere_coeur 175.1
+Carnegie_Stage_20.json           -> CS20  Carnegie 462    um/u=0.959   refl=False G/D=-0.81 | tube_neural 188.1, aorte_dorsale 236.2, lumiere_coeur 52.3
+Carnegie_Stage_23.json           -> CS23  Carnegie 9226   um/u=1.151   refl=False G/D=-1.97 | tube_neural 538.9, aorte_dorsale 447.0, lumiere_coeur 166.8
+Carnegie_Stage_14_vers_CS15.json -> CS15  Carnegie 3512   um/u=6.233   refl=False G/D=-0.47 | tube_neural 117.3, aorte_dorsale 88.6, lumiere_coeur 103.6, foie 89.2
+--- cles detaillees
+===== Carnegie_Stage_14_vers_CS15
+  pdf : "Carnegie_Stage_14"
+  modele : "CS15"
+  specimen_modele : "Carnegie 3512"
+  matrice_pdf_vers_mm : 4x4 (omise)
+  mm_par_unite : 0.006232632151775975
+  um_par_unite : 6.232632151775975
+  reflexion : false
+  echelle_initiale_um : 5.667867063955406
+  longueurs : {"hikspoors_unites": 1165.7702930869252, "modele_mm": 6.607431048325023}
+  controle_gauche_droite_mm : -0.4695509749628162
+  ecarts_um : {"tube_neural": {"mediane": 117.3, "p90": 496.6}, "aorte_dorsale": {"mediane": 88.6, "p90": 446.5}, "lumiere_coeur": {"mediane": 103.6, "p90": 357.0}, "foie": {"mediane": 89.2, "p90": 212.1}}
+  classes : ["tube_neural", "aorte_dorsale", "lumiere_coeur", "foie"]
+  autres_solutions : [{"score_um": 100.0, "reflexion": false, "cote": -0.4693463045294286}, {"score_um": 99.9, "reflexion": false, "cote": -0.4694342930471678}, {"score_um": 99.7, "reflexion": false, "cote": -0.4695509749628162}, {"score_um": 100.0, "reflexion": false, "cote": -0.4693639014391754}, {"score_um": 102.2, "
+===== Carnegie_Stage_18_NEWvalves : ABSENT

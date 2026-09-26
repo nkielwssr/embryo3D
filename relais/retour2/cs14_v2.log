@@ -1,0 +1,47 @@
+   banque : Carnegie_Stage_14.npz
+CS14 : 49 parties lues
+   après scission par couleur : 57 parties
+   48 structures canoniques ; non reconnues : ['Ao_swelling', 'pulm_swelling'] ; ignorées : ['scale_cube_200um']
+   pas de calage dans C:/Users/MicroTurtle/Documents/ChatGPT/Embryo/reference/hikspoors_maastricht\calage pour Carnegie_Stage_14 : orientation automatique
+   orientation : score 10.0 (Z ACP e1 (+1), Y indice dorsal (aorte/somites/cardinales, tranche du cœur))
+      OK  crânial : ^myocarde_ > ^foie$
+      OK  crânial : ^arc_aortique > ^myocarde_
+      OK  crânial : ^myocarde_voie_efferente > ^myocarde_sinus_veineux
+      OK  crânial : ^intestin_anterieur > ^intestin_posterieur
+      OK  dorsal : aorte/somites/cardinales, tranche du cœur au-dessus (Y) du cœur
+      OK  gauche à +X (4 paires)
+   étendue (mm) X 2.18  Y 5.30  Z 6.61  (CRL typique 6.0 mm) ; recentré sur la boîte
+   union coeur              <- 19 parties (voxels (pas 0.01926), 210822 faces)
+   union cavites_cardiaques <- 6 parties (voxels (pas 0.01717), 248620 faces)
+   union arteres            <- 5 parties (voxels (pas 0.03538), 30806 faces)
+   union veines             <- 6 parties (voxels (pas 0.0354), 26562 faces)
+   verif_maillages : 24/52 maillages sans erreur
+      pericarde                                non étanche (416 arêtes de bord) ; orientation incohérente
+      intestin                                 non étanche (3444 arêtes de bord)
+      poumons                                  non étanche (128 arêtes de bord)
+      aorte_dorsale                            non étanche (1240 arêtes de bord)
+      arc_aortique_3                           non étanche (128 arêtes de bord)
+      arc_aortique_4                           non étanche (136 arêtes de bord)
+      arc_aortique_6                           non étanche (128 arêtes de bord)
+      canal_hepatocardiaque_droit              non étanche (64 arêtes de bord)
+      cavite_oreillette_droite                 non étanche (176 arêtes de bord)
+      cavite_oreillette_gauche                 non étanche (240 arêtes de bord)
+      cavite_sinus_veineux                     non étanche (152 arêtes de bord)
+      cavite_ventricule_droit                  non étanche (305 arêtes de bord) ; orientation incohérente ; 17 arêtes non-manifold ; 2 faces dupliquées
+      cavite_ventricule_gauche                 non étanche (189 arêtes de bord) ; 4 arêtes non-manifold ; 2 faces dupliquées
+      cavite_voie_efferente                    non étanche (112 arêtes de bord)
+      courbure_interne_lv                      non étanche (144 arêtes de bord)
+      courbure_interne_rv                      non étanche (144 arêtes de bord)
+      myocarde_oreillettes                     non étanche (312 arêtes de bord)
+      myocarde_sinus_veineux                   non étanche (160 arêtes de bord)
+      myocarde_ventricule_droit                non étanche (200 arêtes de bord)
+      myocarde_ventricule_gauche               non étanche (184 arêtes de bord)
+      myocarde_voie_efferente                  non étanche (240 arêtes de bord)
+      sac_aortique                             non étanche (240 arêtes de bord)
+      valvules_sinusales                       non étanche (592 arêtes de bord)
+      veine_cardinale                          non étanche (912 arêtes de bord)
+      veine_cardinale_commune                  non étanche (168 arêtes de bord) ; 35 faces dégénérées
+      veine_ombilicale_gauche                  non étanche (272 arêtes de bord)
+      veine_pulmonaire                         non étanche (64 arêtes de bord)
+      veine_vitelline                          non étanche (160 arêtes de bord)
+-> C:\Users\MICROT~1\AppData\Local\Temp\claude\C--Users-MicroTurtle-Documents-Claude\23073bc7-11c8-454d-9e8a-a242b921d210\scratchpad\out2\CS14_hikspoors : 52 structures, manifest.json, rapport.json, controle.png (non publiable)

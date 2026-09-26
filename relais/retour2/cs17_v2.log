@@ -1,0 +1,48 @@
+   banque : Carnegie_Stage_17.npz
+CS17 : 48 parties lues
+   après scission par couleur : 57 parties
+   46 structures canoniques ; non reconnues : ['Ao_swelling', 'pulm_swelling'] ; ignorées : ['scale_cube___200um']
+   calage : Carnegie_Stage_17.json (matrice_pdf_vers_mm) ; 0.7356 µm/unité ; repère modeles
+   indices anatomiques (contrôle, le calage fait foi) : score 7.0
+      OK  crânial : ^arc_aortique > ^myocarde_
+      OK  crânial : ^myocarde_voie_efferente > ^myocarde_sinus_veineux
+      OK  dorsal : aorte/somites/cardinales, tranche du cœur au-dessus (Y) du cœur
+      OK  tube neural plus large en haut (encéphale ; information, non compté)
+      OK  gauche à +X (4 paires)
+   orientation automatique (repli sans calage) : 15.4° du calage (score 7.0, Z ACP e1 (-1))
+   étendue (mm) X 3.37  Y 7.71  Z 8.76  (CRL typique 11.0 mm) ; coordonnées du modèle CS17 (centre de la boîte [-0.063, 0.086, 0.217])
+   union coeur              <- 17 parties (voxels (pas 0.01983), 198864 faces)
+   union cavites_cardiaques <- 6 parties (voxels (pas 0.01893), 220720 faces)
+   union arteres            <- 9 parties (voxels (pas 0.04118), 29998 faces)
+   union veines             <- 4 parties (voxels (pas 0.03164), 31118 faces)
+   verif_maillages : 21/50 maillages sans erreur
+      pericarde                                non étanche (256 arêtes de bord)
+      intestin                                 non étanche (494 arêtes de bord) ; 3 arêtes non-manifold ; 3 faces dupliquées
+      poumons                                  non étanche (48 arêtes de bord) ; 1 arêtes non-manifold ; 1 faces dupliquées
+      aorte_ascendante                         non étanche (160 arêtes de bord)
+      aorte_dorsale                            non étanche (2528 arêtes de bord)
+      arc_aortique_3                           non étanche (128 arêtes de bord)
+      arc_aortique_4                           non étanche (128 arêtes de bord)
+      arc_aortique_6                           non étanche (192 arêtes de bord)
+      arteres_pulmonaires                      non étanche (128 arêtes de bord)
+      canal_hepatocardiaque_droit              non étanche (80 arêtes de bord)
+      cavite_oreillette_droite                 non étanche (168 arêtes de bord)
+      cavite_oreillette_gauche                 non étanche (120 arêtes de bord)
+      cavite_sinus_veineux                     non étanche (176 arêtes de bord)
+      cavite_ventricule_droit                  non étanche (371 arêtes de bord) ; orientation incohérente ; 1 arêtes non-manifold ; 1 faces dupliquées
+      cavite_ventricule_gauche                 non étanche (446 arêtes de bord) ; 2 arêtes non-manifold
+      cavite_voie_efferente                    non étanche (176 arêtes de bord)
+      coeur_voie_efferente                     non étanche (448 arêtes de bord)
+      myocarde_oreillettes                     non étanche (256 arêtes de bord)
+      myocarde_sinus_veineux                   non étanche (88 arêtes de bord)
+      myocarde_veines_pulmonaires              non étanche (64 arêtes de bord)
+      myocarde_ventricule_droit                non étanche (240 arêtes de bord)
+      myocarde_ventricule_gauche               non étanche (152 arêtes de bord)
+      myocarde_voie_efferente                  non étanche (304 arêtes de bord)
+      systeme_conduction                       non étanche (8790 arêtes de bord) ; 4 faces dégénérées
+      tronc_pulmonaire                         non étanche (96 arêtes de bord)
+      valvules_sinusales                       non étanche (6634 arêtes de bord)
+      veine_cardinale                          non étanche (272 arêtes de bord)
+      veine_cardinale_commune                  non étanche (128 arêtes de bord)
+      veine_pulmonaire                         non étanche (160 arêtes de bord)
+-> C:\Users\MICROT~1\AppData\Local\Temp\claude\C--Users-MicroTurtle-Documents-Claude\23073bc7-11c8-454d-9e8a-a242b921d210\scratchpad\out2\CS17_hikspoors : 50 structures, manifest.json, rapport.json, controle.png (non publiable)

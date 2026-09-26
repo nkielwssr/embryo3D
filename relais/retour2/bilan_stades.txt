@@ -1,0 +1,134 @@
+===== CS9
+   banque : Carnegie_Stage_9.npz
+CS9 : 11 parties lues
+   11 structures canoniques ; non reconnues : aucune ; ignorées : ['scale_cube_200um']
+   calage : Carnegie_Stage_9.json (matrice_pdf_vers_mm) ; 0.9857 µm/unité ; repère modeles
+   indices anatomiques (contrôle, le calage fait foi) : score 0.0
+      NON crânial : ^myocarde_ > ^foie$
+   ATTENTION : « rotation 180° autour de Y » vérifie mieux les indices (4.0 contre 0.0) : regarder controle.png
+   orientation automatique (repli sans calage) : 163.8° du calage (score 4.0, Z ACP e1 (-1))
+   étendue (mm) X 0.73  Y 0.93  Z 1.43  (CRL typique 1.8 mm) ; coordonnées du modèle CS9 (centre de la boîte [-0.033, 0.014, 0.1])
+   verif_maillages : 5/12 maillages sans erreur
+-> out2/CS9_hikspoors : 12 structures, manifest.json, rapport.json, controle.png (non publiable)
+===== CS10
+   banque : Carnegie_Stage_10.npz
+CS10 : 23 parties lues
+   23 structures canoniques ; non reconnues : ['lumen_IFT'] ; ignorées : ['scale_cube_200um']
+   calage : Carnegie_Stage_10.json (matrice_pdf_vers_mm) ; 0.7868 µm/unité ; repère modeles
+   indices anatomiques (contrôle, le calage fait foi) : score 7.0
+   orientation automatique (repli sans calage) : 16.3° du calage (score 7.0, Z ACP e1 (+1))
+   étendue (mm) X 0.61  Y 0.50  Z 1.96  (CRL typique 2.5 mm) ; coordonnées du modèle CS10 (centre de la boîte [-0.002, -0.02, 0.031])
+   verif_maillages : 8/27 maillages sans erreur
+-> out2/CS10_hikspoors : 27 structures, manifest.json, rapport.json, controle.png (non publiable)
+===== CS11
+   banque : Carnegie_Stage_11.npz
+CS11 : 26 parties lues
+   27 structures canoniques ; non reconnues : ['lumen_IFT'] ; ignorées : ['scale_cube_200um']
+   calage : Carnegie_Stage_11.json (matrice_pdf_vers_mm) ; 0.758 µm/unité ; repère modeles
+   indices anatomiques (contrôle, le calage fait foi) : score 7.0
+   orientation automatique (repli sans calage) : 10.9° du calage (score 7.0, Z ACP e1 (+1))
+   étendue (mm) X 0.55  Y 0.56  Z 1.85  (CRL typique 3.5 mm) ; coordonnées du modèle CS11 (centre de la boîte [0.057, -0.136, 0.168])
+   verif_maillages : 11/31 maillages sans erreur
+-> out2/CS11_hikspoors : 31 structures, manifest.json, rapport.json, controle.png (non publiable)
+===== CS12
+   banque : Carnegie_Stage_12.npz
+CS12 : 35 parties lues
+   37 structures canoniques ; non reconnues : ['lumen_IFT', 'myocard_IFT'] ; ignorées : ['scale_cube_200um']
+   calage : Carnegie_Stage_12.json (matrice_pdf_vers_mm) ; 4.471 µm/unité ; repère modeles
+   indices anatomiques (contrôle, le calage fait foi) : score 9.0
+   orientation automatique (repli sans calage) : 31.7° du calage (score 9.0, Z ACP e1 (-1))
+   étendue (mm) X 1.05  Y 1.57  Z 2.23  (CRL typique 4.0 mm) ; coordonnées du modèle CS12 (centre de la boîte [-0.262, 0.085, 0.009])
+   verif_maillages : 15/41 maillages sans erreur
+      vesicule_vitelline                       non étanche (528 arêtes de bord) ; orientation incohérente
+      gelee_cardiaque                          non étanche (264 arêtes de bord) ; orientation incohérente ; 72 arêtes non-manifold ; 6 faces dégénérées ; 24 faces dupliquées
+-> out2/CS12_hikspoors : 41 structures, manifest.json, rapport.json, controle.png (non publiable)
+===== CS13
+   banque : Carnegie_Stage_13.npz
+CS13 : 43 parties lues
+   44 structures canoniques ; non reconnues : aucune ; ignorées : ['scale_cube_200um']
+   calage : Carnegie_Stage_13.json (matrice_pdf_vers_mm) ; 1.101 µm/unité ; repère modeles
+   indices anatomiques (contrôle, le calage fait foi) : score 9.0
+      NON tube neural plus large en haut (encéphale ; information, non compté)
+   orientation automatique (repli sans calage) : 8.8° du calage (score 9.0, Z ACP e1 (+1))
+   étendue (mm) X 1.19  Y 2.88  Z 4.14  (CRL typique 4.5 mm) ; coordonnées du modèle CS13 (centre de la boîte [-0.181, 0.023, 0.046])
+   verif_maillages : 18/48 maillages sans erreur
+-> out2/CS13_hikspoors : 48 structures, manifest.json, rapport.json, controle.png (non publiable)
+===== CS14
+   banque : Carnegie_Stage_14.npz
+CS14 : 49 parties lues
+   48 structures canoniques ; non reconnues : ['Ao_swelling', 'pulm_swelling'] ; ignorées : ['scale_cube_200um']
+   pas de calage dans C:/Users/MicroTurtle/Documents/ChatGPT/Embryo/reference/hikspoors_maastricht\calage pour Carnegie_Stage_14 : orientation automatique
+   orientation : score 10.0 (Z ACP e1 (+1), Y indice dorsal (aorte/somites/cardinales, tranche du cœur))
+   étendue (mm) X 2.18  Y 5.30  Z 6.61  (CRL typique 6.0 mm) ; recentré sur la boîte
+   verif_maillages : 24/52 maillages sans erreur
+      pericarde                                non étanche (416 arêtes de bord) ; orientation incohérente
+      cavite_ventricule_droit                  non étanche (305 arêtes de bord) ; orientation incohérente ; 17 arêtes non-manifold ; 2 faces dupliquées
+-> out2/CS14_hikspoors : 52 structures, manifest.json, rapport.json, controle.png (non publiable)
+===== CS15
+   banque : Carnegie_Stage_15.npz
+CS15 : 48 parties lues
+   45 structures canoniques ; non reconnues : ['Ao_swelling', 'pulm_swelling'] ; ignorées : ['scale_cube_200um']
+   calage : Carnegie_Stage_15.json (matrice_pdf_vers_mm) ; 0.7841 µm/unité ; repère modeles
+   indices anatomiques (contrôle, le calage fait foi) : score 7.0
+   orientation automatique (repli sans calage) : 4.3° du calage (score 7.0, Z ACP e1 (-1))
+   étendue (mm) X 2.42  Y 5.14  Z 6.35  (CRL typique 7.5 mm) ; coordonnées du modèle CS15 (centre de la boîte [-0.085, -0.096, -0.493])
+   verif_maillages : 21/49 maillages sans erreur
+      aorte_dorsale                            non étanche (1280 arêtes de bord) ; orientation incohérente ; 34 arêtes non-manifold ; 2 faces dupliquées
+-> out2/CS15_hikspoors : 49 structures, manifest.json, rapport.json, controle.png (non publiable)
+===== CS16
+   banque : Carnegie_Stage_16.npz
+CS16 : 47 parties lues
+   44 structures canoniques ; non reconnues : ['Ao_swelling', 'pulm_swelling'] ; ignorées : ['scale_cube_200um']
+   calage : Carnegie_Stage_16.json (matrice_pdf_vers_mm) ; 1.058 µm/unité ; repère modeles
+   indices anatomiques (contrôle, le calage fait foi) : score 7.0
+   orientation automatique (repli sans calage) : 31.5° du calage (score 7.0, Z ACP e1 (-1))
+   étendue (mm) X 3.30  Y 8.58  Z 9.28  (CRL typique 9.0 mm) ; coordonnées du modèle CS16 (centre de la boîte [-0.069, -0.196, 0.109])
+   verif_maillages : 18/48 maillages sans erreur
+      cavite_ventricule_droit                  non étanche (358 arêtes de bord) ; orientation incohérente ; 19 arêtes non-manifold ; 12 faces dupliquées
+-> out2/CS16_hikspoors : 48 structures, manifest.json, rapport.json, controle.png (non publiable)
+===== CS17
+   banque : Carnegie_Stage_17.npz
+CS17 : 48 parties lues
+   46 structures canoniques ; non reconnues : ['Ao_swelling', 'pulm_swelling'] ; ignorées : ['scale_cube___200um']
+   calage : Carnegie_Stage_17.json (matrice_pdf_vers_mm) ; 0.7356 µm/unité ; repère modeles
+   indices anatomiques (contrôle, le calage fait foi) : score 7.0
+   orientation automatique (repli sans calage) : 15.4° du calage (score 7.0, Z ACP e1 (-1))
+   étendue (mm) X 3.37  Y 7.71  Z 8.76  (CRL typique 11.0 mm) ; coordonnées du modèle CS17 (centre de la boîte [-0.063, 0.086, 0.217])
+   verif_maillages : 21/50 maillages sans erreur
+      cavite_ventricule_droit                  non étanche (371 arêtes de bord) ; orientation incohérente ; 1 arêtes non-manifold ; 1 faces dupliquées
+-> out2/CS17_hikspoors : 50 structures, manifest.json, rapport.json, controle.png (non publiable)
+===== CS18
+   banque : Carnegie_Stage_18_NEWvalves.npz
+CS18 : 51 parties lues
+   version d'origine (Carnegie_Stage_18.npz) : 50 parties de même nom, écart médian des boîtes 0 % de l'étendue ; ajoutées : ['gut']
+   52 structures canoniques ; non reconnues : aucune ; ignorées : aucune
+   calage : Carnegie_Stage_18.json (matrice_pdf_vers_mm, calage de la version d'origine) ; 0.7065 µm/unité ; repère modeles
+   indices anatomiques (contrôle, le calage fait foi) : score 7.0
+   orientation automatique (repli sans calage) : 32.6° du calage (score 7.0, Z ACP e1 (-1))
+   étendue (mm) X 3.08  Y 6.65  Z 8.74  (CRL typique 14.0 mm) ; coordonnées du modèle CS18 (centre de la boîte [-0.084, 0.359, 0.224])
+   verif_maillages : 20/56 maillages sans erreur
+      cavite_ventricule_droit                  non étanche (669 arêtes de bord) ; orientation incohérente ; 27 arêtes non-manifold
+-> out2/CS18_hikspoors : 56 structures, manifest.json, rapport.json, controle.png (non publiable)
+===== CS20
+   banque : Carnegie_Stage_20_NEWvalves.npz
+CS20 : 52 parties lues
+   version d'origine (Carnegie_Stage_20.npz) : 52 parties de même nom, écart médian des boîtes 0 % de l'étendue ; ajoutées : aucune
+   52 structures canoniques ; non reconnues : aucune ; ignorées : aucune
+   calage : Carnegie_Stage_20.json (matrice_pdf_vers_mm, calage de la version d'origine) ; 0.9592 µm/unité ; repère modeles
+   indices anatomiques (contrôle, le calage fait foi) : score 7.0
+   orientation automatique (repli sans calage) : 15.4° du calage (score 7.0, Z ACP e1 (-1))
+   étendue (mm) X 3.90  Y 8.12  Z 14.50  (CRL typique 20.0 mm) ; coordonnées du modèle CS20 (centre de la boîte [0.032, 0.19, -0.145])
+   verif_maillages : 17/56 maillages sans erreur
+-> out2/CS20_hikspoors : 56 structures, manifest.json, rapport.json, controle.png (non publiable)
+===== CS23
+   banque : Carnegie_Stage_23_NEWvalves.npz
+CS23 : 55 parties lues
+   version d'origine (Carnegie_Stage_23.npz) : 55 parties de même nom, écart médian des boîtes 0 % de l'étendue ; ajoutées : aucune
+   55 structures canoniques ; non reconnues : aucune ; ignorées : aucune
+   calage : Carnegie_Stage_23.json (matrice_pdf_vers_mm, calage de la version d'origine) ; 1.151 µm/unité ; repère modeles
+   indices anatomiques (contrôle, le calage fait foi) : score 7.0
+   orientation automatique (repli sans calage) : 12.2° du calage (score 7.0, Z ACP e1 (-1))
+   étendue (mm) X 11.68  Y 17.72  Z 28.69  (CRL typique 28.0 mm) ; coordonnées du modèle CS23 (centre de la boîte [1.255, -1.032, -0.411])
+   verif_maillages : 25/59 maillages sans erreur
+      intestin                                 non étanche (848 arêtes de bord) ; orientation incohérente ; 5 arêtes non-manifold ; 5 faces dupliquées
+-> out2/CS23_hikspoors : 59 structures, manifest.json, rapport.json, controle.png (non publiable)

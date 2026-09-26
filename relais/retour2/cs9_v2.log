@@ -1,0 +1,22 @@
+   banque : Carnegie_Stage_9.npz
+CS9 : 11 parties lues
+   après scission par couleur : 15 parties
+   11 structures canoniques ; non reconnues : aucune ; ignorées : ['scale_cube_200um']
+   calage : Carnegie_Stage_9.json (matrice_pdf_vers_mm) ; 0.9857 µm/unité ; repère modeles
+   indices anatomiques (contrôle, le calage fait foi) : score 0.0
+      NON crânial : ^myocarde_ > ^foie$
+      OK  dorsal : aorte/somites/cardinales, tranche du cœur au-dessus (Y) du cœur
+      OK  tube neural plus large en haut (encéphale ; information, non compté)
+   ATTENTION : « rotation 180° autour de Y » vérifie mieux les indices (4.0 contre 0.0) : regarder controle.png
+   orientation automatique (repli sans calage) : 163.8° du calage (score 4.0, Z ACP e1 (-1))
+   étendue (mm) X 0.73  Y 0.93  Z 1.43  (CRL typique 1.8 mm) ; coordonnées du modèle CS9 (centre de la boîte [-0.033, 0.014, 0.1])
+   union coeur              <- 2 parties (voxels (pas 0.005415), 63088 faces)
+   verif_maillages : 5/12 maillages sans erreur
+      pericarde                                non étanche (0 arêtes de bord) ; 1 arêtes non-manifold ; 1 faces dupliquées
+      vesicule_vitelline                       non étanche (8234 arêtes de bord) ; 1 arêtes non-manifold ; 1 faces dupliquées
+      intestin                                 non étanche (8176 arêtes de bord)
+      somites                                  non étanche (5208 arêtes de bord)
+      myocarde_ventricule_gauche               non étanche (4920 arêtes de bord)
+      plexus_arteriel                          non étanche (1088 arêtes de bord)
+      plexus_veineux                           non étanche (3344 arêtes de bord) ; 1 arêtes non-manifold ; 1 faces dupliquées
+-> C:\Users\MICROT~1\AppData\Local\Temp\claude\C--Users-MicroTurtle-Documents-Claude\23073bc7-11c8-454d-9e8a-a242b921d210\scratchpad\out2\CS9_hikspoors : 12 structures, manifest.json, rapport.json, controle.png (non publiable)

@@ -1,0 +1,39 @@
+   banque : Carnegie_Stage_11.npz
+CS11 : 26 parties lues
+   après scission par couleur : 31 parties
+   27 structures canoniques ; non reconnues : ['lumen_IFT'] ; ignorées : ['scale_cube_200um']
+   calage : Carnegie_Stage_11.json (matrice_pdf_vers_mm) ; 0.758 µm/unité ; repère modeles
+   indices anatomiques (contrôle, le calage fait foi) : score 7.0
+      OK  crânial : ^myocarde_ > ^foie$
+      OK  crânial : ^myocarde_voie_efferente > ^myocarde_sinus_veineux
+      OK  dorsal : aorte/somites/cardinales, tranche du cœur au-dessus (Y) du cœur
+      OK  tube neural plus large en haut (encéphale ; information, non compté)
+      OK  gauche à +X (6 paires)
+   orientation automatique (repli sans calage) : 10.9° du calage (score 7.0, Z ACP e1 (+1))
+   étendue (mm) X 0.55  Y 0.56  Z 1.85  (CRL typique 3.5 mm) ; coordonnées du modèle CS11 (centre de la boîte [0.057, -0.136, 0.168])
+   union coeur              <- 6 parties (voxels (pas 0.00455), 99436 faces)
+   union cavites_cardiaques <- 3 parties (voxels (pas 0.003667), 103128 faces)
+   union arteres            <- 2 parties (voxels (pas 0.0107), 39180 faces)
+   union veines             <- 8 parties (voxels (pas 0.008084), 34124 faces)
+   verif_maillages : 11/31 maillages sans erreur
+      pericarde                                non étanche (400 arêtes de bord)
+      vesicule_vitelline                       non étanche (520 arêtes de bord) ; 1 arêtes non-manifold ; 1 faces dupliquées
+      lumen_ift                                non étanche (184 arêtes de bord)
+      intestin                                 non étanche (328 arêtes de bord)
+      somites                                  non étanche (3434 arêtes de bord)
+      aorte                                    non étanche (136 arêtes de bord)
+      aorte_dorsale                            non étanche (1024 arêtes de bord)
+      axe_tube_cardiaque                       non étanche (1024 arêtes de bord)
+      canal_hepatocardiaque_droit              non étanche (144 arêtes de bord)
+      canal_hepatocardiaque_gauche             non étanche (120 arêtes de bord)
+      cavite_oreillettes                       non étanche (120 arêtes de bord)
+      cavite_ventricule_droit                  non étanche (104 arêtes de bord)
+      cavite_ventricule_gauche                 non étanche (64 arêtes de bord)
+      courbure_interne_lv                      non étanche (248 arêtes de bord) ; 1 arêtes non-manifold ; 1 faces dupliquées
+      gelee_cardiaque                          non étanche (0 arêtes de bord) ; 3 arêtes non-manifold ; 3 faces dupliquées
+      myocarde_ventricule_gauche               non étanche (248 arêtes de bord) ; 1 arêtes non-manifold ; 2 faces dégénérées ; 1 faces dupliquées
+      veine_ombilicale_droit                   non étanche (120 arêtes de bord)
+      veine_ombilicale_gauche                  non étanche (176 arêtes de bord)
+      veine_vitelline_droit                    non étanche (464 arêtes de bord)
+      veine_vitelline_gauche                   non étanche (192 arêtes de bord)
+-> C:\Users\MICROT~1\AppData\Local\Temp\claude\C--Users-MicroTurtle-Documents-Claude\23073bc7-11c8-454d-9e8a-a242b921d210\scratchpad\out2\CS11_hikspoors : 31 structures, manifest.json, rapport.json, controle.png (non publiable)

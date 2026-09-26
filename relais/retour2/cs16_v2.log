@@ -1,0 +1,48 @@
+   banque : Carnegie_Stage_16.npz
+CS16 : 47 parties lues
+   après scission par couleur : 54 parties
+   44 structures canoniques ; non reconnues : ['Ao_swelling', 'pulm_swelling'] ; ignorées : ['scale_cube_200um']
+   calage : Carnegie_Stage_16.json (matrice_pdf_vers_mm) ; 1.058 µm/unité ; repère modeles
+   indices anatomiques (contrôle, le calage fait foi) : score 7.0
+      OK  crânial : ^arc_aortique > ^myocarde_
+      OK  crânial : ^myocarde_voie_efferente > ^myocarde_sinus_veineux
+      OK  dorsal : aorte/somites/cardinales, tranche du cœur au-dessus (Y) du cœur
+      OK  gauche à +X (4 paires)
+   orientation automatique (repli sans calage) : 31.5° du calage (score 7.0, Z ACP e1 (-1))
+   étendue (mm) X 3.30  Y 8.58  Z 9.28  (CRL typique 9.0 mm) ; coordonnées du modèle CS16 (centre de la boîte [-0.069, -0.196, 0.109])
+   union coeur              <- 17 parties (voxels (pas 0.02642), 209026 faces)
+   union cavites_cardiaques <- 6 parties (voxels (pas 0.025), 190258 faces)
+   union arteres            <- 7 parties (voxels (pas 0.0374), 35226 faces)
+   union veines             <- 4 parties (voxels (pas 0.0337), 41150 faces)
+   verif_maillages : 18/48 maillages sans erreur
+      pericarde                                non étanche (440 arêtes de bord)
+      intestin                                 non étanche (280988 arêtes de bord) ; 1 arêtes non-manifold ; 4 faces dégénérées ; 1 faces dupliquées
+      ganglions_spinaux_droit                  non étanche (0 arêtes de bord) ; 1 arêtes non-manifold ; 1 faces dupliquées
+      poumons                                  non étanche (128 arêtes de bord)
+      aorte_ascendante                         non étanche (160 arêtes de bord)
+      aorte_dorsale                            non étanche (1520 arêtes de bord)
+      arc_aortique_3                           non étanche (128 arêtes de bord)
+      arc_aortique_4                           non étanche (128 arêtes de bord)
+      arc_aortique_6                           non étanche (200 arêtes de bord) ; 1 arêtes non-manifold ; 1 faces dupliquées
+      arteres_pulmonaires                      non étanche (128 arêtes de bord)
+      canal_hepatocardiaque_droit              non étanche (64 arêtes de bord)
+      cavite_oreillette_droite                 non étanche (208 arêtes de bord)
+      cavite_oreillette_gauche                 non étanche (192 arêtes de bord)
+      cavite_sinus_veineux                     non étanche (160 arêtes de bord)
+      cavite_ventricule_droit                  non étanche (358 arêtes de bord) ; orientation incohérente ; 19 arêtes non-manifold ; 12 faces dupliquées
+      cavite_ventricule_gauche                 non étanche (586 arêtes de bord) ; 2 arêtes non-manifold
+      cavite_voie_efferente                    non étanche (280 arêtes de bord)
+      coeur_voie_efferente                     non étanche (304 arêtes de bord)
+      myocarde_oreillettes                     non étanche (352 arêtes de bord)
+      myocarde_sinus_veineux                   non étanche (152 arêtes de bord)
+      myocarde_ventricule_droit                non étanche (200 arêtes de bord)
+      myocarde_ventricule_gauche               non étanche (168 arêtes de bord)
+      myocarde_voie_efferente                  non étanche (240 arêtes de bord)
+      noeud_sinusal                            non étanche (200 arêtes de bord)
+      systeme_conduction                       non étanche (5314 arêtes de bord)
+      tronc_pulmonaire                         non étanche (120 arêtes de bord)
+      veine_cardinale                          non étanche (192 arêtes de bord)
+      veine_cardinale_commune                  non étanche (128 arêtes de bord)
+      veine_pulmonaire                         non étanche (96 arêtes de bord)
+      coeur                                    non étanche (0 arêtes de bord) ; 6 arêtes non-manifold ; 4 faces dupliquées
+-> C:\Users\MICROT~1\AppData\Local\Temp\claude\C--Users-MicroTurtle-Documents-Claude\23073bc7-11c8-454d-9e8a-a242b921d210\scratchpad\out2\CS16_hikspoors : 48 structures, manifest.json, rapport.json, controle.png (non publiable)

@@ -1,0 +1,47 @@
+   banque : Carnegie_Stage_15.npz
+CS15 : 48 parties lues
+   après scission par couleur : 52 parties
+   45 structures canoniques ; non reconnues : ['Ao_swelling', 'pulm_swelling'] ; ignorées : ['scale_cube_200um']
+   calage : Carnegie_Stage_15.json (matrice_pdf_vers_mm) ; 0.7841 µm/unité ; repère modeles
+   indices anatomiques (contrôle, le calage fait foi) : score 7.0
+      OK  crânial : ^arc_aortique > ^myocarde_
+      OK  crânial : ^myocarde_voie_efferente > ^myocarde_sinus_veineux
+      OK  dorsal : aorte/somites/cardinales, tranche du cœur au-dessus (Y) du cœur
+      OK  tube neural plus large en haut (encéphale ; information, non compté)
+      OK  gauche à +X (5 paires)
+   orientation automatique (repli sans calage) : 4.3° du calage (score 7.0, Z ACP e1 (-1))
+   étendue (mm) X 2.42  Y 5.14  Z 6.35  (CRL typique 7.5 mm) ; coordonnées du modèle CS15 (centre de la boîte [-0.085, -0.096, -0.493])
+   union coeur              <- 17 parties (voxels (pas 0.02089), 195026 faces)
+   union cavites_cardiaques <- 6 parties (voxels (pas 0.01967), 200784 faces)
+   union arteres            <- 7 parties (voxels (pas 0.03209), 29440 faces)
+   union veines             <- 5 parties (voxels (pas 0.03001), 46814 faces)
+   verif_maillages : 21/49 maillages sans erreur
+      pericarde                                non étanche (336 arêtes de bord)
+      intestin                                 non étanche (96 arêtes de bord)
+      poumons                                  non étanche (32 arêtes de bord)
+      aorte_ascendante                         non étanche (184 arêtes de bord)
+      aorte_dorsale                            non étanche (1280 arêtes de bord) ; orientation incohérente ; 34 arêtes non-manifold ; 2 faces dupliquées
+      arc_aortique_3                           non étanche (128 arêtes de bord)
+      arc_aortique_4                           non étanche (128 arêtes de bord)
+      arc_aortique_6                           non étanche (192 arêtes de bord)
+      arteres_pulmonaires                      non étanche (128 arêtes de bord)
+      canal_hepatocardiaque_droit              non étanche (176 arêtes de bord)
+      canal_hepatocardiaque_gauche             non étanche (64 arêtes de bord)
+      cavite_oreillette_droite                 non étanche (216 arêtes de bord)
+      cavite_oreillette_gauche                 non étanche (224 arêtes de bord)
+      cavite_sinus_veineux                     non étanche (280 arêtes de bord)
+      cavite_ventricule_droit                  non étanche (433 arêtes de bord) ; 17 arêtes non-manifold ; 5 faces dupliquées
+      cavite_ventricule_gauche                 non étanche (570 arêtes de bord) ; 13 arêtes non-manifold
+      cavite_voie_efferente                    non étanche (216 arêtes de bord)
+      myocarde_oreillettes                     non étanche (248 arêtes de bord)
+      myocarde_sinus_veineux                   non étanche (112 arêtes de bord)
+      myocarde_ventricule_droit                non étanche (208 arêtes de bord)
+      myocarde_ventricule_gauche               non étanche (144 arêtes de bord)
+      myocarde_voie_efferente                  non étanche (256 arêtes de bord)
+      tronc_pulmonaire                         non étanche (128 arêtes de bord)
+      valvules_sinusales                       non étanche (13428 arêtes de bord)
+      veine_cardinale                          non étanche (312 arêtes de bord)
+      veine_cardinale_commune                  non étanche (168 arêtes de bord)
+      veine_pulmonaire                         non étanche (96 arêtes de bord)
+      coeur                                    non étanche (0 arêtes de bord) ; 9 arêtes non-manifold ; 6 faces dupliquées
+-> C:\Users\MICROT~1\AppData\Local\Temp\claude\C--Users-MicroTurtle-Documents-Claude\23073bc7-11c8-454d-9e8a-a242b921d210\scratchpad\out2\CS15_hikspoors : 49 structures, manifest.json, rapport.json, controle.png (non publiable)

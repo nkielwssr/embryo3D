@@ -1,0 +1,50 @@
+   banque : Carnegie_Stage_13.npz
+CS13 : 43 parties lues
+   après scission par couleur : 50 parties
+   44 structures canoniques ; non reconnues : aucune ; ignorées : ['scale_cube_200um']
+   calage : Carnegie_Stage_13.json (matrice_pdf_vers_mm) ; 1.101 µm/unité ; repère modeles
+   indices anatomiques (contrôle, le calage fait foi) : score 9.0
+      OK  crânial : ^myocarde_ > ^foie$
+      OK  crânial : ^arc_aortique > ^myocarde_
+      OK  crânial : ^myocarde_voie_efferente > ^myocarde_sinus_veineux
+      OK  dorsal : aorte/somites/cardinales, tranche du cœur au-dessus (Y) du cœur
+      NON tube neural plus large en haut (encéphale ; information, non compté)
+      OK  gauche à +X (8 paires)
+   orientation automatique (repli sans calage) : 8.8° du calage (score 9.0, Z ACP e1 (+1))
+   étendue (mm) X 1.19  Y 2.88  Z 4.14  (CRL typique 4.5 mm) ; coordonnées du modèle CS13 (centre de la boîte [-0.181, 0.023, 0.046])
+   union coeur              <- 14 parties (voxels (pas 0.01224), 203202 faces)
+   union cavites_cardiaques <- 6 parties (voxels (pas 0.01146), 202594 faces)
+   union arteres            <- 5 parties (voxels (pas 0.02301), 49750 faces)
+   union veines             <- 11 parties (voxels (pas 0.02016), 47500 faces)
+   verif_maillages : 18/48 maillages sans erreur
+      pericarde                                non étanche (544 arêtes de bord) ; 1 arêtes non-manifold ; 1 faces dupliquées
+      intestin_et_vesicule_vitelline           non étanche (184 arêtes de bord)
+      aorte_dorsale                            non étanche (1664 arêtes de bord)
+      arc_aortique_2                           non étanche (128 arêtes de bord)
+      arc_aortique_3                           non étanche (128 arêtes de bord)
+      arc_aortique_4                           non étanche (128 arêtes de bord)
+      axe_tube_cardiaque                       non étanche (1708 arêtes de bord)
+      canal_hepatocardiaque_droit              non étanche (96 arêtes de bord)
+      canal_hepatocardiaque_gauche             non étanche (104 arêtes de bord)
+      cavite_oreillette_droite                 non étanche (216 arêtes de bord)
+      cavite_oreillette_gauche                 non étanche (208 arêtes de bord)
+      cavite_sinus_veineux                     non étanche (440 arêtes de bord) ; 1 arêtes non-manifold ; 1 faces dupliquées
+      cavite_ventricule_droit                  non étanche (256 arêtes de bord)
+      cavite_ventricule_gauche                 non étanche (256 arêtes de bord) ; 9 arêtes non-manifold ; 9 faces dupliquées
+      cavite_voie_efferente                    non étanche (176 arêtes de bord)
+      courbure_interne_lv                      non étanche (176 arêtes de bord)
+      courbure_interne_rv                      non étanche (200 arêtes de bord)
+      myocarde_oreillettes                     non étanche (560 arêtes de bord)
+      myocarde_sinus_veineux                   non étanche (248 arêtes de bord)
+      myocarde_ventricule_droit                non étanche (168 arêtes de bord)
+      myocarde_ventricule_gauche               non étanche (160 arêtes de bord)
+      myocarde_voie_efferente                  non étanche (136 arêtes de bord)
+      sac_aortique                             non étanche (248 arêtes de bord)
+      veine_cardinale_commune_droit            non étanche (112 arêtes de bord)
+      veine_cardinale_commune_gauche           non étanche (160 arêtes de bord)
+      veine_ombilicale_droit                   non étanche (256 arêtes de bord)
+      veine_ombilicale_gauche                  non étanche (552 arêtes de bord)
+      veine_pulmonaire                         non étanche (32 arêtes de bord)
+      veine_vitelline_gauche                   2 faces dégénérées
+      coeur                                    non étanche (0 arêtes de bord) ; 12 arêtes non-manifold ; 8 faces dupliquées
+-> C:\Users\MICROT~1\AppData\Local\Temp\claude\C--Users-MicroTurtle-Documents-Claude\23073bc7-11c8-454d-9e8a-a242b921d210\scratchpad\out2\CS13_hikspoors : 48 structures, manifest.json, rapport.json, controle.png (non publiable)
