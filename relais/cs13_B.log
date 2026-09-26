@@ -1,0 +1,16 @@
+﻿   banque : Carnegie_Stage_13.npz
+CS13 : 43 parties lues
+   après scission par couleur : 50 parties
+   34 structures canoniques ; non reconnues : ['R_HCC', 'L_HCC', 'SAN', 'DMP', 'PAAs_2', 'PAAs_3', 'PAAs_4'] ; ignorées : ['scale_cube_200um']
+   calage fourni : échelle 0.001078, repère pipeline, det(R) 1.00 ; indices anatomiques : score -3.0 tel quel, 1.0 avec miroir X
+      NON crânial : ^myocarde_ > ^foie$
+      NON crânial : ^arc_aortique > ^myocarde_
+      OK  dorsal : tube neural/somites au-dessus (Y) du cœur/intestin
+      OK  tube neural plus large en haut (encéphale)
+      NON gauche à +X (2 paires)
+   ATTENTION : le miroir X vérifie mieux les indices -> essayer --calage-repere modeles
+   étendue (mm) X 1.21  Y 2.79  Z 4.06  (CRL typique 4.5 mm)
+   union cavites_cardiaques <- 5 parties (voxels (pas 0.01072), 189974 faces)
+   union arteres            <- 2 parties (voxels (pas 0.02244), 45770 faces)
+   union veines             <- 4 parties (voxels (pas 0.01478), 85664 faces)
+-> C:\Users\MICROT~1\AppData\Local\Temp\claude\C--Users-MicroTurtle-Documents-Claude\23073bc7-11c8-454d-9e8a-a242b921d210\scratchpad\out\CS13_hikspoors_calage : 37 structures, manifest.json, rapport.json, controle.png

@@ -1,0 +1,15 @@
+﻿   banque : Carnegie_Stage_13.npz
+CS13 : 43 parties lues
+   après scission par couleur : 50 parties
+   34 structures canoniques ; non reconnues : ['R_HCC', 'L_HCC', 'SAN', 'DMP', 'PAAs_2', 'PAAs_3', 'PAAs_4'] ; ignorées : ['scale_cube_200um']
+   orientation : score 3.0 (ACP e1 (+1), indice dorsal)
+      OK  crânial : ^myocarde_ > ^foie$
+      OK  crânial : ^arc_aortique > ^myocarde_
+      OK  dorsal : tube neural/somites au-dessus (Y) du cœur/intestin
+      NON tube neural plus large en haut (encéphale)
+      NON gauche à +X (2 paires)
+   étendue (mm) X 1.82  Y 2.44  Z 4.04  (CRL typique 4.5 mm)
+   union cavites_cardiaques <- 5 parties (voxels (pas 0.0112), 174570 faces)
+   union arteres            <- 2 parties (voxels (pas 0.02289), 45684 faces)
+   union veines             <- 4 parties (voxels (pas 0.01537), 80102 faces)
+-> C:\Users\MICROT~1\AppData\Local\Temp\claude\C--Users-MicroTurtle-Documents-Claude\23073bc7-11c8-454d-9e8a-a242b921d210\scratchpad\out\CS13_hikspoors : 37 structures, manifest.json, rapport.json, controle.png
