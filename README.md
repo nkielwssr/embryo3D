@@ -220,28 +220,47 @@ les séparent. La chaîne `tubes_morph.py` les prend en charge comme tubes suppl
   sont des lumières pâles courtes et obliques dans le mésenchyme des arcs pharyngiens, latérales au pharynx, entre deux poches ; leur origine
   ventrale est le sac aortique, juste en avant de la voie de sortie du cœur, leur terminaison dorsale rejoint l'aorte dorsale du même côté ; les
   poches sont les prolongements latéraux pâles de la lumière pharyngienne (`digestif_lumieres.py` les détecte comme composantes distinctes).
+- **Relevé semi-automatique des arcs et du sac** (une fois les aortes dorsales tracées) :
+  `python embryo3d/arcs_candidats.py CS13.f4v/work CS13 [--sac x,s,y] [--pas 2]` cherche les départs de branches pâles dans une coque autour de la
+  partie crâniale de chaque aorte dorsale (côté ventral ou latéral ; intersegmentaires dorsales écartées), puis, aorte bloquée, le chemin de moindre
+  coût (lumière pâle, favorisant la ligne centrale) depuis une graine dans le sac aortique (défaut : haut des cavités cardiaques) jusqu'à chaque
+  départ : ce chemin ne peut passer que par la branche elle-même, c'est l'arc ; le tronc commun des chemins donne le sac. Seuil de lumière calé sur
+  la densité des aortes tracées ; exclus : hors enveloppe, cavité péricardique, veines et tube digestif déjà tracés. Sorties :
+  `vaisseaux_points/<CS>_arcs_proposes.json` (format de `<CS>.json`, bloc `qualite` par segment : fraction pâle, plus longue traversée de paroi,
+  jonction aortique) et `<work>/cardio/arcs_candidats.png` (profil de chaque côté, face, bandeau récapitulatif, graduations en voxels). Arcs nommés
+  d'après le calendrier quand le nombre de branches propres d'un côté égale le nombre attendu, sinon `arc_candidat_<i>_<côté>` ; un chemin qui
+  force une paroi (> 3 voxels) devient `arc_candidat_douteux_<i>_<côté>`. **Validation obligatoire** sur la planche : renommer ou supprimer les
+  candidats, couper le sac au bout de la voie de sortie (le reste = `tronc_arteriel`), corriger des points au besoin, puis
+  `python embryo3d/arcs_candidats.py fusionner embryo3d/vaisseaux_points/CS13_arcs_proposes.json` (recopie `arc_aortique_*`, `sac_aortique`,
+  `tronc_arteriel` dans `vaisseaux_points/CS13.json`, sans les blocs `qualite`) et `digestif_build.py … --sortie cardio`. Les poches restent à
+  relever à la main (planches `digestif_planches.py`, composantes de `digestif_lumieres.py`).
+- **Tests sans données** : `python embryo3d/test_tubes_morph_synthetique.py` (chaîne `tubes_morph` + planche : présences, raccords des absents,
+  calendrier, mésos) et `python embryo3d/test_arcs_candidats_synthetique.py` (volume synthétique CS13 avec leurres : pharynx, poches, veines
+  cardinales, cavité péricardique, intersegmentaire, kyste) ; chacun finit par « OK : … réussi ». Dépendances : numpy, scipy, opencv, scikit-image.
 - **Morphing** : un arc absent (pas encore formé ou régressé) est réduit sur la fin du sac aortique, sinon sur le début de l'arc voisin le plus
   proche du même côté, sinon sur l'aorte dorsale : il pousse ou se résorbe depuis son origine ventrale pendant la transition. Une poche absente est
   réduite sur le pharynx à sa hauteur attendue (1/5 … 4/5 de sa longueur). Sous-collections Blender « Arcs aortiques, sac aortique, tronc artériel »
   et « Poches pharyngiennes » ; site : arcs sous « Artères », poches sous « Tube digestif ».
-- **Calendrier attendu** (`vaisseaux_points/calendrier_arcs.json`, d'après Rana 2014 / Congdon 1922) : `tubes_morph.py` compare la présence
+- **Calendrier attendu** (`vaisseaux_points/calendrier_arcs.json`, d'après Rana 2014, Graham 2023 et Congdon 1922) : `tubes_morph.py` compare la présence
   tracée à ce calendrier et affiche, sans bloquer, les structures « attendues mais non tracées » et « tracées mais attendues absentes » (bloc
   `calendrier` de `tubes_morph.json`). Clés latéralisées prioritaires (ex. `arc_aortique_6_droite`).
 
   | | CS13 | CS14 | CS15 | CS16 | CS17 | CS19 | CS20 |
   |---|---|---|---|---|---|---|---|
   | arc 1 (mandibulaire) | régression | absent | absent | absent | absent | absent | absent |
-  | arc 2 (hyoïdien) | présent | régression | absent | absent | absent | absent | absent |
+  | arc 2 (hyoïdien) | régression | absent | absent | absent | absent | absent | absent |
   | arc 3 (carotidien) | présent | présent | présent | présent | présent | présent | présent |
   | arc 4 (aortique) | présent | présent | présent | présent | présent | présent | présent |
-  | arc 6 (pulmonaire) | formation | présent | présent | présent | présent (droit : régression) | gauche seul | gauche seul |
+  | arc 6 (pulmonaire) | formation | formation (CS14-CS15 selon l'embryon) | présent | présent | présent (droit : régression) | gauche seul | gauche seul |
   | sac aortique, tronc artériel | présents | présents | présents (cloisonnement) | présents | présents | présents | présents |
   | poches 1-4 | 1-3 présentes, 4 formation | présentes | présentes | présentes | régression | absentes | absentes |
 
 - **Non modélisé** : 5e arc (transitoire) ; régression des segments intermédiaires des aortes dorsales (canal carotidien entre arcs 3 et 4 vers
   CS17, aorte dorsale droite caudale vers CS19) — les aortes dorsales restent des lignes uniques, à découper en segments si l'on veut les faire
   disparaître un à un ; artères pulmonaires, carotides externes, intersegmentaires. Aucun arc ni poche n'est tracé à ce jour : la chaîne est prête,
-  les points restent à relever (CS13 et CS14 d'abord, où la dynamique est la plus riche).
+  les points restent à relever (CS13 et CS14 d'abord, où la dynamique est la plus riche), avec `arcs_candidats.py` pour les arcs et le sac.
+  Calendrier aligné le 26/09 sur le résumé de Rana 2014 (arcs 1 et 2 déjà en régression à CS13, disparus ou réduits à des reliquats à CS14) et
+  sur Graham 2023 (6e arc formé entre CS14 et CS15 selon l'embryon).
 
 ## Membres séparés
 `split_membres.py <stade>` sépare le label `membres` en `membre_sup_gauche`, `membre_sup_droit`, `membre_inf_gauche`, `membre_inf_droit` (2 plus grosses composantes de chaque côté du plan médian, la plus crâniale = supérieur) dans `labels.npz` ; `meshexport` les exporte (collection Membres) et la scène maître les morphe pièce par pièce. Contrôle du morphing : `planche_morph.py sortie.png [stades]` ; vidéo : `blender_render_anim.py` (séquence PNG, caméra fixe cadrée sur CS20, option `--suivre`) puis `encode_frames.py`.

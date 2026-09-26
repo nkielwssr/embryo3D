@@ -1,6 +1,6 @@
 {
  "titre": "Présence attendue des artères des arcs pharyngiens, du sac aortique, du tronc artériel et des poches pharyngiennes, par stade (littérature)",
- "source": "Rana MS, Sizarov A, Christoffels VM, Moorman AFM (2014) Development of the human aortic arch system captured in an interactive three-dimensional reference model. Am J Med Genet A 164A:1372-1383 ; Congdon ED (1922) Transformation of the aortic-arch system during the development of the human embryo. Contrib Embryol Carnegie Inst 14:47-110 ; O'Rahilly R, Müller F (2010) Developmental stages in human embryos. Cells Tissues Organs 192:73-84",
+ "source": "Rana MS, Sizarov A, Christoffels VM, Moorman AFM (2014) Development of the human aortic arch system captured in an interactive three-dimensional reference model. Am J Med Genet A 164A:1372-1383 ; Graham A et al. (2023) A revised terminology for the pharyngeal arches and the arch arteries. J Anat, PMC10485586 (6e arc variable CS14-CS15, citant Rana 2014) ; Congdon ED (1922) Transformation of the aortic-arch system during the development of the human embryo. Contrib Embryol Carnegie Inst 14:47-110 ; O'Rahilly R, Müller F (2010) Developmental stages in human embryos. Cells Tissues Organs 192:73-84",
  "usage": "lu par tubes_morph.py (verifier_calendrier) : signale les structures attendues mais non tracées et les structures tracées mais attendues absentes ; ne bloque rien. Clé latéralisée (ex. arc_aortique_6_droite) prioritaire sur la clé de base (arc_aortique_6).",
  "statuts": {
   "present": "perméable, à tracer",
@@ -11,16 +11,16 @@
  "convention_de_trace": "arcs : du sac aortique (ventral, début) vers l'aorte dorsale (dorsal, fin), dans vaisseaux_points/<CS>.json, clés arc_aortique_<k>_<gauche|droite> ; sac_aortique et tronc_arteriel : du cœur (début) vers les arcs (fin) ; poches : de la lumière du pharynx (début) vers leur fond latéral (fin), dans digestif_points/<CS>.json, clés poche_pharyngienne_<k>_<gauche|droite>",
  "stades": {
   "CS13": {
-   "arc_aortique_1": "regression", "arc_aortique_2": "present", "arc_aortique_3": "present", "arc_aortique_4": "present", "arc_aortique_6": "formation",
+   "arc_aortique_1": "regression", "arc_aortique_2": "regression", "arc_aortique_3": "present", "arc_aortique_4": "present", "arc_aortique_6": "formation",
    "sac_aortique": "present", "tronc_arteriel": "present",
    "poche_pharyngienne_1": "present", "poche_pharyngienne_2": "present", "poche_pharyngienne_3": "present", "poche_pharyngienne_4": "formation",
-   "note": "≈ 28 j (4-6 mm). Arc mandibulaire (1) interrompu, réduit à son reliquat ; arcs hyoïdien (2), carotidien (3) et aortique (4) perméables ; 6e arc (pulmonaire) en formation (plexus). Aortes dorsales paires prolongées vers la tête (carotides internes), sac aortique en avant des arcs, dans le prolongement de la voie de sortie du cœur. Poches 1-3 nettes entre les arcs, 4e en formation."
+   "note": "≈ 28 j (4-6 mm). Arcs mandibulaire (1) et hyoïdien (2) encore présents mais déjà en régression (Rana 2014) ; carotidien (3) et aortique (4) perméables ; 6e arc (pulmonaire) pas encore canalisé (plexus). Aortes dorsales paires prolongées vers la tête (carotides internes), sac aortique en avant des arcs, dans le prolongement de la voie de sortie du cœur. Poches 1-3 nettes entre les arcs, 4e en formation."
   },
   "CS14": {
-   "arc_aortique_1": "absent", "arc_aortique_2": "regression", "arc_aortique_3": "present", "arc_aortique_4": "present", "arc_aortique_6": "present",
+   "arc_aortique_1": "absent", "arc_aortique_2": "absent", "arc_aortique_3": "present", "arc_aortique_4": "present", "arc_aortique_6": "formation",
    "sac_aortique": "present", "tronc_arteriel": "present",
    "poche_pharyngienne_1": "present", "poche_pharyngienne_2": "present", "poche_pharyngienne_3": "present", "poche_pharyngienne_4": "present",
-   "note": "≈ 32 j (5-7 mm). Arcs 3, 4 et 6 perméables ; 1 disparu (reliquat = a. maxillaire), 2 en régression (reliquat = a. stapédienne / hyoïdienne). Poches 1-4 formées."
+   "note": "≈ 32 j (5-7 mm). Arcs 3 et 4 perméables ; 1 et 2 disparus ou réduits à des reliquats (Rana 2014 ; reliquats = a. maxillaire, a. stapédienne / hyoïdienne) ; 6e arc formé entre CS14 et CS15 selon l'embryon (Graham 2023) : tracer ce qui est canalisé. Poches 1-4 formées."
   },
   "CS15": {
    "arc_aortique_1": "absent", "arc_aortique_2": "absent", "arc_aortique_3": "present", "arc_aortique_4": "present", "arc_aortique_6": "present",

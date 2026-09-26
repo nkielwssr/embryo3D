@@ -70,13 +70,22 @@ def vignette(v):
     b = int(px_mm); cv2.line(im, (10, 14), (10 + b, 14), (0, 0, 0), 2); cv2.putText(im, '1 mm', (14 + b, 19), 0, 0.4, (0, 0, 0), 1, cv2.LINE_AA)
     i0 = int(np.floor(v)); titre = f'stage {v:g}' + (f' = {ST[i0]}' if abs(v - i0) < 1e-9 and i0 < len(ST) else f' ({ST[i0]} -> {ST[min(i0 + 1, len(ST) - 1)]})')
     absents = [n for n in Z.files if abs(v - i0) < 1e-9 and i0 < len(ST) and not meta['presence'][n][ST[i0]]]
-    bandeau = np.full((44, im.shape[1], 3), 235, np.uint8)
+    lignes = []                                                 # liste des absents repliée à la largeur de la vignette
+    for mot in (['absents :'] + [n + ',' for n in absents[:-1]] + absents[-1:]) if absents else []:
+        if lignes and cv2.getTextSize(lignes[-1] + ' ' + mot, 0, 0.36, 1)[0][0] < im.shape[1] - 16: lignes[-1] += ' ' + mot
+        else: lignes.append(mot)
+    return titre, lignes, im
+
+def avec_bandeau(titre, lignes, im, n_lignes):
+    """bandeau de hauteur commune à toutes les vignettes (vues alignées d'un stade à l'autre)"""
+    bandeau = np.full((28 + 14 * n_lignes, im.shape[1], 3), 235, np.uint8)
     cv2.putText(bandeau, titre, (8, 18), 0, 0.55, (20, 20, 20), 1, cv2.LINE_AA)
-    if absents: cv2.putText(bandeau, 'absents : ' + ', '.join(absents), (8, 38), 0, 0.36, (120, 40, 40), 1, cv2.LINE_AA)
+    for k, t in enumerate(lignes): cv2.putText(bandeau, t, (8, 34 + 14 * k), 0, 0.36, (120, 40, 40), 1, cv2.LINE_AA)
     return np.vstack([bandeau, im])
 
 vs = [vignette(v) for v in valeurs]
-cols = min(5, len(vs)); H0, W0 = vs[0].shape[:2]
+vs = [avec_bandeau(t, l, im, max(len(x[1]) for x in vs)) for t, l, im in vs]
+cols = min(5, len(vs)); H0, W0 = max(x.shape[0] for x in vs), max(x.shape[1] for x in vs)
 vs = [cv2.copyMakeBorder(x, 0, H0 - x.shape[0], 0, W0 - x.shape[1] + 6, cv2.BORDER_CONSTANT, value=(255, 255, 255)) for x in vs]
 while len(vs) % cols: vs.append(np.full_like(vs[0], 255))
 grille = np.vstack([np.hstack(vs[k:k + cols]) for k in range(0, len(vs), cols)])
