@@ -179,3 +179,59 @@ Si `out/topographie/video360/etages_imposes.json` existe (session Extraction squ
 
 ## Membres séparés
 `split_membres.py <stade>` sépare le label `membres` en `membre_sup_gauche`, `membre_sup_droit`, `membre_inf_gauche`, `membre_inf_droit` (2 plus grosses composantes de chaque côté du plan médian, la plus crâniale = supérieur) dans `labels.npz` ; `meshexport` les exporte (collection Membres) et la scène maître les morphe pièce par pièce. Contrôle du morphing : `planche_morph.py sortie.png [stades]` ; vidéo : `blender_render_anim.py` (séquence PNG, caméra fixe cadrée sur CS20, option `--suivre`) puis `encode_frames.py`.
+
+## Modèle complet CS10→CS23 : PDF 3D Hikspoors (Maastricht) en priorité + nos données (26/09/2026, session « Hikspoors → modèles »)
+
+Source : les PDF 3D interactifs de Hikspoors & Lamers (Maastricht) hébergés par le HDBR atlas, https://hdbratlas.org/hikspoors-pdf/
+(Commun Biol 2022, doi 10.1038/s42003-022-03153-x ; PDF identiques sur figshare). Licence du site : **CC BY-NC-SA 4.0** (adaptation et morphing
+permis en usage non commercial, avec attribution et partage à l'identique). Stades disponibles : CS9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 20, 23
+(+ versions « NEWvalves » 2025 de 18, 20, 23) ; **pas de CS19, 21, 22**. Mêmes spécimens Carnegie que nos coupes ehd (CS13 = #836, CS20 = #462,
+CS23 = #9226…), reconstruits dans Amira : ils se calent directement sur nos volumes. Contenu centré sur le cœur (myocarde et lumières par cavité,
+coussins, valves, crêtes de l'OFT, système de conduction, épicarde, péricarde), veines (vitellines, ombilicales, cardinales, canaux hépatocardiaques,
+VCI, azygos), arcs aortiques, artères pulmonaires et coronaires, plus tube neural, somites, intestin + vésicule vitelline, foie, poumons, septum
+transversum ; 11 à 49 structures par stade. Ce n'est pas une enveloppe complète : peau, membres, yeux, squelette viennent de nos autres sources.
+
+Extraction PDF → maillages : faite par la session locale « Carnegie Stage 13 PDF 3D » (`reference/hikspoors_maastricht/`, hors dépôt :
+`site/` PDF, `u3d/<stade>.npz` + `_scene.json`, `glb/`, `extraire.py` s'appuyant sur `output/atlas_brouillons/decode_u3d_local.py`). Les maillages
+sont dans un bloc U3D propriétaire 0x100 (« RH »), pas le format CLOD standard ; les couleurs vraies sont dans les textures (deux structures
+peuvent partager une surface : `gut_yolk_sac` = intestin gris 174 + vésicule 120 ; `myocard_LV/RV` = cavité + courbure interne 127,173,87).
+Échelle : environ 1 unité = 1 µm ; CS13 calé sur notre modèle VHE v6 à 1,078 µm/unité (écart médian 41 µm) ; CS12 et CS14 dans une autre unité
+(à mesurer) ; le cube `scale_cube_200um` n'est pas fiable. Ces valeurs sont dans `hikspoors_echelles.json`.
+
+Chaîne (scripts de ce dépôt, tout se lance depuis la racine `Embryo/`) :
+
+```bash
+python embryo3d/hikspoors_modele.py CS13 --glb reference/hikspoors_maastricht/glb/CS13 --separer-couleurs      # -> embryons_3D/modeles/CS13_hikspoors/
+python embryo3d/hikspoors_modele.py CS13 --npz reference/hikspoors_maastricht/u3d/CS13.npz --scene reference/hikspoors_maastricht/u3d/CS13_scene.json
+python embryo3d/hikspoors_modele.py CS14 --glb ... --um-par-unite 1.05 --retourner z    # échelle imposée ; axe crânial inversé si controle.png le montre
+python embryo3d/video_vers_modele.py CS19_f4v                                        # nos reconstructions vidéo -> modeles/CS19_video/ (miroir X, noms canoniques)
+python embryo3d/master_modeles.py [--fusion]                                         # -> embryons_3D/master_CS10-CS23.json (priorité hikspoors > video > recon > brouillon)
+blender -b -P embryo3d/blender_build_scene.py -- embryons_3D/master_CS10-CS23.json embryons_3D/embryon_CS10-CS23.blend
+python embryo3d/agregateur.py                                                        # statut « externe » (bleu plein) pour les maillages d'auteurs
+python embryo3d/test_hikspoors_synthetique.py                                        # test sans données : embryon synthétique nommé à la Hikspoors
+```
+
+`hikspoors_modele.py` lit un dossier de GLB/PLY/OBJ (un fichier par structure, ou une scène GLB avec un nœud par structure) ou le npz
+(clés reconnues : sommets (N,3) + faces (M,3) + partie par face + noms, ou un jeu `<nom>_vertices/<nom>_faces` ; sinon il liste les clés et
+s'arrête). Il applique `hikspoors_nomenclature.json` (règles regex : cœur = type [myocarde, cavité, trabécules, courbure interne] × chambre
+[VG, VD, OG, OD, OFT, canal AV, sinus veineux…], veines, artères, tube neural, somites, intestin, foie, poumons… ; côté gauche/droit déduit du
+nom ; `par_couleur` pour les surfaces scindées ; `ignorer` pour le cube d'échelle), fusionne les parties de même nom canonique, écrit les unions
+dérivées `coeur`, `cavites_cardiaques`, `arteres`, `veines`, `intestin` (re-maillage par voxels) pour le morphing, puis oriente **automatiquement** :
+ACP (grand axe = crânio-caudal), dorsal = du cœur vers le tube neural, signe crânial par vote (cœur au-dessus du foie et de l'intestin, arcs
+aortiques au-dessus du cœur, tube neural plus large côté encéphale, structures « gauche » à +X). Le repère est celui des modèles (mm, Z crânial,
+Y dorsal, X = Y×Z = gauche, origine au centre). Sorties : PLY par structure, `manifest.json` (statut `externe`, licence, attribution, spécimen,
+échelle, score d'orientation), `rapport.json` (indices d'orientation, candidats, noms non reconnus → compléter la table), `controle.png`
+(profil, face, dos : **à vérifier avant publication**, corriger avec `--retourner z|y`), `verif_maillages.json`. `--calage T.npy` (13 nombres
+s, R, t) remplace l'orientation automatique par une similitude connue (repère `modeles` ou `pipeline`, ce dernier remis en repère direct).
+
+`video_vers_modele.py` met nos stades vidéo dans le même repère (le repère du pipeline X = gauche→droite est indirect : miroir X, faces
+réorientées) et la même nomenclature (`snc` → `tube_neural`, `coeur_detoure` → `coeur`, `vaisseaux_aorte` → `aorte_dorsale`…, labels « faible »
+écartés). `master_modeles.py` choisit un dossier par stade (ou complète avec `--fusion` par les structures manquantes des autres dossiers, sans
+recalage : il signale les écarts d'étendue), écrit le manifest multi-stades au format de `blender_build_scene.py` et une liste `morph` des noms
+canoniques présents à plusieurs stades (`blender_build_scene.py` l'ajoute à MORPH). Les stades sans modèle (CS19 tant que la vidéo n'est pas
+convertie, CS21, CS22) sont sautés : le slider interpole entre voisins. Test de bout en bout validé sur un embryon synthétique (orientation
+retrouvée à 3°, gauche/droite et ventral/dorsal confirmés par le contrôle d'orientation de l'agrégateur, 24/24 maillages sans erreur).
+
+Reste à faire : passer les 12 stades réels (vérifier chaque `controle.png`, compléter `non_reconnus` de `rapport.json` dans la nomenclature,
+mesurer l'échelle des stades autres que CS13 par calage sur nos volumes), CS19 par `video_vers_modele.py`, CS21/22 par interpolation ou par les
+modèles OPT du HDBR atlas (CS12→CS23, même licence), et un recalage entre sources avant d'utiliser `--fusion`.

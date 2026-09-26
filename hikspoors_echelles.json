@@ -1,0 +1,56 @@
+{
+ "_doc": [
+  "Échelle des maillages Hikspoors par stade : µm par unité U3D (hikspoors_modele.py, --um-par-unite l'emporte).",
+  "CS13 : calage sur notre modèle VHE v6 (session « Carnegie Stage 13 PDF 3D », 26/09) : 1,078 µm/unité, écart médian 41 µm.",
+  "Autres stades : 1 unité ≈ 1 µm d'après les auteurs ; CS12 et CS14 semblent dans une autre unité (à mesurer par calage sur nos volumes).",
+  "Le cube « scale_cube_200um » des PDF n'est pas fiable (redimensionné au niveau du nœud)."
+ ],
+ "CS9": {
+  "um_par_unite": 1.0,
+  "statut": "à confirmer"
+ },
+ "CS10": {
+  "um_par_unite": 1.0,
+  "statut": "à confirmer"
+ },
+ "CS11": {
+  "um_par_unite": 1.0,
+  "statut": "à confirmer"
+ },
+ "CS12": {
+  "um_par_unite": 1.0,
+  "statut": "douteux (autre unité ?)"
+ },
+ "CS13": {
+  "um_par_unite": 1.078,
+  "statut": "calé sur VHE v6 (41 µm)"
+ },
+ "CS14": {
+  "um_par_unite": 1.0,
+  "statut": "douteux (autre unité ?)"
+ },
+ "CS15": {
+  "um_par_unite": 1.0,
+  "statut": "à confirmer"
+ },
+ "CS16": {
+  "um_par_unite": 1.0,
+  "statut": "à confirmer"
+ },
+ "CS17": {
+  "um_par_unite": 1.0,
+  "statut": "à confirmer"
+ },
+ "CS18": {
+  "um_par_unite": 1.0,
+  "statut": "à confirmer"
+ },
+ "CS20": {
+  "um_par_unite": 1.0,
+  "statut": "à confirmer"
+ },
+ "CS23": {
+  "um_par_unite": 1.0,
+  "statut": "à confirmer"
+ }
+}

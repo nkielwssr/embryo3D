@@ -68,6 +68,7 @@ built = [build_stage(st) for st in stages]
 # structures "blob" morphables (shape keys sur la topologie du dernier stade, projetées par Shrinkwrap après pré-alignement),
 # les autres (multi-morceaux) sont simplement affichées quand le slider est proche de leur stade.
 MORPH = {'enveloppe', 'foie', 'coeur', 'cavite_pericardique', 'yeux', 'coeur_detoure', 'myocarde', 'digestif_estomac', 'digestif_oesophage', 'notochorde'}
+MORPH |= set(M.get('morph', []))   # master_modeles.py : noms canoniques présents à plusieurs stades (chaîne CS10→CS23)
 # 24/09 16:00 : subdivisions du SNC (prosencephale, mesencephale, rhombencephale, moelle, ventricule_*) et meninges retirées du morphing :
 # volumes incohérents d'un stade à l'autre (prosencéphale CS15 0,06 mm³ vs 2,0 à CS16 ; moelle CS16 0,19 vs 13,8 à CS17) → cerveau « cassé » ;
 # bloc méningé à coupe plane ; 'ventricules' global retiré aussi (8,9 mm³ à CS16, 2,1 à CS17, 80 à CS19 : sort du cerveau).
