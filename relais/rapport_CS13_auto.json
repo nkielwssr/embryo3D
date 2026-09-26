@@ -1,0 +1,685 @@
+{
+ "stade": "CS13",
+ "source": "Hikspoors et al. 2022, Commun Biol (doi 10.1038/s42003-022-03153-x) — PDF 3D hdbratlas.org/hikspoors-pdf",
+ "echelle": {
+  "um_par_unite": 1.078
+ },
+ "non_reconnus": [
+  "R_HCC",
+  "L_HCC",
+  "SAN",
+  "DMP",
+  "PAAs_2",
+  "PAAs_3",
+  "PAAs_4"
+ ],
+ "ignores": [
+  "scale_cube_200um"
+ ],
+ "journal": [
+  {
+   "source": "neural_tube",
+   "parent": "neural_tube",
+   "nom": "tube_neural",
+   "regle": "neural_?tube|spinal_?cord|neuraltube|tube_neural|moelle|neural_?plate|neural_?groove|neural_?fold",
+   "faces": 84608,
+   "couleur_source": [
+    255,
+    244,
+    163
+   ]
+  },
+  {
+   "source": "somites__c000000",
+   "parent": "",
+   "nom": "somites",
+   "regle": "somite|somit|dermomyotome|sclerotome",
+   "faces": 40960,
+   "couleur_source": [
+    0,
+    0,
+    0
+   ]
+  },
+  {
+   "source": "somites__cffe0da",
+   "parent": "",
+   "nom": "somites",
+   "regle": "somite|somit|dermomyotome|sclerotome",
+   "faces": 39936,
+   "couleur_source": [
+    255,
+    224,
+    218
+   ]
+  },
+  {
+   "source": "gut_yolk_sac",
+   "parent": "gut_yolk_sac",
+   "nom": "intestin_et_vesicule_vitelline",
+   "regle": "gut.*yolk|yolk.*gut|gut_?and_?yolk",
+   "faces": 67936,
+   "couleur_source": [
+    174,
+    174,
+    174
+   ]
+  },
+  {
+   "source": "liver",
+   "parent": "liver",
+   "nom": "foie",
+   "regle": "liver|hepat|foie",
+   "faces": 75392,
+   "couleur_source": [
+    221,
+    252,
+    126
+   ]
+  },
+  {
+   "source": "transverse_septum",
+   "parent": "transverse_septum",
+   "nom": "septum_transversum",
+   "regle": "septum_?transvers|transverse_?septum",
+   "faces": 68416,
+   "couleur_source": [
+    252,
+    132,
+    105
+   ]
+  },
+  {
+   "source": "dorsal_aorta",
+   "parent": "dorsal_aorta",
+   "nom": "aorte_dorsale",
+   "regle": "dorsal_?aort|aorte_dors|da(_|$)|descending_?aort",
+   "faces": 86016,
+   "couleur_source": [
+    255,
+    0,
+    0
+   ]
+  },
+  {
+   "source": "R_Vit_vein",
+   "parent": "R_Vit_vein",
+   "nom": "veine_r_droit",
+   "regle": "vein|vena|veine|venous|venae",
+   "faces": 36172,
+   "couleur_source": [
+    179,
+    241,
+    241
+   ]
+  },
+  {
+   "source": "L_Vit_vein",
+   "parent": "L_Vit_vein",
+   "nom": "veine_l_gauche",
+   "regle": "vein|vena|veine|venous|venae",
+   "faces": 61876,
+   "couleur_source": [
+    179,
+    241,
+    241
+   ]
+  },
+  {
+   "source": "R_Umb_vein",
+   "parent": "R_Umb_vein",
+   "nom": "veine_r_droit",
+   "regle": "vein|vena|veine|venous|venae",
+   "faces": 25728,
+   "couleur_source": [
+    255,
+    0,
+    255
+   ]
+  },
+  {
+   "source": "L_Umb_vein",
+   "parent": "L_Umb_vein",
+   "nom": "veine_l_gauche",
+   "regle": "vein|vena|veine|venous|venae",
+   "faces": 42400,
+   "couleur_source": [
+    255,
+    0,
+    255
+   ]
+  },
+  {
+   "source": "R_cardinal_vein",
+   "parent": "R_cardinal_vein",
+   "nom": "coeur",
+   "regle": "cardiaque:chambre seule coeur",
+   "faces": 12512,
+   "couleur_source": [
+    0,
+    0,
+    114
+   ]
+  },
+  {
+   "source": "L_cardinal_vein",
+   "parent": "L_cardinal_vein",
+   "nom": "coeur",
+   "regle": "cardiaque:chambre seule coeur",
+   "faces": 11968,
+   "couleur_source": [
+    0,
+    0,
+    114
+   ]
+  },
+  {
+   "source": "R_common_card_vein",
+   "parent": "R_common_card_vein",
+   "nom": "coeur",
+   "regle": "cardiaque:chambre seule coeur",
+   "faces": 1792,
+   "couleur_source": [
+    0,
+    0,
+    114
+   ]
+  },
+  {
+   "source": "L_common_card_vein",
+   "parent": "L_common_card_vein",
+   "nom": "coeur",
+   "regle": "cardiaque:chambre seule coeur",
+   "faces": 3392,
+   "couleur_source": [
+    0,
+    0,
+    114
+   ]
+  },
+  {
+   "source": "R_HCC",
+   "parent": "R_HCC",
+   "nom": "r_hcc",
+   "regle": null,
+   "faces": 6656,
+   "couleur_source": [
+    176,
+    108,
+    238
+   ]
+  },
+  {
+   "source": "L_HCC",
+   "parent": "L_HCC",
+   "nom": "l_hcc",
+   "regle": null,
+   "faces": 2464,
+   "couleur_source": [
+    176,
+    108,
+    238
+   ]
+  },
+  {
+   "source": "lumen_venous_sinus",
+   "parent": "lumen_venous_sinus",
+   "nom": "veine_lumen",
+   "regle": "vein|vena|veine|venous|venae",
+   "faces": 37536,
+   "couleur_source": [
+    0,
+    0,
+    255
+   ]
+  },
+  {
+   "source": "myocard_venous_sinus",
+   "parent": "myocard_venous_sinus",
+   "nom": "myocarde_coeur",
+   "regle": "cardiaque:myocarde×coeur",
+   "faces": 25312,
+   "couleur_source": [
+    124,
+    163,
+    136
+   ]
+  },
+  {
+   "source": "SAN",
+   "parent": "SAN",
+   "nom": "san",
+   "regle": null,
+   "faces": 5376,
+   "couleur_source": [
+    255,
+    255,
+    163
+   ]
+  },
+  {
+   "source": "lumen_RA",
+   "parent": "lumen_RA",
+   "nom": "cavite_oreillette_droite",
+   "regle": "cardiaque:cavite×oreillette_droite",
+   "faces": 14432,
+   "couleur_source": [
+    0,
+    162,
+    255
+   ]
+  },
+  {
+   "source": "lumen_LA",
+   "parent": "lumen_LA",
+   "nom": "cavite_oreillette_gauche",
+   "regle": "cardiaque:cavite×oreillette_gauche",
+   "faces": 18624,
+   "couleur_source": [
+    72,
+    202,
+    255
+   ]
+  },
+  {
+   "source": "myocard_atriums__c007308",
+   "parent": "",
+   "nom": "myocarde_oreillettes",
+   "regle": "cardiaque:myocarde×oreillettes",
+   "faces": 30944,
+   "couleur_source": [
+    0,
+    115,
+    8
+   ]
+  },
+  {
+   "source": "myocard_atriums__c63735e",
+   "parent": "",
+   "nom": "myocarde_oreillettes",
+   "regle": "cardiaque:myocarde×oreillettes",
+   "faces": 6496,
+   "couleur_source": [
+    99,
+    115,
+    94
+   ]
+  },
+  {
+   "source": "DMP",
+   "parent": "DMP",
+   "nom": "dmp",
+   "regle": null,
+   "faces": 5120,
+   "couleur_source": [
+    255,
+    0,
+    204
+   ]
+  },
+  {
+   "source": "pulmonary_vein",
+   "parent": "pulmonary_vein",
+   "nom": "veine_pulmonaire",
+   "regle": "pulmonary_?vein|veine_pulm|pv(_|$)",
+   "faces": 1664,
+   "couleur_source": [
+    11,
+    197,
+    175
+   ]
+  },
+  {
+   "source": "myocard_AV_canal",
+   "parent": "myocard_AV_canal",
+   "nom": "myocarde_canal_atrioventriculaire",
+   "regle": "cardiaque:myocarde×canal_atrioventriculaire",
+   "faces": 33600,
+   "couleur_source": [
+    255,
+    255,
+    0
+   ]
+  },
+  {
+   "source": "sup_endocardial_cushion",
+   "parent": "sup_endocardial_cushion",
+   "nom": "coeur",
+   "regle": "cardiaque:chambre seule coeur",
+   "faces": 23744,
+   "couleur_source": [
+    255,
+    167,
+    26
+   ]
+  },
+  {
+   "source": "inf_endocardial_cushion",
+   "parent": "inf_endocardial_cushion",
+   "nom": "coeur",
+   "regle": "cardiaque:chambre seule coeur",
+   "faces": 25600,
+   "couleur_source": [
+    255,
+    128,
+    0
+   ]
+  },
+  {
+   "source": "lumen_LV",
+   "parent": "lumen_LV",
+   "nom": "cavite_ventricule_gauche",
+   "regle": "cardiaque:cavite×ventricule_gauche",
+   "faces": 626496,
+   "couleur_source": [
+    0,
+    211,
+    232
+   ]
+  },
+  {
+   "source": "myocard_LV__c42db56",
+   "parent": "",
+   "nom": "myocarde_ventricule_gauche",
+   "regle": "cardiaque:myocarde×ventricule_gauche",
+   "faces": 8128,
+   "couleur_source": [
+    66,
+    219,
+    86
+   ]
+  },
+  {
+   "source": "myocard_LV__c7fad57",
+   "parent": "",
+   "nom": "courbure_interne_lv",
+   "regle": "par_couleur [127, 173, 87]",
+   "faces": 2496,
+   "couleur_source": [
+    127,
+    173,
+    87
+   ]
+  },
+  {
+   "source": "lumen_RV",
+   "parent": "lumen_RV",
+   "nom": "cavite_ventricule_droit",
+   "regle": "cardiaque:cavite×ventricule_droit",
+   "faces": 77824,
+   "couleur_source": [
+    92,
+    252,
+    255
+   ]
+  },
+  {
+   "source": "myocard_RV__ca5ff8c",
+   "parent": "",
+   "nom": "myocarde_ventricule_droit",
+   "regle": "cardiaque:myocarde×ventricule_droit",
+   "faces": 6112,
+   "couleur_source": [
+    165,
+    255,
+    140
+   ]
+  },
+  {
+   "source": "myocard_RV__c7fad57",
+   "parent": "",
+   "nom": "courbure_interne_rv",
+   "regle": "par_couleur [127, 173, 87]",
+   "faces": 2464,
+   "couleur_source": [
+    127,
+    173,
+    87
+   ]
+  },
+  {
+   "source": "lumen_OFT",
+   "parent": "lumen_OFT",
+   "nom": "cavite_voie_efferente",
+   "regle": "cardiaque:cavite×voie_efferente",
+   "faces": 11072,
+   "couleur_source": [
+    188,
+    255,
+    255
+   ]
+  },
+  {
+   "source": "OFT_cardiac_jelly",
+   "parent": "OFT_cardiac_jelly",
+   "nom": "coeur_voie_efferente",
+   "regle": "cardiaque:chambre seule voie_efferente",
+   "faces": 30080,
+   "couleur_source": [
+    234,
+    166,
+    255
+   ]
+  },
+  {
+   "source": "myocard_OFT",
+   "parent": "myocard_OFT",
+   "nom": "myocarde_voie_efferente",
+   "regle": "cardiaque:myocarde×voie_efferente",
+   "faces": 7968,
+   "couleur_source": [
+    174,
+    255,
+    178
+   ]
+  },
+  {
+   "source": "aortic_sac",
+   "parent": "aortic_sac",
+   "nom": "sac_aortique",
+   "regle": "aortic_?sac|sac_aort",
+   "faces": 4832,
+   "couleur_source": [
+    255,
+    149,
+    0
+   ]
+  },
+  {
+   "source": "PAAs_2",
+   "parent": "PAAs_2",
+   "nom": "paas_2",
+   "regle": null,
+   "faces": 9536,
+   "couleur_source": [
+    240,
+    188,
+    47
+   ]
+  },
+  {
+   "source": "PAAs_3",
+   "parent": "PAAs_3",
+   "nom": "paas_3",
+   "regle": null,
+   "faces": 5440,
+   "couleur_source": [
+    168,
+    98,
+    0
+   ]
+  },
+  {
+   "source": "PAAs_4",
+   "parent": "PAAs_4",
+   "nom": "paas_4",
+   "regle": null,
+   "faces": 4608,
+   "couleur_source": [
+    135,
+    0,
+    0
+   ]
+  },
+  {
+   "source": "epicard",
+   "parent": "epicard",
+   "nom": "coeur",
+   "regle": "cardiaque:chambre seule coeur",
+   "faces": 21568,
+   "couleur_source": [
+    194,
+    124,
+    77
+   ]
+  },
+  {
+   "source": "pericard",
+   "parent": "pericard",
+   "nom": "coeur",
+   "regle": "cardiaque:chambre seule coeur",
+   "faces": 36672,
+   "couleur_source": [
+    209,
+    81,
+    21
+   ]
+  },
+  {
+   "source": "pericardial_reflection",
+   "parent": "pericardial_reflection",
+   "nom": "coeur",
+   "regle": "cardiaque:chambre seule coeur",
+   "faces": 8432,
+   "couleur_source": [
+    255,
+    206,
+    172
+   ]
+  },
+  {
+   "source": "loop_wire_heart_tube__cbcffff",
+   "parent": "",
+   "nom": "coeur_tube_cardiaque",
+   "regle": "cardiaque:chambre seule tube_cardiaque",
+   "faces": 6477,
+   "couleur_source": [
+    188,
+    255,
+    255
+   ]
+  },
+  {
+   "source": "loop_wire_heart_tube__c3dfcff",
+   "parent": "",
+   "nom": "coeur_tube_cardiaque",
+   "regle": "cardiaque:chambre seule tube_cardiaque",
+   "faces": 4424,
+   "couleur_source": [
+    61,
+    252,
+    255
+   ]
+  },
+  {
+   "source": "loop_wire_heart_tube__c00e8ff",
+   "parent": "",
+   "nom": "coeur_tube_cardiaque",
+   "regle": "cardiaque:chambre seule tube_cardiaque",
+   "faces": 3080,
+   "couleur_source": [
+    0,
+    232,
+    255
+   ]
+  },
+  {
+   "source": "loop_wire_heart_tube__c48caff",
+   "parent": "",
+   "nom": "coeur_tube_cardiaque",
+   "regle": "cardiaque:chambre seule tube_cardiaque",
+   "faces": 1655,
+   "couleur_source": [
+    72,
+    202,
+    255
+   ]
+  }
+ ],
+ "orientation": {
+  "methode": "automatique (ACP + indices anatomiques)",
+  "R_lignes_XYZ_dans_repere_source": [
+   [
+    -0.908807,
+    0.416977,
+    0.014103
+   ],
+   [
+    0.416769,
+    0.905751,
+    0.076938
+   ],
+   [
+    0.019308,
+    0.075799,
+    -0.996936
+   ]
+  ],
+  "score": 3.0,
+  "indices": [
+   {
+    "indice": "crânial : ^myocarde_ > ^foie$",
+    "ok": true,
+    "ecart_mm": null,
+    "poids": 2.0
+   },
+   {
+    "indice": "crânial : ^arc_aortique > ^myocarde_",
+    "ok": true,
+    "ecart_mm": null,
+    "poids": 2.0
+   },
+   {
+    "indice": "dorsal : tube neural/somites au-dessus (Y) du cœur/intestin",
+    "ok": true,
+    "poids": 2.0
+   },
+   {
+    "indice": "tube neural plus large en haut (encéphale)",
+    "ok": false,
+    "poids": 1.0,
+    "rayon_haut": 390.13520828063116,
+    "rayon_bas": 482.8649484117946
+   },
+   {
+    "indice": "gauche à +X (2 paires)",
+    "ok": false,
+    "poids": 2.0,
+    "dx_median": -272.9471493945415
+   }
+  ],
+  "candidats": [
+   {
+    "z": "ACP e1 (+1)",
+    "y": "indice dorsal",
+    "score": 3.0
+   },
+   {
+    "z": "ACP e1 (-1)",
+    "y": "indice dorsal",
+    "score": 1.0
+   }
+  ]
+ },
+ "dimensions": {
+  "etendue_mm": [
+   1.823,
+   2.444,
+   4.043
+  ],
+  "hauteur_mm": 4.043,
+  "crl_typique_mm": 4.5,
+  "rapport_hauteur_crl": 0.899,
+  "note": "les PDF Hikspoors sont centrés sur le cœur : l'étendue n'est pas la longueur de l'embryon"
+ }
+}

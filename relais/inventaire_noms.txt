@@ -1,0 +1,227 @@
+﻿### Carnegie_Stage_9 : 11 facesets
+  arterial_plexus <- arterial_plexus  c=[1.0, 0.0, 0.0]  v=58898
+  cardiac_jelly <- cardiac_jelly  c=[0.9179999828338623, 0.6499999761581421, 1.0]  v=20066
+  coelom <- coelom  c=[1.0, 0.7789999842643738, 0.49000000953674316]  v=40006
+  gut_yolk_sac <- gut_yolk_sac  c=[0.5, 0.5, 0.5]  v=47371  fc:15 teintes
+  myocard_LV <- myocard_LV  c=[0.5, 0.5, 0.5]  v=64258  fc:3 teintes 000000 42db56 ffb300
+  neural_plate <- neural_plate  c=[0.5, 0.5, 0.5]  v=23138  fc:8 teintes
+  pericard <- pericard  c=[0.8199999928474426, 0.3160000145435333, 0.0820000022649765]  v=24738
+  scale_cube_200um <- scale_cube_200um  c=[0.6000000238418579, 0.6000000238418579, 0.6000000238418579]  v=8
+  somites_somitomeres <- somites_somitomeres  c=[0.5, 0.5, 0.5]  v=11032  fc:2 teintes 000000 ffe0da
+  transverse_septum <- transverse_septum  c=[0.9900000095367432, 0.5180000066757202, 0.41200000047683716]  v=4194
+  venous_plexus <- venous_plexus  c=[0.0, 0.0, 1.0]  v=178588
+  plage |c : 0.000 .. 1.000
+
+### Carnegie_Stage_13 : 43 facesets
+  DMP <- DMP  c=[1.0, 0.0, 0.800000011920929]  v=2562
+  L_HCC <- L_HCC  c=[0.6899999976158142, 0.42399999499320984, 0.9330000281333923]  v=1285
+  L_Umb_vein <- L_Umb_vein  c=[1.0, 0.0, 1.0]  v=21458
+  L_Vit_vein <- L_Vit_vein  c=[0.7039999961853027, 0.9449999928474426, 0.9449999928474426]  v=30940
+  L_cardinal_vein <- L_cardinal_vein  c=[0.0, 0.0, 0.44699999690055847]  v=5984
+  L_common_card_vein <- L_common_card_vein  c=[0.0, 0.0, 0.44699999690055847]  v=1776
+  OFT_cardiac_jelly <- OFT_cardiac_jelly  c=[0.9179999828338623, 0.6510000228881836, 1.0]  v=15040
+  PAAs_2 <- PAAs_2  c=[0.9409999847412109, 0.7369999885559082, 0.18400000035762787]  v=4832
+  PAAs_3 <- PAAs_3  c=[0.6600000262260437, 0.38499999046325684, 0.0]  v=2784
+  PAAs_4 <- PAAs_4  c=[0.5299999713897705, 0.0, 0.0]  v=2368
+  R_HCC <- R_HCC  c=[0.6899999976158142, 0.42399999499320984, 0.9330000281333923]  v=3377
+  R_Umb_vein <- R_Umb_vein  c=[1.0, 0.0, 1.0]  v=12983
+  R_Vit_vein <- R_Vit_vein  c=[0.7039999961853027, 0.9449999928474426, 0.9449999928474426]  v=18088
+  R_cardinal_vein <- R_cardinal_vein  c=[0.0, 0.0, 0.44699999690055847]  v=6256
+  R_common_card_vein <- R_common_card_vein  c=[0.0, 0.0, 0.44699999690055847]  v=952
+  SAN <- SAN  c=[1.0, 1.0, 0.6389999985694885]  v=2690
+  aortic_sac <- aortic_sac  c=[1.0, 0.5839999914169312, 0.0]  v=2535
+  dorsal_aorta <- dorsal_aorta  c=[1.0, 0.0, 0.0]  v=43788
+  epicard <- epicard  c=[0.7599999904632568, 0.48500001430511475, 0.3009999990463257]  v=10798
+  gut_yolk_sac <- gut_yolk_sac  c=[0.5, 0.5, 0.5]  v=34059  fc:2 teintes 787777 aeaeae
+  inf_endocardial_cushion <- inf_endocardial_cushion  c=[1.0, 0.5, 0.0]  v=12802
+  liver <- liver  c=[0.8659999966621399, 0.9900000095367432, 0.4950000047683716]  v=37698
+  loop_wire_heart_tube <- loop_wire_heart_tube  c=[0.5, 0.5, 0.5]  v=7820  fc:55 teintes
+  lumen_LA <- lumen_LA  c=[0.28200000524520874, 0.7919999957084656, 1.0]  v=9415
+  lumen_LV <- lumen_LV  c=[0.0, 0.828000009059906, 0.9100000262260437]  v=313303
+  lumen_OFT <- lumen_OFT  c=[0.7369999885559082, 1.0, 1.0]  v=5624
+  lumen_RA <- lumen_RA  c=[0.0, 0.6349999904632568, 1.0]  v=7324
+  lumen_RV <- lumen_RV  c=[0.36000001430511475, 0.9890000224113464, 1.0]  v=39040
+  lumen_venous_sinus <- lumen_venous_sinus  c=[0.0, 0.0, 1.0]  v=18985
+  myocard_AV_canal <- myocard_AV_canal  c=[1.0, 1.0, 0.0]  v=16800
+  myocard_LV <- myocard_LV  c=[0.5, 0.5, 0.5]  v=5416  fc:6 teintes 42db56 7fad56 7fad57 7fae56 7fae57 80ad57
+  myocard_OFT <- myocard_OFT  c=[0.6819999814033508, 1.0, 0.6980000138282776]  v=4052
+  myocard_RV <- myocard_RV  c=[0.5, 0.5, 0.5]  v=4392  fc:6 teintes 7fad56 7fad57 7fae56 7fae57 80ad57 a5ff8c
+  myocard_atriums <- myocard_atriums  c=[0.5, 0.5, 0.5]  v=18914  fc:2 teintes 007308 63735e
+  myocard_venous_sinus <- myocard_venous_sinus  c=[0.4860000014305115, 0.6399999856948853, 0.5350000262260437]  v=12781
+  neural_tube <- neural_tube  c=[1.0, 0.9580000042915344, 0.6399999856948853]  v=42306
+  pericard <- pericard  c=[0.8199999928474426, 0.3160000145435333, 0.0820000022649765]  v=18606
+  pericardial_reflection <- pericardial_reflection  c=[1.0, 0.8080000281333923, 0.675000011920929]  v=4216
+  pulmonary_vein <- pulmonary_vein  c=[0.04399999976158142, 0.7720000147819519, 0.6869999766349792]  v=849
+  scale_cube_200um <- scale_cube_200um  c=[0.6000000238418579, 0.6000000238418579, 0.6000000238418579]  v=8
+  somites <- somites  c=[0.5, 0.5, 0.5]  v=40576  fc:2 teintes 000000 ffe0da
+  sup_endocardial_cushion <- sup_endocardial_cushion  c=[1.0, 0.6549999713897705, 0.10000000149011612]  v=11874
+  transverse_septum <- transverse_septum  c=[0.9900000095367432, 0.5180000066757202, 0.41200000047683716]  v=34210
+  plage |c : 0.000 .. 1.000
+
+### Carnegie_Stage_18_NEWvalves : 51 facesets
+  Ao_non_adj_leaflet <- Ao_non_adj_leaflet  c=[0.9200000166893005, 0.4779999852180481, 0.6399999856948853]  v=1378
+  Ao_parietal_leaflet <- Ao_parietal_leaflet  c=[0.5, 0.5, 0.5]  v=3234  fc:6 teintes b25ea7 e87ada e87bd9 e87bda e97ada e97bda
+  Ao_septal_leaflet <- Ao_septal_leaflet  c=[0.5, 0.5, 0.5]  v=3778  fc:6 teintes eac9ff ebc9ff f5e5ff f5e6ff f6e5ff f6e6ff
+  CCS_1 <- CCS_1  c=[0.5, 0.5, 0.5]  v=8700  fc:101 teintes
+  L_spinal_ganglia <- L_spinal_ganglia  c=[0.5, 0.5, 0.5]  v=4894  fc:2 teintes c7a8ff e6e6e6
+  NCCs <- NCCs  c=[0.46000000834465027, 0.2680000066757202, 0.0]  v=2306
+  PAAs_3 <- PAAs_3  c=[0.6600000262260437, 0.38499999046325684, 0.0]  v=2112
+  PAAs_4 <- PAAs_4  c=[0.5299999713897705, 0.0, 0.0]  v=1856
+  PAAs_6 <- PAAs_6  c=[0.25999999046325684, 0.09099999815225601, 0.0]  v=1743
+  R_HCC <- R_HCC  c=[0.6899999976158142, 0.42399999499320984, 0.9330000281333923]  v=1516
+  R_spinal_ganglia <- R_spinal_ganglia  c=[0.5, 0.5, 0.5]  v=5084  fc:2 teintes c7a8ff e6e6e6
+  SAN <- SAN  c=[1.0, 1.0, 0.6399999856948853]  v=3744
+  asc_Ao_wall <- asc_Ao_wall  c=[0.7490000128746033, 0.40400001406669617, 0.5690000057220459]  v=7744
+  ascending_aorta <- ascending_aorta  c=[1.0, 0.5839999914169312, 0.0]  v=6460
+  cardinal_veins <- cardinal_veins  c=[0.0, 0.0, 0.44699999690055847]  v=1314
+  common_cardinal_veins <- common_cardinal_veins  c=[0.0, 0.0, 0.44699999690055847]  v=608
+  dorsal_aorta <- dorsal_aorta  c=[1.0, 0.0, 0.0]  v=48645
+  epicard <- epicard  c=[0.7599999904632568, 0.48500001430511475, 0.3009999990463257]  v=12832
+  left_coronary_artery <- left_coronary_artery  c=[0.7369999885559082, 0.0, 0.41600000858306885]  v=2848
+  lumen_LA <- lumen_LA  c=[0.28200000524520874, 0.7919999957084656, 1.0]  v=12027
+  lumen_LV <- lumen_LV  c=[0.0, 0.8270000219345093, 0.9100000262260437]  v=427211
+  lumen_OFT_subaortic_part <- lumen_OFT_subaortic_part  c=[0.7369999885559082, 1.0, 1.0]  v=2280
+  lumen_OFT_subpulm_part <- lumen_OFT_subpulm_part  c=[0.8429999947547913, 0.921999990940094, 1.0]  v=3780
+  lumen_RA <- lumen_RA  c=[0.0, 0.6349999904632568, 1.0]  v=13587
+  lumen_RV <- lumen_RV  c=[0.3610000014305115, 0.9879999756813049, 1.0]  v=40316
+  lumen_pulmonary_vein <- lumen_pulmonary_vein  c=[0.04399999976158142, 0.7720000147819519, 0.6869999766349792]  v=4845
+  lumen_venous_sinus <- lumen_venous_sinus  c=[0.0, 0.0, 1.0]  v=4306
+  lungs <- lungs  c=[0.46299999952316284, 0.0820000022649765, 0.6710000038146973]  v=2177
+  mitral_valve <- mitral_valve  c=[0.5, 0.5, 0.5]  v=4422  fc:7 teintes
+  musc_ventricular_septum <- musc_ventricular_septum  c=[0.6470000147819519, 1.0, 0.5490000247955322]  v=10306
+  myocard_AV_canal <- myocard_AV_canal  c=[1.0, 1.0, 0.0]  v=12544
+  myocard_LV <- myocard_LV  c=[0.2590000033378601, 0.859000027179718, 0.3370000123977661]  v=6397
+  myocard_OFT <- myocard_OFT  c=[0.7919999957084656, 1.0, 0.6819999814033508]  v=2544
+  myocard_RV <- myocard_RV  c=[0.6470000147819519, 1.0, 0.5490000247955322]  v=5201
+  myocard_atriums <- myocard_atriums  c=[0.0, 0.44999998807907104, 0.029999999329447746]  v=19364
+  myocard_outlet_septum <- myocard_outlet_septum  c=[0.515999972820282, 0.7200000286102295, 0.0]  v=4354
+  myocard_pulmonary_veins <- myocard_pulmonary_veins  c=[0.008999999612569809, 0.30000001192092896, 0.12999999523162842]  v=2231
+  myocard_venous_sinus <- myocard_venous_sinus  c=[0.4860000014305115, 0.6399999856948853, 0.5350000262260437]  v=4588
+  myocardial_DMP <- myocardial_DMP  c=[1.0, 0.0, 0.800000011920929]  v=2242
+  neural_tube <- neural_tube  c=[1.0, 0.9570000171661377, 0.6389999985694885]  v=8338
+  pericard <- pericard  c=[0.8199999928474426, 0.3160000145435333, 0.0820000022649765]  v=38831
+  pericardial_reflection <- pericardial_reflection  c=[1.0, 0.75, 0.5090000033378601]  v=5043
+  primary_atrial_septum <- primary_atrial_septum  c=[0.0, 1.0, 0.0]  v=4898
+  pulm_non_adj_leaflet <- pulm_non_adj_leaflet  c=[0.9200000166893005, 0.4779999852180481, 0.6399999856948853]  v=1666
+  pulm_parietal_leaflet <- pulm_parietal_leaflet  c=[0.5, 0.5, 0.5]  v=3330  fc:6 teintes b25ea7 e87ada e87bd9 e87bda e97ada e97bda
+  pulm_septal_leaflet <- pulm_septal_leaflet  c=[0.5, 0.5, 0.5]  v=3874  fc:6 teintes eac9ff ebc9ff f5e5ff f5e6ff f6e5ff f6e6ff
+  pulm_trunk_wall <- pulm_trunk_wall  c=[0.7490000128746033, 0.40400001406669617, 0.5690000057220459]  v=6462
+  pulmonary_arteries <- pulmonary_arteries  c=[1.0, 0.75, 0.75]  v=2624
+  pulmonary_trunk <- pulmonary_trunk  c=[1.0, 0.5839999914169312, 0.0]  v=3491
+  tricuspid_valve <- tricuspid_valve  c=[0.5, 0.5, 0.5]  v=3110  fc:7 teintes
+  venous_valves <- venous_valves  c=[0.5, 0.5, 0.5]  v=7938  fc:2 teintes a800d6 ff877e
+  plage |c : 0.000 .. 1.000
+
+### Carnegie_Stage_20_NEWvalves : 52 facesets
+  Ao_non_adj_leaflet <- Ao_non_adj_leaflet  c=[0.9200000166893005, 0.4779999852180481, 0.6399999856948853]  v=1378
+  Ao_parietal_leaflet <- Ao_parietal_leaflet  c=[0.5, 0.5, 0.5]  v=1698  fc:6 teintes b25ea7 e87ada e87bd9 e87bda e97ada e97bda
+  Ao_septal_leaflet <- Ao_septal_leaflet  c=[0.5, 0.5, 0.5]  v=1666  fc:7 teintes
+  CSS <- CSS  c=[0.5, 0.5, 0.5]  v=8848  fc:109 teintes
+  L_spinal_ganglia <- L_spinal_ganglia  c=[0.5, 0.5, 0.5]  v=54846  fc:2 teintes c7a8ff e6e6e6
+  NCCs <- NCCs  c=[0.46000000834465027, 0.2680000066757202, 0.0]  v=2946
+  PAAs_3 <- PAAs_3  c=[0.6600000262260437, 0.38499999046325684, 0.0]  v=2528
+  PAAs_4 <- PAAs_4  c=[0.5299999713897705, 0.0, 0.0]  v=1780
+  PAAs_6 <- PAAs_6  c=[0.25999999046325684, 0.09099999815225601, 0.0]  v=2243
+  R_HCC <- R_HCC  c=[0.6859999895095825, 0.42399999499320984, 0.9330000281333923]  v=1200
+  R_spinal_ganglia <- R_spinal_ganglia  c=[0.5, 0.5, 0.5]  v=50558  fc:2 teintes c7a8ff e6e6e6
+  SAN <- SAN  c=[1.0, 1.0, 0.6399999856948853]  v=4512
+  asc_Ao_wall <- asc_Ao_wall  c=[0.7490000128746033, 0.40400001406669617, 0.5690000057220459]  v=5472
+  ascending_aorta <- ascending_aorta  c=[1.0, 0.5839999914169312, 0.0]  v=7231
+  cardinal_veins <- cardinal_veins  c=[0.0, 0.0, 0.44699999690055847]  v=20586
+  common_cardinal_veins <- common_cardinal_veins  c=[0.0, 0.0, 0.44699999690055847]  v=628
+  coronary_arteries <- coronary_arteries  c=[0.7369999885559082, 0.0, 0.41600000858306885]  v=9231
+  dorsal_aorta <- dorsal_aorta  c=[1.0, 0.0, 0.0]  v=42848
+  epicard <- epicard  c=[0.7599999904632568, 0.48500001430511475, 0.3009999990463257]  v=21472
+  gut <- gut  c=[0.5, 0.5, 0.5]  v=434325  fc:12 teintes
+  lumen_LA <- lumen_LA  c=[0.28200000524520874, 0.7919999957084656, 1.0]  v=14175
+  lumen_LV <- lumen_LV  c=[0.0, 0.8270000219345093, 0.9100000262260437]  v=558786
+  lumen_OFT_subaortic_part <- lumen_OFT_subaortic_part  c=[0.7369999885559082, 1.0, 1.0]  v=1056
+  lumen_OFT_subpulm_part <- lumen_OFT_subpulm_part  c=[0.8429999947547913, 0.921999990940094, 1.0]  v=1160
+  lumen_RA <- lumen_RA  c=[0.0, 0.6349999904632568, 1.0]  v=13643
+  lumen_RV <- lumen_RV  c=[0.3610000014305115, 0.9879999756813049, 1.0]  v=95274
+  lumen_pulmonary_vein <- lumen_pulmonary_vein  c=[0.04399999976158142, 0.7720000147819519, 0.6869999766349792]  v=4909
+  lumen_venous_sinus <- lumen_venous_sinus  c=[0.0, 0.0, 1.0]  v=3946
+  lungs <- lungs  c=[0.46299999952316284, 0.0820000022649765, 0.6710000038146973]  v=175242
+  mitral_valve <- mitral_valve  c=[0.5, 0.5, 0.5]  v=3172  fc:33 teintes
+  musc_ventricular_septum <- musc_ventricular_septum  c=[0.4129999876022339, 0.9599999785423279, 0.4399999976158142]  v=5954
+  myocard_AV_canal <- myocard_AV_canal  c=[1.0, 1.0, 0.0]  v=9632
+  myocard_LV <- myocard_LV  c=[0.2590000033378601, 0.859000027179718, 0.3370000123977661]  v=5409
+  myocard_OFT <- myocard_OFT  c=[0.7919999957084656, 1.0, 0.6819999814033508]  v=3480
+  myocard_RV <- myocard_RV  c=[0.6470000147819519, 1.0, 0.5490000247955322]  v=4925
+  myocard_atriums <- myocard_atriums  c=[0.0, 0.44999998807907104, 0.029999999329447746]  v=21532
+  myocard_outlet_septum <- myocard_outlet_septum  c=[0.515999972820282, 0.7200000286102295, 0.0]  v=4354
+  myocard_pulmonary_veins <- myocard_pulmonary_veins  c=[0.008999999612569809, 0.30000001192092896, 0.12999999523162842]  v=1207
+  myocard_venous_sinus <- myocard_venous_sinus  c=[0.4860000014305115, 0.6399999856948853, 0.5350000262260437]  v=2172
+  myocardial_DMP <- myocardial_DMP  c=[1.0, 0.0, 0.800000011920929]  v=2146
+  neural_tube <- neural_tube  c=[1.0, 0.9570000171661377, 0.6389999985694885]  v=5819
+  pericard <- pericard  c=[0.8199999928474426, 0.3160000145435333, 0.0820000022649765]  v=12351
+  pericardial_reflection <- pericardial_reflection  c=[1.0, 0.8080000281333923, 0.675000011920929]  v=7072
+  primary_atrial_septum <- primary_atrial_septum  c=[0.0, 1.0, 0.0]  v=4514
+  pulm_non_adj_leaflet <- pulm_non_adj_leaflet  c=[0.9200000166893005, 0.4779999852180481, 0.6399999856948853]  v=1058
+  pulm_parietal_leaflet <- pulm_parietal_leaflet  c=[0.5, 0.5, 0.5]  v=1698  fc:6 teintes b25ea7 e87ada e87bd9 e87bda e97ada e97bda
+  pulm_septal_leaflet <- pulm_septal_leaflet  c=[0.5, 0.5, 0.5]  v=2082  fc:7 teintes
+  pulm_trunk_wall <- pulm_trunk_wall  c=[0.7490000128746033, 0.40400001406669617, 0.5690000057220459]  v=4606
+  pulmonary_arteries <- pulmonary_arteries  c=[1.0, 0.75, 0.75]  v=2880
+  pulmonary_trunk <- pulmonary_trunk  c=[1.0, 0.5839999914169312, 0.0]  v=4163
+  tricuspid_valve <- tricuspid_valve  c=[0.5, 0.5, 0.5]  v=4580  fc:35 teintes
+  venous_valves <- venous_valves  c=[0.5, 0.5, 0.5]  v=12260  fc:4 teintes a700d6 a800d6 a800d7 ff877e
+  plage |c : 0.000 .. 1.000
+
+### Carnegie_Stage_23_NEWvalves : 55 facesets
+  Ao_non_adj_leaflet <- Ao_non_adj_leaflet  c=[0.9200000166893005, 0.4779999852180481, 0.6399999856948853]  v=1026
+  Ao_parietal_leaflet <- Ao_parietal_leaflet  c=[0.9100000262260437, 0.48100000619888306, 0.8539999723434448]  v=1698
+  Ao_septal_leaflet <- Ao_septal_leaflet  c=[0.9610000252723694, 0.8999999761581421, 1.0]  v=1698
+  CCS <- CCS  c=[0.7059999704360962, 0.0, 0.22699999809265137]  v=5858
+  L_spinal_ganglia <- L_spinal_ganglia  c=[0.5, 0.5, 0.5]  v=41562  fc:2 teintes c7a8ff e6e6e6
+  PAAs_3 <- PAAs_3  c=[0.5299999713897705, 0.0, 0.0]  v=3392
+  PAAs_4 <- PAAs_4  c=[0.6600000262260437, 0.38499999046325684, 0.0]  v=1344
+  PAAs_6 <- PAAs_6  c=[0.25999999046325684, 0.09099999815225601, 0.0]  v=1487
+  R_spinal_ganglia <- R_spinal_ganglia  c=[0.5, 0.5, 0.5]  v=36890  fc:2 teintes c7a8ff e6e6e6
+  SAN <- SAN  c=[1.0, 1.0, 0.6399999856948853]  v=3872
+  asc_Ao_wall <- asc_Ao_wall  c=[0.7490000128746033, 0.40400001406669617, 0.5690000057220459]  v=5376
+  ascending_aorta <- ascending_aorta  c=[1.0, 0.5839999914169312, 0.0]  v=7999
+  azygos_venous_system <- azygos_venous_system  c=[0.0, 0.0, 0.44699999690055847]  v=30235
+  coronary_arteries <- coronary_arteries  c=[0.7369999885559082, 0.0, 0.41600000858306885]  v=18123
+  cranial_veins <- cranial_veins  c=[0.0, 0.0, 0.44699999690055847]  v=7465
+  dorsal_aorta <- dorsal_aorta  c=[1.0, 0.0, 0.0]  v=63962
+  epicard <- epicard  c=[0.7609999775886536, 0.4860000014305115, 0.3019999861717224]  v=29278
+  gut <- gut  c=[0.5, 0.5, 0.5]  v=404862  fc:10 teintes
+  inf_caval_vein <- inf_caval_vein  c=[0.5, 0.5, 0.5]  v=17401  fc:1 teintes b06cee
+  lumen_LA <- lumen_LA  c=[0.28200000524520874, 0.7910000085830688, 1.0]  v=26287
+  lumen_LV <- lumen_LV  c=[0.0, 0.8270000219345093, 0.9100000262260437]  v=118549
+  lumen_OFT_subaortic_part <- lumen_OFT_subaortic_part  c=[0.7369999885559082, 1.0, 1.0]  v=2144
+  lumen_OFT_subpulm_part <- lumen_OFT_subpulm_part  c=[0.8429999947547913, 0.921999990940094, 1.0]  v=2624
+  lumen_RA <- lumen_RA  c=[0.0, 0.6349999904632568, 1.0]  v=27855
+  lumen_RV <- lumen_RV  c=[0.3610000014305115, 0.9869999885559082, 1.0]  v=169447
+  lumen_coronary_sinus <- lumen_coronary_sinus  c=[0.5, 0.5, 0.5]  v=8968  fc:344 teintes
+  lumen_pulmonary_vein <- lumen_pulmonary_vein  c=[0.04399999976158142, 0.7720000147819519, 0.6869999766349792]  v=6485
+  lumen_venous_sinus <- lumen_venous_sinus  c=[0.0, 0.0, 1.0]  v=2050
+  lung_lobes <- lung_lobes  c=[1.0, 0.8299999833106995, 0.8299999833106995]  v=57194
+  main_branches_lungs <- main_branches_lungs  c=[0.46299999952316284, 0.0820000022649765, 0.6710000038146973]  v=38673
+  mitral_valve <- mitral_valve  c=[0.5, 0.5, 0.5]  v=4068  fc:28 teintes
+  musc_ventricular_septum <- musc_ventricular_septum  c=[0.4129999876022339, 0.9599999785423279, 0.4399999976158142]  v=4930
+  myocard_AV_canal <- myocard_AV_canal  c=[1.0, 1.0, 0.0]  v=8512
+  myocard_LV <- myocard_LV  c=[0.2590000033378601, 0.859000027179718, 0.3370000123977661]  v=6881
+  myocard_OFT <- myocard_OFT  c=[0.7919999957084656, 1.0, 0.6809999942779541]  v=4216
+  myocard_RV <- myocard_RV  c=[0.6480000019073486, 1.0, 0.550000011920929]  v=8485
+  myocard_atriums <- myocard_atriums  c=[0.0, 0.44999998807907104, 0.029999999329447746]  v=47192
+  myocard_outlet_septum <- myocard_outlet_septum  c=[0.515999972820282, 0.7200000286102295, 0.0]  v=2658
+  myocard_pulmonary_veins <- myocard_pulmonary_veins  c=[0.008999999612569809, 0.30000001192092896, 0.12999999523162842]  v=2897
+  myocard_venous_sinus <- myocard_venous_sinus  c=[0.4860000014305115, 0.6399999856948853, 0.5350000262260437]  v=3789
+  myocardial_DMP <- myocardial_DMP  c=[1.0, 0.0, 0.800000011920929]  v=1858
+  neural_tube <- neural_tube  c=[1.0, 0.9570000171661377, 0.6389999985694885]  v=91970
+  pericard <- pericard  c=[0.8199999928474426, 0.3160000145435333, 0.0820000022649765]  v=12823
+  pericardial_reflection <- pericardial_reflection  c=[1.0, 0.8080000281333923, 0.675000011920929]  v=6868
+  primary_atrial_septum <- primary_atrial_septum  c=[0.0, 1.0, 0.0]  v=3458
+  pulm_non_adj_leaflet <- pulm_non_adj_leaflet  c=[0.9200000166893005, 0.4779999852180481, 0.6399999856948853]  v=1026
+  pulm_parietal_leaflet <- pulm_parietal_leaflet  c=[0.9100000262260437, 0.48100000619888306, 0.8539999723434448]  v=1698
+  pulm_septal_leaflet <- pulm_septal_leaflet  c=[0.9610000252723694, 0.8999999761581421, 1.0]  v=1698
+  pulm_trunk_wall <- pulm_trunk_wall  c=[0.7490000128746033, 0.40400001406669617, 0.5690000057220459]  v=4734
+  pulmonary_arteries <- pulmonary_arteries  c=[1.0, 0.75, 0.75]  v=5566
+  pulmonary_trunk <- pulmonary_trunk  c=[1.0, 0.5839999914169312, 0.0]  v=3983
+  secondary_atrial_septum <- secondary_atrial_septum  c=[0.4749999940395355, 0.921999990940094, 0.5759999752044678]  v=3074
+  sup_caval_vein <- sup_caval_vein  c=[0.0, 0.0, 0.44699999690055847]  v=1559
+  tricuspid_valve <- tricuspid_valve  c=[0.5, 0.5, 0.5]  v=5924  fc:39 teintes
+  venous_valves <- venous_valves  c=[0.6589999794960022, 0.0, 0.8389999866485596]  v=6948
+  plage |c : 0.000 .. 1.000
+
