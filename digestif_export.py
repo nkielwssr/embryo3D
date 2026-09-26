@@ -5,6 +5,7 @@ usage : python digestif_export.py <dossier_stade> [<dossier_stade> ...]      (ex
 import numpy as np, json, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from meshexport import mask_to_mesh
+from tubes_morph import couleur as couleur_tube      # poches pharyngiennes : couleur commune
 
 COULEURS = {'pharynx': (0.80, 0.25, 0.25), 'oesophage': (0.85, 0.40, 0.70), 'estomac': (0.95, 0.60, 0.20), 'duodenum': (0.30, 0.75, 0.35),
             'intestin_moyen': (0.95, 0.85, 0.25), 'intestin_posterieur': (0.30, 0.55, 0.95)}
@@ -26,7 +27,7 @@ for d in sys.argv[1:]:
         if mesh is None: print(stage, k, 'vide'); continue
         mesh.apply_translation(-np.array([c[0], c[2], -c[1]]) * s_mm)
         fn = f'{stage}_{k}.ply'; mesh.export(os.path.join(od, fn))
-        res['segments'].append({'name': k, 'file': fn, 'color': list(COULEURS.get(k, (0.7, 0.7, 0.7))),
+        res['segments'].append({'name': k, 'file': fn, 'color': list(COULEURS.get(k) or couleur_tube(k)),
                                 'confiance': CONFIANCE.get(k, 'approximative'), 'faces': int(len(mesh.faces)),
                                 'volume_mm3': float(m.sum()) * s_mm ** 3})
         print(f'{stage} {k:22s} {len(mesh.faces):6d} faces {m.sum() * s_mm ** 3:8.3f} mm3')

@@ -47,9 +47,9 @@ SYSTEMES = [
     ("snc", "Système nerveux (segmentation automatique)", "#4f7fc9", {"snc": "#4f7fc9", "ventricules": "#8fd3ff", "ganglions": "#9fc5e8"}),
     ("sens", "Yeux et otocystes", "#6aa7e8", {"yeux": "#2f4f9f", "cristallins": "#dfe9ff", "vesicules_otiques": "#6aa7e8"}),
     ("coeur", "Cœur", "#b0202a", {"coeur_detoure": "#b0202a", "myocarde": "#b0202a", "cavites_cardiaques": "#f08a8a"}),
-    ("arteres", "Artères", "#d62828", {"vaisseaux_aorte": "#d62828"}),
+    ("arteres", "Artères", "#d62828", {"vaisseaux_aorte": "#d62828", "vaisseaux_arcs_aortiques": "#3fae5a"}),
     ("veines", "Veines", "#2f6fd6", {"vaisseaux_cardinales": "#2f6fd6", "vaisseaux_ombilicaux": "#3d8bff", "vaisseaux_vitellins": "#1f4fd6", "vaisseaux_veines": "#2f6fd6"}),
-    ("digestif", "Tube digestif", "#f2c14e", {"digestif_pharynx": "#f2c14e", "digestif_oesophage": "#f2c14e", "digestif_estomac": "#f2c14e", "digestif_duodenum": "#f2c14e", "digestif_intestin_moyen": "#f2c14e", "digestif_intestin_posterieur": "#f2c14e"}),
+    ("digestif", "Tube digestif", "#f2c14e", {"digestif_pharynx": "#f2c14e", "digestif_oesophage": "#f2c14e", "digestif_estomac": "#f2c14e", "digestif_duodenum": "#f2c14e", "digestif_intestin_moyen": "#f2c14e", "digestif_intestin_posterieur": "#f2c14e", "digestif_poches_pharyngiennes": "#c7c7dc"}),
     ("foie", "Foie", "#8c5a2b", {"foie": "#8c5a2b"}),
     ("colonne", "Squelette axial : cartilages, arcs, côtes, notochorde, axe", "#f1ead6", {"axe_vertebral": "#ff9f43", "etages_vertebraux": "#f1ead6", "somites_video": "#ffd27f", "etages_manuels": "#7fe07f", "etages_manuels_dorsal": "#4fc94f", "reper1": "#bfffbf", "reper2": "#bfffbf", "notochorde": "#ffffff", "squelette_axial_cartilage": "#f1ead6", "chondrocrane": "#e8e0c8", "cartilage_autre": "#d9d0b8", "corps_vertebraux": "#f5f0e0", "arcs_neuraux": "#e6dcc0", "cotes": "#d8ccb0"}),
     ("muscles", "Somites", "#9b59b6", {"somites": "#9b59b6"}),
@@ -117,7 +117,7 @@ main{position:relative;min-height:0}canvas{width:100%;height:100%;display:block}
  <div class="row"><button id="all">tout</button><button id="none">rien</button><button id="fit">recadrer</button></div>
  <label class="chk" id="morphLbl" style="display:none"><input type="checkbox" id="morph" checked> morphing continu (clés de la scène Blender)</label>
  <label class="chk"><input type="checkbox" id="autozoom"> zoom interpolé sur la croissance (décoché : échelle constante, caméra fixe)</label>
- <label class="chk" id="tubesLbl"><input type="checkbox" id="tubes" checked> tubes interpolés entre stades (pharynx, digestif, aortes, mésos)</label>
+ <label class="chk" id="tubesLbl"><input type="checkbox" id="tubes" checked> tubes interpolés entre stades (pharynx, poches, digestif, aortes, arcs aortiques, mésos)</label>
  <label class="chk"><input type="checkbox" id="loop" checked> lecture en boucle</label>
  <label class="chk">vitesse <select id="speed"><option value="1">1 j/s</option><option value="2" selected>2 j/s</option><option value="4">4 j/s</option></select></label>
  <div style="margin-top:auto;font-size:11px;color:var(--mut)">glisser = orbite · molette = zoom · clic droit = déplacer<br>version <span id="ver"></span></div>
@@ -165,9 +165,10 @@ function show(s){if(cur===s.id)return;if(!loaded[s.id]){load(s);return;}cur=s.id
  if(muscGroup)scene.remove(muscGroup);muscGroup=new THREE.Group();s.musc.forEach(m=>{const g=plyCache[m.url];if(g&&g.attributes){const mesh=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:new THREE.Color(colorOf[m.nom]||'#ff9f43'),roughness:0.55}));mesh.name=m.nom;muscGroup.add(mesh);}});scene.add(muscGroup);
  applyVis();$('st').textContent=s.id;$('badge').textContent=s.id;const n=nextOf(s);if(n)load(n);if(!fitted){fit();fitted=true;}updateInfo();}
 let fitted=false,camGoal=null;const camVel={p:new THREE.Vector3(),t:new THREE.Vector3()};
-const TUBE_SYS=t=>t.famille==='aorte'?'arteres':'digestif';const TUBE_COL=t=>({aorte:'#d62828',meso:'#f4c9b8',digestif:'#f2c14e'})[t.famille]||'#f2c14e';
-function tubeMasque(name,s){if(!D.tubes||!$('tubes').checked||!s)return false;const P=D.tubes.presence;
- if(name==='vaisseaux_aorte')return D.tubes.noms.some(n=>/^aorte/.test(n)&&P[n]&&P[n][s.id]);
+const TUBE_SYS=t=>(t.famille==='aorte'||t.famille==='arc')?'arteres':'digestif';const TUBE_COL=t=>t.couleur||({aorte:'#d62828',meso:'#f4c9b8',digestif:'#f2c14e'})[t.famille]||'#f2c14e';
+const famOf=n=>{const t=((D.tubes&&D.tubes.liste)||[]).find(x=>x.n===n);return t?t.famille:(/^aorte/.test(n)?'aorte':'digestif');};
+function tubeMasque(name,s){if(!D.tubes||!$('tubes').checked||!s)return false;const P=D.tubes.presence;const anyFam=f=>D.tubes.noms.some(n=>famOf(n)===f&&P[n]&&P[n][s.id]);
+ if(name==='vaisseaux_aorte')return anyFam('aorte');if(name==='vaisseaux_arcs_aortiques')return anyFam('arc');if(name==='digestif_poches_pharyngiennes')return anyFam('poche');
  const m=/^digestif_(.+)$/.exec(name);return !!(m&&P[m[1]]&&P[m[1]][s.id]);}
 function visPred(rt){let fin=false,recr=false;const sCur=stageAt(day);const continu=playing;if(rt)rt.traverse(o=>{if(o.isMesh&&/^(prosencephale|rhombencephale|moelle|moelle_rachidienne)$/.test(o.name))fin=true;if(o.isMesh&&/^(corps_vertebraux|arcs_neuraux)$/.test(o.name))recr=true;});return o=>{if(!o.isMesh)return false;if(continu&&!COMMUN.has(o.name)&&!/^tube:/.test(o.name))return false;const sys=sysOf[o.name];if(fin&&['snc','ventricules','ganglions'].includes(o.name))return false;if(recr&&o.name==='squelette_axial_cartilage')return false;if(tubeMasque(o.name,sCur))return false;return !SCRATCH.has(o.name)&&!!sys&&on[sys]!==false;};}
 function applyVis(){const pr=visPred(root);const f=o=>{if(o.isMesh)o.visible=pr(o);};if(root)root.traverse(f);if(muscGroup)muscGroup.traverse(f);}
@@ -287,8 +288,9 @@ def ecrire_tubes(out_dir):
     for n in noms:
         a = np.ascontiguousarray(z[n], dtype="<f4"); n_st, Nn, Mn = a.shape[:3]
         inf = structs.get(n, {}); typ = inf.get("type", "tube")
+        col = inf.get("couleur")
         liste.append({"n": n, "N": int(Nn), "M": int(Mn), "ferme": typ == "tube", "famille": inf.get("famille", "aorte" if n.startswith("aorte") else "digestif"),
-                      "base": int(base), "stride": int(Nn * Mn * 3)})
+                      "base": int(base), "stride": int(Nn * Mn * 3), "couleur": "#%02x%02x%02x" % tuple(int(round(255 * float(c))) for c in col[:3]) if col else None})
         parts.append(a.reshape(-1)); base += int(a.size)
     with open(os.path.join(out_dir, "tubes.bin"), "wb") as f:
         f.write(np.concatenate(parts).tobytes())

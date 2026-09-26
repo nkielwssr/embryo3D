@@ -2,10 +2,11 @@
 Lit embryons_3D/tubes_morph.npz + .json : un objet par structure, une shape key par stade, pilotées par la propriété de
 scène « stage » (0 = CS13 … 6 = CS20), comme la scène maître ; mêmes keyframes (palier de 12 images puis transition de
 48 images) : Lecture fait défiler les stades.
-- type « tube » (N anneaux × M sommets, extrémités fermées) : pharynx, œsophage, estomac, duodénum, intestins, aortes ;
+- type « tube » (N anneaux × M sommets, extrémités fermées) : pharynx, poches pharyngiennes, œsophage, estomac, duodénum, intestins,
+  aortes dorsales, arcs aortiques, sac aortique, tronc artériel (couleurs lues dans tubes_morph.json, légende de Rana et al. 2014) ;
 - type « nappe » (N lignes × K colonnes, bord digestif → bord aortique) : mésos dorsaux, avec un modificateur Solidify
   (épaisseur --epaisseur mm, 0,05 par défaut) et un matériau translucide double face.
-Sous-collections « Tube digestif », « Aortes », « Mésos dorsaux » dans « Tubes morphables ».
+Sous-collections « Tube digestif », « Poches pharyngiennes », « Aortes », « Arcs aortiques… », « Mésos dorsaux » dans « Tubes morphables ».
 usage : blender -b -P tubes_morph_blender.py -- <sortie.blend> [<dossier_rendus>] [--epaisseur 0.05] [--npz <tubes_morph.npz>]
 Réutilisable par la scène maître : bpy.data.libraries.load(<sortie.blend>) → collection « Tubes morphables »."""
 import bpy, sys, os, json, numpy as np, mathutils
@@ -26,7 +27,7 @@ COUL = {'pharynx': (0.80, 0.25, 0.25), 'oesophage': (0.85, 0.40, 0.70), 'estomac
         'aorte_dorsale_gauche': (0.90, 0.10, 0.10), 'aorte_dorsale_droite': (0.95, 0.35, 0.20), 'aorte_commune': (0.75, 0.05, 0.10),
         'meso_oesophage': (0.96, 0.80, 0.72), 'mesogastre_dorsal': (0.96, 0.76, 0.66), 'mesoduodenum': (0.94, 0.78, 0.70),
         'mesentere': (0.97, 0.82, 0.74), 'mesocolon_dorsal': (0.93, 0.74, 0.68)}
-SOUS_COLL = {'digestif': 'Tube digestif', 'aorte': 'Aortes', 'meso': 'Mésos dorsaux'}
+SOUS_COLL = {'digestif': 'Tube digestif', 'poche': 'Poches pharyngiennes', 'aorte': 'Aortes', 'arc': 'Arcs aortiques, sac aortique, tronc artériel', 'meso': 'Mésos dorsaux'}
 
 bpy.ops.wm.read_factory_settings(use_empty=True)
 sc = bpy.context.scene
@@ -79,7 +80,7 @@ for nom in Z.files:
     me = bpy.data.meshes.new(nom); me.from_pydata(verts(A[-1], typ).tolist(), [], faces); me.update()
     o = bpy.data.objects.new(f'{nom} (morph)', me); sous.get(fam, coll).objects.link(o)
     for p in me.polygons: p.use_smooth = True
-    me.materials.append(materiau(nom, COUL.get(nom, (0.7, 0.7, 0.7)), 0.75 if typ == 'nappe' else 1.0))
+    me.materials.append(materiau(nom, tuple(inf.get('couleur') or COUL.get(nom, (0.7, 0.7, 0.7))), 0.75 if typ == 'nappe' else 1.0))
     o.shape_key_add(name='Basis', from_mix=False)
     for i, st in enumerate(ST):
         k = o.shape_key_add(name=st, from_mix=False)

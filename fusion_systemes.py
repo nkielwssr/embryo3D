@@ -34,7 +34,8 @@ def run(stage_dir, scene=True):
     if os.path.exists(pv):
         s = np.load(pv)
         if 'shape' not in s.files or tuple(s['shape']) == shape:
-            fam = {'vaisseaux_aorte': lambda k: k.startswith('aorte'), 'vaisseaux_cardinales': lambda k: k.startswith('cardinale'),
+            fam = {'vaisseaux_aorte': lambda k: k.startswith('aorte'), 'vaisseaux_arcs_aortiques': lambda k: k.startswith(('arc_aortique', 'sac_aortique', 'tronc_arteriel')),
+                   'vaisseaux_cardinales': lambda k: k.startswith('cardinale'),
                    'vaisseaux_ombilicaux': lambda k: k.startswith(('ombilical', 'ombilicale')), 'vaisseaux_vitellins': lambda k: k.startswith(('vitellin', 'vitelline'))}
             for dst, test in fam.items():
                 keys = [k for k in s.files if k not in ('shape', 'union') and test(k)]
@@ -42,6 +43,15 @@ def run(stage_dir, scene=True):
                 u = np.zeros((n + 7)//8, np.uint8)
                 for k in keys: u |= s[k]
                 labels[dst] = u; added.append('%s(%s, %d vox)' % (dst, '+'.join(keys), int(np.unpackbits(u)[:n].sum())))
+    # poches pharyngiennes (digestif/digestif.npz, clés poche_pharyngienne_<k>_<côté>) : union sous un seul label
+    pd = os.path.join(work, 'digestif', 'digestif.npz')
+    if os.path.exists(pd):
+        s = np.load(pd)
+        keys = [k for k in s.files if k.startswith('poche_pharyngienne')] if ('shape' not in s.files or tuple(s['shape']) == shape) else []
+        if keys:
+            u = np.zeros((n + 7)//8, np.uint8)
+            for k in keys: u |= s[k]
+            labels['digestif_poches_pharyngiennes'] = u; added.append('digestif_poches_pharyngiennes(%s, %d vox)' % ('+'.join(keys), int(np.unpackbits(u)[:n].sum())))
     print(stage, 'fusionné :', ', '.join(added) if added else 'rien')
     shutil.copy(os.path.join(work, 'labels.npz'), os.path.join(work, 'labels_avant_fusion.npz'))
     tmp = os.path.join(work, 'labels.tmp.npz'); np.savez_compressed(tmp, **labels, shape=np.array(shape)); os.replace(tmp, os.path.join(work, 'labels.npz'))   # atomique : d'autres sessions lisent labels.npz

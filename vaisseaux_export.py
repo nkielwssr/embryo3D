@@ -3,6 +3,7 @@
 import numpy as np, json, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from meshexport import mask_to_mesh
+from tubes_morph import couleur as couleur_tube      # arcs aortiques, sac aortique, tronc artériel : légende commune
 HERE = os.path.dirname(os.path.abspath(__file__))
 COUL = {'aorte_dorsale_gauche': (0.90, 0.10, 0.10), 'aorte_dorsale_droite': (0.95, 0.35, 0.20), 'aorte_commune': (0.75, 0.05, 0.10),
         'aorte_dorsale': (0.85, 0.10, 0.10),
@@ -25,7 +26,7 @@ for d in sys.argv[1:]:
         if mesh is None: continue
         mesh.apply_translation(-np.array([c[0], c[2], -c[1]]) * s_mm)
         fn = f'{st}_{k}.ply'; mesh.export(os.path.join(od, fn))
-        res['segments'].append({'name': k, 'file': fn, 'color': list(COUL.get(k, (0.8, 0.1, 0.1))), 'faces': int(len(mesh.faces)),
+        res['segments'].append({'name': k, 'file': fn, 'color': list(COUL.get(k) or couleur_tube(k)), 'faces': int(len(mesh.faces)),
                                 'volume_mm3': float(m.sum()) * s_mm ** 3})
         print(f'{st} {k:22s} {len(mesh.faces):6d} faces')
     json.dump(res, open(os.path.join(od, 'manifest_vaisseaux.json'), 'w', encoding='utf-8'), indent=1, ensure_ascii=False)

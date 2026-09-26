@@ -22,6 +22,10 @@ COUL = {'pharynx': (60, 60, 200), 'oesophage': (180, 100, 215), 'estomac': (50, 
         'intestin_moyen': (60, 215, 240), 'intestin_posterieur': (240, 140, 80),
         'aorte_dorsale_gauche': (25, 25, 230), 'aorte_dorsale_droite': (50, 90, 240), 'aorte_commune': (25, 15, 190)}
 COUL_MESO = (200, 170, 245)
+def bgr(nom, defaut):
+    """couleur BGR 0-255 de la structure : métadonnées de tubes_morph.json (RGB 0-1) sinon table locale"""
+    c = info(nom).get('couleur')
+    return tuple(int(255 * v) for v in c[::-1]) if c else defaut
 
 def forme(nom, v):
     """sommets (N, M|K, 3) à la valeur de stage v (interpolation linéaire entre stades voisins)"""
@@ -48,12 +52,12 @@ def vignette(v):
             for i in range(len(P) - 1):
                 q = np.array([P[i, 0], P[i, -1], P[i + 1, -1], P[i + 1, 0]], np.int32)
                 if cv2.contourArea(q.astype(np.float32)) < 1.0: continue
-                cv2.fillPoly(ov, [q], COUL_MESO); nappe_dessinee = True
+                cv2.fillPoly(ov, [q], bgr(nom, COUL_MESO)); nappe_dessinee = True
                 cv2.line(ov, tuple(P[i, -1].astype(int)), tuple(P[i + 1, -1].astype(int)), (150, 90, 210), 1)
         if nappe_dessinee: im = cv2.addWeighted(ov, 0.55, im, 0.45, 0)
         for nom in Z.files:
             if info(nom)['type'] != 'tube': continue
-            A = forme(nom, v); P = proj(A, vue).astype(np.int32); c = COUL.get(nom, (120, 120, 120))
+            A = forme(nom, v); P = proj(A, vue).astype(np.int32); c = bgr(nom, COUL.get(nom, (120, 120, 120)))
             if np.ptp(A.reshape(-1, 3), axis=0).max() < 1e-6:
                 cv2.circle(im, tuple(P[0, 0]), 2, c, -1); continue     # réduit à un point (absent au stade)
             Nn, Mn = P.shape[:2]

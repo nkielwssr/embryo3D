@@ -204,7 +204,44 @@ Si `out/topographie/video360/etages_imposes.json` existe (session Extraction squ
   keyframes que la scène maître ; les nappes portent un Solidify (0,05 mm) et un matériau translucide double face. La scène maître garde son bloc
   tubes désactivé (`TUBES_VHE = False`, décision du 24/09) ; la collection se lie dans une autre scène par `bpy.data.libraries.load`.
 - Le site (`viewer_3dh.py`) lit les formes par structure (`liste` dans les métadonnées) : tubes fermés, nappes ouvertes translucides sous le
-  système « Tube digestif ».
+  système « Tube digestif » ; couleurs lues dans `tubes_morph.json` (`structures.<nom>.couleur`, table `COULEURS` de `tubes_morph.py`).
+
+## Arcs aortiques, sac aortique et poches pharyngiennes (26/09, dynamique de Rana et al. 2014)
+La figure CS11 → CS14 de Rana, Sizarov, Christoffels & Moorman (2014, *Am J Med Genet A* 164A:1372) montre ce qui manque à nos jeunes stades :
+les artères des arcs pharyngiens entre le sac aortique et les aortes dorsales, leur apparition et leur régression, et les poches pharyngiennes qui
+les séparent. La chaîne `tubes_morph.py` les prend en charge comme tubes supplémentaires, dès qu'ils sont tracés :
+- **Structures** : `arc_aortique_{1,2,3,4,6}_{gauche,droite}` (1 mandibulaire, 2 hyoïdien, 3 carotidien, 4 aortique, 6 pulmonaire), `sac_aortique`,
+  `tronc_arteriel` (lumière de la voie de sortie du cœur), `poche_pharyngienne_{1..4}_{gauche,droite}`. Couleurs de la légende de la figure
+  (beige, jaune, vert, cyan, magenta ; sac orange, voie de sortie bleu-violet, aorte dorsale rouge) dans `tubes_morph.py` → `COULEURS`.
+- **Tracé** : arcs, sac et tronc dans `vaisseaux_points/<CS>.json` puis `digestif_build.py <work> embryo3d/vaisseaux_points/<CS>.json --sortie cardio`
+  (comme les aortes ; `vaisseaux_export.py` exporte les PLY, `fusion_systemes.py` les réunit dans le label `vaisseaux_arcs_aortiques`) ; poches dans
+  `digestif_points/<CS>.json` (label fusionné `digestif_poches_pharyngiennes`). Sens : arcs du sac aortique (ventral, début) vers l'aorte dorsale
+  (dorsal, fin) ; sac et tronc du cœur vers les arcs ; poches de la lumière du pharynx vers leur fond latéral. Repères dans les volumes : les arcs
+  sont des lumières pâles courtes et obliques dans le mésenchyme des arcs pharyngiens, latérales au pharynx, entre deux poches ; leur origine
+  ventrale est le sac aortique, juste en avant de la voie de sortie du cœur, leur terminaison dorsale rejoint l'aorte dorsale du même côté ; les
+  poches sont les prolongements latéraux pâles de la lumière pharyngienne (`digestif_lumieres.py` les détecte comme composantes distinctes).
+- **Morphing** : un arc absent (pas encore formé ou régressé) est réduit sur la fin du sac aortique, sinon sur le début de l'arc voisin le plus
+  proche du même côté, sinon sur l'aorte dorsale : il pousse ou se résorbe depuis son origine ventrale pendant la transition. Une poche absente est
+  réduite sur le pharynx à sa hauteur attendue (1/5 … 4/5 de sa longueur). Sous-collections Blender « Arcs aortiques, sac aortique, tronc artériel »
+  et « Poches pharyngiennes » ; site : arcs sous « Artères », poches sous « Tube digestif ».
+- **Calendrier attendu** (`vaisseaux_points/calendrier_arcs.json`, d'après Rana 2014 / Congdon 1922) : `tubes_morph.py` compare la présence
+  tracée à ce calendrier et affiche, sans bloquer, les structures « attendues mais non tracées » et « tracées mais attendues absentes » (bloc
+  `calendrier` de `tubes_morph.json`). Clés latéralisées prioritaires (ex. `arc_aortique_6_droite`).
+
+  | | CS13 | CS14 | CS15 | CS16 | CS17 | CS19 | CS20 |
+  |---|---|---|---|---|---|---|---|
+  | arc 1 (mandibulaire) | régression | absent | absent | absent | absent | absent | absent |
+  | arc 2 (hyoïdien) | présent | régression | absent | absent | absent | absent | absent |
+  | arc 3 (carotidien) | présent | présent | présent | présent | présent | présent | présent |
+  | arc 4 (aortique) | présent | présent | présent | présent | présent | présent | présent |
+  | arc 6 (pulmonaire) | formation | présent | présent | présent | présent (droit : régression) | gauche seul | gauche seul |
+  | sac aortique, tronc artériel | présents | présents | présents (cloisonnement) | présents | présents | présents | présents |
+  | poches 1-4 | 1-3 présentes, 4 formation | présentes | présentes | présentes | régression | absentes | absentes |
+
+- **Non modélisé** : 5e arc (transitoire) ; régression des segments intermédiaires des aortes dorsales (canal carotidien entre arcs 3 et 4 vers
+  CS17, aorte dorsale droite caudale vers CS19) — les aortes dorsales restent des lignes uniques, à découper en segments si l'on veut les faire
+  disparaître un à un ; artères pulmonaires, carotides externes, intersegmentaires. Aucun arc ni poche n'est tracé à ce jour : la chaîne est prête,
+  les points restent à relever (CS13 et CS14 d'abord, où la dynamique est la plus riche).
 
 ## Membres séparés
 `split_membres.py <stade>` sépare le label `membres` en `membre_sup_gauche`, `membre_sup_droit`, `membre_inf_gauche`, `membre_inf_droit` (2 plus grosses composantes de chaque côté du plan médian, la plus crâniale = supérieur) dans `labels.npz` ; `meshexport` les exporte (collection Membres) et la scène maître les morphe pièce par pièce. Contrôle du morphing : `planche_morph.py sortie.png [stades]` ; vidéo : `blender_render_anim.py` (séquence PNG, caméra fixe cadrée sur CS20, option `--suivre`) puis `encode_frames.py`.

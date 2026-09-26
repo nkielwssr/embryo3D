@@ -17,6 +17,11 @@ loin de l'aorte (> --portee mm) ou dont le pied tombe au-delà d'une extrémité
 (largeur nulle) ; un méso sans aorte au stade reste plaqué sur le tube (largeur nulle) et s'ouvre pendant le morphing.
 Le pharynx n'a pas de méso (il est plaqué sous la notochorde, entre les aortes).
 
+Arcs aortiques (artères des arcs pharyngiens 1, 2, 3, 4, 6, gauche et droite), sac aortique, tronc artériel et poches pharyngiennes 1-4
+(dynamique CS11-CS16 de Rana et al. 2014) : tubes comme les autres, lus dans vaisseaux_chemins.json (arcs, sac, tronc) et chemins.json
+(poches) dès qu'ils sont tracés ; un arc absent est réduit sur le sac aortique (sinon l'arc voisin, sinon l'aorte dorsale), une poche absente
+sur le pharynx à sa hauteur attendue. vaisseaux_points/calendrier_arcs.json donne la présence attendue par stade ; les écarts sont signalés.
+
 Sortie : embryons_3D/tubes_morph.npz (clé '<structure>' -> tableau (7, N, M, 3) pour un tube, (7, N, K, 3) pour un méso)
 + tubes_morph.json (stades, N, M, K, présence par stade, type/famille/forme par structure, attaches des mésos).
 Lecteurs : tubes_morph_blender.py (scène Blender), tubes_morph_planche.py (contrôle 2D), viewer_3dh.py (site), blender_build_scene.py.
@@ -29,19 +34,62 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 STADES = [('CS13', 'CS13.f4v'), ('CS14', 'CS14_f4v'), ('CS15', 'CS15_f4v'), ('CS16', 'CS16_f4v'),
           ('CS17', 'CS17_f4v'), ('CS19', 'CS19_f4v'), ('CS20', 'CS20_F4V')]
 N, M = 64, 16
-# structure -> (fichier de chemins, clés acceptées par ordre de préférence, raccord si absent : (structure, 'fin'|'debut'))
+# structure -> (fichier de chemins, clés acceptées par ordre de préférence, raccords si absent : liste de (structure, 'debut'|'fin'|fraction 0-1)
+#               essayés dans l'ordre puis, s'ils manquent aussi, leurs propres raccords ; une fraction = abscisse relative le long de la structure)
 STRUCT = {
-    'pharynx':              ('digestif', ['pharynx', 'intestin_pharyngien'], ('oesophage', 'debut')),
-    'oesophage':            ('digestif', ['oesophage'], ('pharynx', 'fin')),
-    'estomac':              ('digestif', ['estomac'], ('oesophage', 'fin')),
-    'duodenum':             ('digestif', ['duodenum'], ('estomac', 'fin')),
-    'intestin_moyen':       ('digestif', ['intestin_moyen'], ('duodenum', 'fin')),
-    'intestin_posterieur':  ('digestif', ['intestin_posterieur'], ('intestin_moyen', 'fin')),
-    'aorte_dorsale_gauche': ('cardio', ['aorte_dorsale_gauche', 'aorte_dorsale'], ('aorte_commune', 'debut')),
-    'aorte_dorsale_droite': ('cardio', ['aorte_dorsale_droite'], ('aorte_dorsale_gauche', 'debut')),
-    'aorte_commune':        ('cardio', ['aorte_commune'], ('aorte_dorsale_gauche', 'fin')),
+    'pharynx':              ('digestif', ['pharynx', 'intestin_pharyngien'], [('oesophage', 'debut')]),
+    'oesophage':            ('digestif', ['oesophage'], [('pharynx', 'fin')]),
+    'estomac':              ('digestif', ['estomac'], [('oesophage', 'fin')]),
+    'duodenum':             ('digestif', ['duodenum'], [('estomac', 'fin')]),
+    'intestin_moyen':       ('digestif', ['intestin_moyen'], [('duodenum', 'fin')]),
+    'intestin_posterieur':  ('digestif', ['intestin_posterieur'], [('intestin_moyen', 'fin')]),
+    'aorte_dorsale_gauche': ('cardio', ['aorte_dorsale_gauche', 'aorte_dorsale'], [('aorte_commune', 'debut')]),
+    'aorte_dorsale_droite': ('cardio', ['aorte_dorsale_droite'], [('aorte_dorsale_gauche', 'debut')]),
+    'aorte_commune':        ('cardio', ['aorte_commune'], [('aorte_dorsale_gauche', 'fin')]),
+    # voie de sortie du cœur (lumière du tronc artériel) et sac aortique, tracés du cœur (début) vers les arcs (fin)
+    'tronc_arteriel':       ('cardio', ['tronc_arteriel', 'voie_de_sortie'], [('sac_aortique', 'debut'), ('aorte_dorsale_gauche', 'debut')]),
+    'sac_aortique':         ('cardio', ['sac_aortique'], [('tronc_arteriel', 'fin')] + [(f'arc_aortique_{k}_gauche', 'debut') for k in (4, 3, 6, 2, 1)]
+                                                          + [('aorte_dorsale_gauche', 'debut')]),
 }
-FAMILLE = {n: ('aorte' if n.startswith('aorte') else 'digestif') for n in STRUCT}
+# artères des arcs pharyngiens 1 (mandibulaire), 2 (hyoïdien), 3 (carotidien), 4 (aortique), 6 (pulmonaire) — dynamique CS11-CS16 de
+# Rana et al. 2014 —, tracées du sac aortique (ventral, début) vers l'aorte dorsale (dorsal, fin). Un arc absent (pas encore formé ou
+# régressé) est réduit sur la fin du sac aortique, sinon sur le début de l'arc voisin le plus proche du même côté, sinon sur l'aorte dorsale :
+# il pousse ou se résorbe depuis son origine ventrale pendant la transition.
+ARCS, COTES = (1, 2, 3, 4, 6), ('gauche', 'droite')
+for k in ARCS:
+    for c in COTES:
+        voisins = sorted((j for j in ARCS if j != k), key=lambda j: (abs(j - k), j))
+        STRUCT[f'arc_aortique_{k}_{c}'] = ('cardio', [f'arc_aortique_{k}_{c}', f'arc_{k}_{c}'],
+                                           [('sac_aortique', 'fin')] + [(f'arc_aortique_{j}_{c}', 'debut') for j in voisins]
+                                           + [(f'aorte_dorsale_{c}', 'debut'), ('aorte_dorsale_gauche', 'debut')])
+# poches pharyngiennes 1 à 4 (diverticules latéraux du pharynx entre les arcs), tracées de la lumière du pharynx (début) vers leur fond (fin) ;
+# une poche absente est réduite sur le pharynx à la hauteur attendue (1/5, 2/5, 3/5, 4/5 de sa longueur), sinon au début de l'œsophage
+for k in (1, 2, 3, 4):
+    for c in COTES:
+        STRUCT[f'poche_pharyngienne_{k}_{c}'] = ('digestif', [f'poche_pharyngienne_{k}_{c}', f'poche_{k}_{c}'], [('pharynx', k / 5), ('oesophage', 'debut')])
+
+def famille(nom):
+    if nom.startswith(('arc_aortique', 'sac_aortique', 'tronc_arteriel')): return 'arc'
+    if nom.startswith('poche_pharyngienne'): return 'poche'
+    if nom.startswith('aorte'): return 'aorte'
+    if nom.startswith(('meso', 'mesentere')): return 'meso'
+    return 'digestif'
+FAMILLE = {n: famille(n) for n in STRUCT}
+# couleurs RGB 0-1, partagées par la scène Blender, la planche et le site (écrites dans tubes_morph.json) ; arcs, sac, voie de sortie et
+# aorte dorsale reprennent la légende de Rana et al. 2014 (mandibulaire beige, hyoïdien jaune, carotidien vert, aortique cyan, pulmonaire
+# magenta, sac orange, voie de sortie bleu-violet, aorte rouge) ; le préfixe le plus long l'emporte
+COULEURS = {'pharynx': (0.80, 0.25, 0.25), 'oesophage': (0.85, 0.40, 0.70), 'estomac': (0.95, 0.60, 0.20), 'duodenum': (0.30, 0.75, 0.35),
+            'intestin_moyen': (0.95, 0.85, 0.25), 'intestin_posterieur': (0.30, 0.55, 0.95),
+            'aorte_dorsale_gauche': (0.90, 0.10, 0.10), 'aorte_dorsale_droite': (0.95, 0.35, 0.20), 'aorte_commune': (0.75, 0.05, 0.10),
+            'sac_aortique': (0.95, 0.55, 0.15), 'tronc_arteriel': (0.40, 0.30, 0.85),
+            'arc_aortique_1': (0.93, 0.87, 0.70), 'arc_aortique_2': (0.95, 0.80, 0.20), 'arc_aortique_3': (0.20, 0.70, 0.30),
+            'arc_aortique_4': (0.20, 0.80, 0.85), 'arc_aortique_6': (0.80, 0.20, 0.80), 'poche_pharyngienne': (0.78, 0.78, 0.86),
+            'meso_oesophage': (0.96, 0.80, 0.72), 'mesogastre_dorsal': (0.96, 0.76, 0.66), 'mesoduodenum': (0.94, 0.78, 0.70),
+            'mesentere': (0.97, 0.82, 0.74), 'mesocolon_dorsal': (0.93, 0.74, 0.68)}
+def couleur(nom):
+    for k in sorted(COULEURS, key=len, reverse=True):
+        if nom == k or nom.startswith(k): return COULEURS[k]
+    return (0.7, 0.7, 0.7)
 # segments digestifs dans l'ordre crânio-caudal (chaîne pour la régression isotonique des attaches)
 CHAINE = ['oesophage', 'estomac', 'duodenum', 'intestin_moyen', 'intestin_posterieur']
 # segment digestif -> méso dorsal qui le relie à l'aorte
@@ -176,15 +224,32 @@ def charger(stades=STADES):
     return lignes
 
 def point_raccord(lignes, st, nom):
-    """point (mm) où un segment absent est réduit : raccord (fin/début du voisin), en remontant la chaîne des raccords"""
-    r = STRUCT[nom][2]; vus = {nom}
-    while r is not None and r[0] not in vus:
-        vus.add(r[0])
-        if (st, r[0]) in lignes:
-            C, _ = lignes[(st, r[0])]; return C[-1] if r[1] == 'fin' else C[0]
-        r = STRUCT[r[0]][2]
+    """point (mm) où une structure absente est réduite : premier raccord tracé au stade (début, fin ou fraction de la longueur d'une
+    structure voisine), en élargissant aux raccords des voisines absentes ; sinon centre des structures tracées"""
+    file, vus = list(STRUCT[nom][2]), {nom}
+    while file:
+        r, ou = file.pop(0)
+        if (st, r) in lignes:
+            C, _ = lignes[(st, r)]
+            return C[-1] if ou == 'fin' else C[0] if ou == 'debut' else C[int(round(float(ou) * (len(C) - 1)))]
+        if r not in vus: vus.add(r); file += list(STRUCT[r][2])
     pres = [lignes[(st, n)][0].mean(0) for n in STRUCT if (st, n) in lignes]
     return np.mean(pres, axis=0) if pres else np.zeros(3)
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+def verifier_calendrier(presence, chemin=os.path.join(HERE, 'vaisseaux_points', 'calendrier_arcs.json')):
+    """compare la présence tracée des arcs, du sac, du tronc et des poches au calendrier attendu (littérature) :
+    {'a_tracer': {stade: [structures attendues mais absentes]}, 'inattendus': {stade: [tracées mais attendues absentes]}}"""
+    if not os.path.exists(chemin): return None
+    cal = json.load(open(chemin, encoding='utf-8')).get('stades', {}); ecarts = {'a_tracer': {}, 'inattendus': {}}
+    for nom, pres in presence.items():
+        base = nom.rsplit('_', 1)[0] if nom.endswith(('_gauche', '_droite')) else nom
+        for st, ok in pres.items():
+            attendu = cal.get(st, {}).get(nom, cal.get(st, {}).get(base))     # clé latéralisée prioritaire (ex. arc_aortique_6_droite)
+            if attendu is None: continue
+            if ok and attendu == 'absent': ecarts['inattendus'].setdefault(st, []).append(nom)
+            if not ok and attendu in ('present', 'formation', 'regression'): ecarts['a_tracer'].setdefault(st, []).append(f'{nom} ({attendu})')
+    return ecarts
 
 def construire(lignes, stades=STADES, portee=3.0, K=4, mesos=True):
     """tableaux (n_stades, N, M|K, 3) par structure + métadonnées (présence, type/famille/forme, attaches des mésos)"""
@@ -198,7 +263,7 @@ def construire(lignes, stades=STADES, portee=3.0, K=4, mesos=True):
             else:
                 arr[i] = np.broadcast_to(point_raccord(lignes, st, nom), (N, M, 3)); pres.append(False)
         res[nom] = arr; presence[nom] = dict(zip(noms_st, pres))
-        structures[nom] = {'type': 'tube', 'famille': FAMILLE[nom], 'forme': [N, M]}
+        structures[nom] = {'type': 'tube', 'famille': FAMILLE[nom], 'forme': [N, M], 'couleur': list(couleur(nom))}
     attach = {}
     if mesos:
         # attaches calculées sur toute la chaîne digestive du stade (monotones le long de l'aorte), puis découpées par segment
@@ -224,9 +289,11 @@ def construire(lignes, stades=STADES, portee=3.0, K=4, mesos=True):
                 attach[nom][st] = {'lignes_actives': int(actif.sum()), 'abscisse_aorte_mm': [round(float(u[actif].min()), 2), round(float(u[actif].max()), 2)] if actif.any() else None,
                                    'largeur_mediane_mm': round(float(np.median(larg[actif])), 3) if actif.any() else 0.0}
             res[nom] = arr; presence[nom] = dict(zip(noms_st, pres))
-            structures[nom] = {'type': 'nappe', 'famille': 'meso', 'forme': [N, K], 'segment': seg, 'attache': 'axe aortique (aortes dorsales / aorte commune)'}
+            structures[nom] = {'type': 'nappe', 'famille': 'meso', 'forme': [N, K], 'couleur': list(couleur(nom)), 'segment': seg,
+                               'attache': 'axe aortique (aortes dorsales / aorte commune)'}
     meta = {'stades': noms_st, 'N': N, 'M': M, 'K': K, 'presence': presence, 'structures': structures,
-            'mesos': {'portee_max_mm': portee, 'colonnes': K, 'attaches': attach} if mesos else None}
+            'mesos': {'portee_max_mm': portee, 'colonnes': K, 'attaches': attach} if mesos else None,
+            'calendrier': verifier_calendrier(presence)}
     return res, meta
 
 if __name__ == '__main__':
@@ -242,6 +309,10 @@ if __name__ == '__main__':
         pres = meta['presence'][nom]; typ = meta['structures'][nom]['type']
         print(f'{nom:22s} {typ:5s}', ' '.join(('X' if pres[s] else '.') for s in meta['stades']),
               '' if typ == 'tube' else '  ' + ' '.join(f"{s}:{a['lignes_actives']}" for s, a in meta['mesos']['attaches'][nom].items()))
+    if meta['calendrier']:
+        for cle, titre in (('a_tracer', 'attendus (calendrier) mais non tracés'), ('inattendus', 'tracés mais attendus absents')):
+            for st in meta['stades']:
+                if st in meta['calendrier'][cle]: print(f'  {st} {titre} : ' + ', '.join(meta['calendrier'][cle][st]))
     os.makedirs(args.sortie, exist_ok=True)
     np.savez_compressed(os.path.join(args.sortie, 'tubes_morph.npz'), **res)
     json.dump(meta, open(os.path.join(args.sortie, 'tubes_morph.json'), 'w', encoding='utf-8'), indent=1, ensure_ascii=False)
