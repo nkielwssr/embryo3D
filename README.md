@@ -191,8 +191,11 @@ coussins, valves, crêtes de l'OFT, système de conduction, épicarde, péricard
 VCI, azygos), arcs aortiques, artères pulmonaires et coronaires, plus tube neural, somites, intestin + vésicule vitelline, foie, poumons, septum
 transversum ; 11 à 49 structures par stade. Ce n'est pas une enveloppe complète : peau, membres, yeux, squelette viennent de nos autres sources.
 
-Extraction PDF → maillages : faite par la session locale « Carnegie Stage 13 PDF 3D » (`reference/hikspoors_maastricht/`, hors dépôt :
-`site/` PDF, `u3d/<stade>.npz` + `_scene.json`, `glb/`, `extraire.py` s'appuyant sur `output/atlas_brouillons/decode_u3d_local.py`). Les maillages
+Extraction PDF → maillages : faite par la session locale « Carnegie Stage 13 PDF 3D » (banque `C:/Users/MicroTurtle/Documents/ChatGPT/Embryo/
+reference/hikspoors_maastricht/`, hors dépôt et hors racine d'exécution : `site/` PDF, `u3d/Carnegie_Stage_<n>[_NEWvalves].npz` + `_scene.json` +
+`_resume.json` pour n = 9…18, 20, 23, `glb/Carnegie_Stage_<n>.glb` pour 9…17 (scène, nœuds `structure~rrggbb` déjà scindés par couleur),
+`calage/T_CS13_hikspoors_vers_vhe_mm.npy`, `LISEZMOI.md`, `extraire.py` s'appuyant sur `output/atlas_brouillons/decode_u3d_local.py`).
+Format npz : clés `FACESET_<nom>|v` (sommets, unités PDF), `|f` (faces), `|c` (couleur matériau), `|p` (parent), `|fc` (couleur par face). Les maillages
 sont dans un bloc U3D propriétaire 0x100 (« RH »), pas le format CLOD standard ; les couleurs vraies sont dans les textures (deux structures
 peuvent partager une surface : `gut_yolk_sac` = intestin gris 174 + vésicule 120 ; `myocard_LV/RV` = cavité + courbure interne 127,173,87).
 Échelle : environ 1 unité = 1 µm ; CS13 calé sur notre modèle VHE v6 à 1,078 µm/unité (écart médian 41 µm) ; CS12 et CS14 dans une autre unité
@@ -201,9 +204,10 @@ peuvent partager une surface : `gut_yolk_sac` = intestin gris 174 + vésicule 12
 Chaîne (scripts de ce dépôt, tout se lance depuis la racine `Embryo/`) :
 
 ```bash
-python embryo3d/hikspoors_modele.py CS13 --glb reference/hikspoors_maastricht/glb/CS13 --separer-couleurs      # -> embryons_3D/modeles/CS13_hikspoors/
-python embryo3d/hikspoors_modele.py CS13 --npz reference/hikspoors_maastricht/u3d/CS13.npz --scene reference/hikspoors_maastricht/u3d/CS13_scene.json
-python embryo3d/hikspoors_modele.py CS14 --glb ... --um-par-unite 1.05 --retourner z    # échelle imposée ; axe crânial inversé si controle.png le montre
+python embryo3d/hikspoors_modele.py CS13 --separer-couleurs      # banque par défaut (C:/Users/MicroTurtle/Documents/ChatGPT/Embryo/reference/hikspoors_maastricht) :
+                                                                 # u3d/Carnegie_Stage_13[_NEWvalves].npz -> embryons_3D/modeles/CS13_hikspoors/
+python embryo3d/hikspoors_modele.py CS13 --separer-couleurs --calage ".../calage/T_CS13_hikspoors_vers_vhe_mm.npy" --calage-repere pipeline
+python embryo3d/hikspoors_modele.py CS14 --glb ".../glb/Carnegie_Stage_14.glb" --um-par-unite 1.05 --retourner z    # scène GLB ; échelle imposée ; axe crânial inversé
 python embryo3d/video_vers_modele.py CS19_f4v                                        # nos reconstructions vidéo -> modeles/CS19_video/ (miroir X, noms canoniques)
 python embryo3d/master_modeles.py [--fusion]                                         # -> embryons_3D/master_CS10-CS23.json (priorité hikspoors > video > recon > brouillon)
 blender -b -P embryo3d/blender_build_scene.py -- embryons_3D/master_CS10-CS23.json embryons_3D/embryon_CS10-CS23.blend
@@ -211,9 +215,9 @@ python embryo3d/agregateur.py                                                   
 python embryo3d/test_hikspoors_synthetique.py                                        # test sans données : embryon synthétique nommé à la Hikspoors
 ```
 
-`hikspoors_modele.py` lit un dossier de GLB/PLY/OBJ (un fichier par structure, ou une scène GLB avec un nœud par structure) ou le npz
-(clés reconnues : sommets (N,3) + faces (M,3) + partie par face + noms, ou un jeu `<nom>_vertices/<nom>_faces` ; sinon il liste les clés et
-s'arrête). Il applique `hikspoors_nomenclature.json` (règles regex : cœur = type [myocarde, cavité, trabécules, courbure interne] × chambre
+`hikspoors_modele.py` lit la banque (`--banque`, défaut ci-dessus : npz `FACESET_…` puis GLB), ou `--npz`/`--glb` explicites (dossier de
+GLB/PLY/OBJ, un fichier par structure, ou une scène GLB avec un nœud par structure ; autres npz : sommets + faces + partie par face + noms,
+ou `<nom>_vertices/<nom>_faces`, sinon il liste les clés et s'arrête). Le parent d'un nœud (`|p`) sert de repli de nomenclature, signalé. Il applique `hikspoors_nomenclature.json` (règles regex : cœur = type [myocarde, cavité, trabécules, courbure interne] × chambre
 [VG, VD, OG, OD, OFT, canal AV, sinus veineux…], veines, artères, tube neural, somites, intestin, foie, poumons… ; côté gauche/droit déduit du
 nom ; `par_couleur` pour les surfaces scindées ; `ignorer` pour le cube d'échelle), fusionne les parties de même nom canonique, écrit les unions
 dérivées `coeur`, `cavites_cardiaques`, `arteres`, `veines`, `intestin` (re-maillage par voxels) pour le morphing, puis oriente **automatiquement** :
@@ -221,8 +225,10 @@ ACP (grand axe = crânio-caudal), dorsal = du cœur vers le tube neural, signe c
 aortiques au-dessus du cœur, tube neural plus large côté encéphale, structures « gauche » à +X). Le repère est celui des modèles (mm, Z crânial,
 Y dorsal, X = Y×Z = gauche, origine au centre). Sorties : PLY par structure, `manifest.json` (statut `externe`, licence, attribution, spécimen,
 échelle, score d'orientation), `rapport.json` (indices d'orientation, candidats, noms non reconnus → compléter la table), `controle.png`
-(profil, face, dos : **à vérifier avant publication**, corriger avec `--retourner z|y`), `verif_maillages.json`. `--calage T.npy` (13 nombres
-s, R, t) remplace l'orientation automatique par une similitude connue (repère `modeles` ou `pipeline`, ce dernier remis en repère direct).
+(profil, face, dos : **à vérifier avant publication**, corriger avec `--retourner z|y`), `verif_maillages.json`. `--calage T.npy` (13 nombres s, R, t,
+ou matrice 4x4 / 3x4) remplace l'orientation automatique par une similitude connue vers le repère `modeles` ou `pipeline` (VHE v6 : ce dernier
+est remis en repère direct par miroir X) ; le script vérifie les indices anatomiques tel quel et avec miroir et avertit si le repère déclaré
+semble faux. `RELAIS.md` à la racine du dépôt tient le fil des échanges avec la session relais locale (demandes, réponses, résultats).
 
 `video_vers_modele.py` met nos stades vidéo dans le même repère (le repère du pipeline X = gauche→droite est indirect : miroir X, faces
 réorientées) et la même nomenclature (`snc` → `tube_neural`, `coeur_detoure` → `coeur`, `vaisseaux_aorte` → `aorte_dorsale`…, labels « faible »

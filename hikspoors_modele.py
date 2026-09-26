@@ -3,15 +3,23 @@
 des PDF par la session « Carnegie Stage 13 PDF 3D » (bloc U3D 0x100), -> modèle au format de l'agrégateur :
 embryons_3D/modeles/<CS>_hikspoors/{<structure>.ply, manifest.json, rapport.json, controle.png, verif_maillages.json}
 
-    python embryo3d/hikspoors_modele.py CS13 --glb reference/hikspoors_maastricht/glb/CS13     # un GLB/PLY/OBJ par structure, ou une scène GLB
-    python embryo3d/hikspoors_modele.py CS13 --npz reference/hikspoors_maastricht/u3d/CS13.npz [--scene reference/.../CS13_scene.json]
+    python embryo3d/hikspoors_modele.py CS13 --banque "C:/Users/MicroTurtle/Documents/ChatGPT/Embryo/reference/hikspoors_maastricht"
+        -> u3d/Carnegie_Stage_13[_NEWvalves].npz (+ _scene.json) de la banque de la session « PDF 3D » ; --banque est la valeur par défaut
+    python embryo3d/hikspoors_modele.py CS13 --npz .../u3d/Carnegie_Stage_13.npz [--scene .../Carnegie_Stage_13_scene.json]
+    python embryo3d/hikspoors_modele.py CS13 --glb .../glb/Carnegie_Stage_13.glb   # scène GLB (nœuds « structure~rrggbb » déjà scindés par couleur)
     options : --um-par-unite 1.078          échelle (µm par unité U3D ; défaut : hikspoors_echelles.json puis 1.0)
-              --calage T.npy [--calage-repere modeles|pipeline]   similitude connue (13 nombres : s, R 3x3, t) au lieu de l'orientation auto
+              --calage T.npy [--calage-repere modeles|pipeline]   similitude connue (13 nombres s,R,t ; ou matrice 4x4 / 3x4) unités PDF -> mm,
+                                            au lieu de l'orientation auto ; « pipeline » = repère de meshexport (X gauche→droite, indirect) remis direct.
+                                            Ex. CS13 : calage/T_CS13_hikspoors_vers_vhe_mm.npy de la banque (repère VHE v6 = pipeline).
               --retourner z|y               inverse un axe après l'orientation automatique (x suit pour rester direct)
               --separer-couleurs            une partie portant plusieurs couleurs de faces (texture) est scindée par couleur
               --sans-unions                 ne pas écrire les unions coeur / cavites_cardiaques / arteres / veines / intestin
               --non-publiable               modèle gardé en local (champ publiable=false)
               --sortie DOSSIER              défaut embryons_3D/modeles/<CS>_hikspoors
+
+Format npz de la banque (decode_u3d_local.py) : clés « FACESET_<nom>|v » (sommets float32, unités PDF), « |f » (faces int32), « |c » (couleur
+matériau, 3 flottants), « |p » (structure parente, chaîne), « |fc » (couleur par face uint8 pour les surfaces texturées : deux structures sur une
+surface, scindées avec --separer-couleurs). Les stades disponibles : 9…18, 20, 23 (+ 18/20/23 _NEWvalves, préférées).
 
 Repère de sortie (convention agrégateur) : mm, Z crânial, Y dorsal, X = Y×Z = gauche anatomique (repère direct), origine = centre du corps.
 Orientation automatique : ACP de l'ensemble des sommets (grand axe = crânio-caudal) ; dorsal = du cœur (ou intestin/foie) vers le tube neural
@@ -54,6 +62,7 @@ SPECIMENS = {'CS9': '3709', 'CS10': '6330', 'CS11': '6344', 'CS12': '8943', 'CS1
              'CS17': '6520', 'CS18': '4430', 'CS20': '462', 'CS23': '9226'}          # collection Carnegie (Hikspoors 2022, table suppl. 2)
 SOURCE = "Hikspoors et al. 2022, Commun Biol (doi 10.1038/s42003-022-03153-x) — PDF 3D hdbratlas.org/hikspoors-pdf"
 LICENCE = "CC BY-NC-SA 4.0 (HDBR atlas, hdbratlas.org/copyright.html)"
+BANQUE = "C:/Users/MicroTurtle/Documents/ChatGPT/Embryo/reference/hikspoors_maastricht"     # banque de la session « Carnegie Stage 13 PDF 3D »
 NOMENCLATURE = os.path.join(ICI, "hikspoors_nomenclature.json")
 ECHELLES = os.path.join(ICI, "hikspoors_echelles.json")
 FEMININ = {"veine", "veines", "artère", "artères", "valve", "valvules", "carotide", "vésicule", "vésicules", "crête", "crêtes", "cavité",
@@ -91,6 +100,30 @@ def couleur_01(c):
 
 
 # ----------------------------------------------------------------------------------------------------------------------- lecture
+def trouver_dans_banque(banque, cs, prefere_newvalves=True):
+    """u3d/Carnegie_Stage_<n>[_NEWvalves].npz (+ _scene.json) ou glb/Carnegie_Stage_<n>.glb dans la banque ; renvoie (npz, scene, glb)"""
+    n = str(norm_int(cs))
+    cands = []
+    if prefere_newvalves:
+        cands.append("Carnegie_Stage_%s_NEWvalves" % n)
+    cands.append("Carnegie_Stage_%s" % n)
+    for base in cands:
+        npz = os.path.join(banque, "u3d", base + ".npz")
+        if os.path.exists(npz):
+            sc = os.path.join(banque, "u3d", base + "_scene.json")
+            return npz, (sc if os.path.exists(sc) else None), None
+    for base in cands:
+        glb = os.path.join(banque, "glb", base + ".glb")
+        if os.path.exists(glb):
+            return None, None, glb
+    return None, None, None
+
+
+def norm_int(cs):
+    n = "".join(ch for ch in str(cs) if ch.isdigit())
+    return int(n) if n else 0
+
+
 def _nom_noeud(scene, noeud, geom):
     n = str(noeud)
     if re.match(r"^(geometry|mesh|node|world)_?\d*$", n, re.I) or n in ("world", ""):
@@ -161,7 +194,12 @@ def charger_fichiers(chemin, cs):
                 if len(obj.graph.nodes_geometry) == 1 and len(fichiers) > 1:
                     nom = base                 # un GLB par structure : le nom du fichier fait foi
                 col, fc = _couleur_visuel(m)
-                parties.append({"nom": nom, "mesh": m, "couleur": col, "couleurs_faces": fc, "fichier": f})
+                part = {"nom": nom, "mesh": m, "couleur": col, "couleurs_faces": fc, "fichier": f}
+                mh = re.match(r"^(.*?)~([0-9a-fA-F]{6})(\.\d+)?$", nom)      # banque : « structure~rrggbb » = surface déjà scindée par couleur
+                if mh:
+                    rgb = [int(mh.group(2)[i:i + 2], 16) for i in (0, 2, 4)]
+                    part.update({"nom": mh.group(1) + "__c" + mh.group(2).lower(), "source_partie": mh.group(1), "couleur_scindee": rgb, "couleur": rgb})
+                parties.append(part)
         elif isinstance(obj, trimesh.Trimesh):
             if len(obj.faces) == 0:
                 continue
@@ -188,26 +226,37 @@ def charger_npz(chemin, scene_json=None):
     z = np.load(chemin, allow_pickle=True)
     cles = list(z.files)
     lc = {k.lower(): k for k in cles}
+    # format de la banque hikspoors_maastricht (decode_u3d_local.py) : FACESET_<nom>|v, |f, |c, |p, |fc
+    faceset = [k for k in cles if k.endswith("|v") and "|" in k]
+    if faceset:
+        parties = []
+        for kv in faceset:
+            pref = kv[:-2]
+            nom = pref[len("FACESET_"):] if pref.startswith("FACESET_") else pref
+            kf = pref + "|f"
+            if kf not in z:
+                continue
+            V = np.asarray(z[kv], float).reshape(-1, 3); F = np.asarray(z[kf]).reshape(-1, 3).astype(np.int64)
+            if len(F) == 0 or len(V) == 0:
+                continue
+            c = z[pref + "|c"] if pref + "|c" in z else None
+            fc = np.asarray(z[pref + "|fc"]) if pref + "|fc" in z else None
+            if fc is not None and (fc.ndim != 2 or len(fc) != len(F)):
+                fc = None
+            par = z[pref + "|p"] if pref + "|p" in z else None
+            par = str(np.asarray(par).ravel()[0]) if par is not None and np.asarray(par).size else ""
+            col = couleur_255(np.median(fc[:, :3], axis=0)) if fc is not None else (couleur_255(np.asarray(c, float).ravel()[:3]) if c is not None else None)
+            parties.append({"nom": nom, "mesh": trimesh.Trimesh(V, F, process=False), "couleur": col, "couleurs_faces": fc[:, :3] if fc is not None else None,
+                            "fichier": chemin, "parent": par, "couleur_materiau": couleur_255(np.asarray(c, float).ravel()[:3]) if c is not None else None})
+        if parties:
+            _completer_scene(parties, scene_json)
+            return parties
 
     def trouve(cat):
         for k in _CLES[cat]:
             if k in lc:
                 return lc[k]
         return None
-    infos = {}
-    if scene_json and os.path.exists(scene_json):
-        sc = json.load(open(scene_json, encoding="utf-8"))
-        items = sc.get("noeuds") or sc.get("nodes") or sc.get("parties") or sc.get("parts") or sc.get("objets") or sc.get("structures") or sc
-        if isinstance(items, dict):
-            for k, v in items.items():
-                if isinstance(v, dict):
-                    infos[normaliser(k)] = v
-        elif isinstance(items, list):
-            for v in items:
-                if isinstance(v, dict):
-                    n = v.get("nom") or v.get("name") or v.get("node") or v.get("noeud")
-                    if n:
-                        infos[normaliser(n)] = v
     parties = []
     ks, kf = trouve("sommets"), trouve("faces")
     if ks and kf:
@@ -265,16 +314,47 @@ def charger_npz(chemin, scene_json=None):
                                             "couleur": couleur_255(o.get("couleur", o.get("color"))), "couleurs_faces": None, "fichier": chemin})
     if not parties:
         raise SystemExit("npz non reconnu ; clés présentes : %s\nAttendu : sommets (N,3) + faces (M,3) + partie par face (M,) + noms (P,), voir charger_npz()." % cles)
-    for p in parties:                          # compléments du _scene.json
-        inf = infos.get(normaliser(p["nom"]))
+    _completer_scene(parties, scene_json)
+    return parties
+
+
+def _infos_scene(scene_json):
+    """_scene.json (facultatif) : {nom: {...}} ou [{"nom"|"name":…, "couleur"|"color":…, "visible":…}] ou {"noeuds"|"nodes"|…: …}"""
+    infos = {}
+    if scene_json and os.path.exists(scene_json):
+        try:
+            sc = json.load(open(scene_json, encoding="utf-8"))
+        except Exception as e:
+            print("   _scene.json illisible :", e); return infos
+        items = sc
+        if isinstance(sc, dict):
+            for k in ("noeuds", "nodes", "parties", "parts", "objets", "structures", "facesets", "meshes"):
+                if isinstance(sc.get(k), (dict, list)):
+                    items = sc[k]; break
+        if isinstance(items, dict):
+            for k, v in items.items():
+                if isinstance(v, dict):
+                    infos[normaliser(k)] = v
+        elif isinstance(items, list):
+            for v in items:
+                if isinstance(v, dict):
+                    n = v.get("nom") or v.get("name") or v.get("node") or v.get("noeud")
+                    if n:
+                        infos[normaliser(n)] = v
+    return infos
+
+
+def _completer_scene(parties, scene_json):
+    infos = _infos_scene(scene_json)
+    for p in parties:
+        inf = infos.get(normaliser(p["nom"])) or infos.get(normaliser("FACESET_" + p["nom"]))
         if inf:
-            if p["couleur"] is None:
+            if p.get("couleur") is None:
                 c = inf.get("couleur") or inf.get("color") or inf.get("diffuse") or inf.get("rgb")
                 p["couleur"] = couleur_255(c) if c is not None else None
             p["visible"] = inf.get("visible", inf.get("V", True))
-            if inf.get("nom_affiche") or inf.get("label") or inf.get("libelle"):
-                p["nom"] = inf.get("nom_affiche") or inf.get("label") or inf.get("libelle")
-    return parties
+            if not p.get("parent") and (inf.get("parent") or inf.get("p")):
+                p["parent"] = str(inf.get("parent") or inf.get("p"))
 
 
 # ----------------------------------------------------------------------------------------------------------------------- nomenclature
@@ -323,6 +403,8 @@ class Nomenclature:
             txt = txt.replace("{cote_fr}", cf)
         txt = txt.replace("{cote}", cote).replace("{1}", cap)
         txt = re.sub(r"\s+", " ", txt).strip() if fr else re.sub(r"_+", "_", txt).strip("_")
+        if not fr:
+            txt = re.sub(r"^([a-z0-9]+)_\1$", r"\1", txt)          # « coeur_coeur » (chambre seule « heart ») -> « coeur »
         return txt
 
     def chercher(self, nom_source):
@@ -576,6 +658,8 @@ def main():
     ap.add_argument("stade")
     ap.add_argument("--glb", help="dossier (ou fichier) de maillages GLB/PLY/OBJ/STL")
     ap.add_argument("--npz"); ap.add_argument("--scene")
+    ap.add_argument("--banque", default=BANQUE, help="banque hikspoors_maastricht (u3d/Carnegie_Stage_<n>[_NEWvalves].npz) ; utilisée sans --npz/--glb")
+    ap.add_argument("--sans-newvalves", action="store_true", help="prendre Carnegie_Stage_<n>.npz même si la version _NEWvalves existe")
     ap.add_argument("--um-par-unite", type=float, default=None)
     ap.add_argument("--echelles", default=ECHELLES)
     ap.add_argument("--calage"); ap.add_argument("--calage-repere", default="modeles", choices=["modeles", "pipeline"])
@@ -587,7 +671,7 @@ def main():
     ap.add_argument("--sortie"); ap.add_argument("--session", default="Hikspoors → modèles (cloud, 26/09)")
     ap.add_argument("--faces-max", type=int, default=0, help="décimation des structures au-delà de N faces (0 = aucune)")
     a = ap.parse_args()
-    for k in ("glb", "npz", "scene", "calage", "sortie"):
+    for k in ("glb", "npz", "scene", "calage", "sortie", "banque"):
         setattr(a, k, abs0(getattr(a, k)))
     if not os.path.exists(a.echelles):
         a.echelles = abs0(a.echelles)
@@ -599,12 +683,18 @@ def main():
     nomen = Nomenclature(a.nomenclature)
 
     # 1. lecture
+    if not a.npz and not a.glb:
+        npz, sc, glb = trouver_dans_banque(a.banque, cs, not a.sans_newvalves)
+        if npz:
+            a.npz, a.scene = npz, (a.scene or sc); print("   banque : %s" % os.path.basename(npz))
+        elif glb:
+            a.glb = glb; print("   banque : %s" % os.path.basename(glb))
+        else:
+            ap.error("stade %s introuvable dans la banque %s (u3d/Carnegie_Stage_%d[_NEWvalves].npz ou glb/…) ; sinon --npz ou --glb" % (cs, a.banque, norm_int(cs)))
     if a.npz:
         parties = charger_npz(a.npz, a.scene)
-    elif a.glb:
-        parties = charger_fichiers(a.glb, cs)
     else:
-        ap.error("--glb ou --npz requis")
+        parties = charger_fichiers(a.glb, cs)
     print("%s : %d parties lues" % (cs, len(parties)))
     if a.separer_couleurs:
         parties = [q for p in parties for q in scinder_par_couleur(p)]
@@ -616,6 +706,16 @@ def main():
         r = nomen.par_couleur_regle(p.get("source_partie", p["nom"]), p.get("couleur_scindee")) if p.get("couleur_scindee") is not None else None
         if r is None:
             r = nomen.chercher(p.get("source_partie", p["nom"]))
+        if r.get("non_reconnu") and p.get("parent"):          # nœud inconnu sous un parent connu (ex. « left » sous « ventricle »)
+            r2 = nomen.chercher(p["parent"] + "_" + p.get("source_partie", p["nom"]))
+            if not r2.get("non_reconnu") and not r2.get("ignorer"):
+                r2["regle"] = "via parent « %s » : %s" % (p["parent"], r2["regle"]); r2["non_reconnu"] = True; r = r2   # à confirmer dans la table
+            else:
+                r3 = nomen.chercher(p["parent"])
+                if not r3.get("non_reconnu") and not r3.get("ignorer"):     # système et groupe du parent, nom propre, à compléter dans la table
+                    r = {"nom": r3["nom"] + "_" + slug(p.get("source_partie", p["nom"])), "nom_fr": r3["nom_fr"] + " : " + str(p["nom"]),
+                         "systeme": r3["systeme"], "groupe": r3["groupe"], "couleur": r3["couleur"], "confiance": "moyenne",
+                         "regle": "parent « %s » reconnu (%s), nom à compléter" % (p["parent"], r3["regle"]), "non_reconnu": True}
         if r.get("ignorer"):
             ignores.append(p["nom"]); continue
         if r["non_reconnu"]:
@@ -624,7 +724,7 @@ def main():
         s["meshes"].append(p["mesh"]); s["sources"].append(p["nom"])
         if p.get("couleur") is not None:
             s["couleurs_source"].append(p["couleur"])
-        journal.append({"source": p["nom"], "nom": r["nom"], "regle": r["regle"], "faces": int(len(p["mesh"].faces)), "couleur_source": p.get("couleur")})
+        journal.append({"source": p["nom"], "parent": p.get("parent", ""), "nom": r["nom"], "regle": r["regle"], "faces": int(len(p["mesh"].faces)), "couleur_source": p.get("couleur")})
     if not structs:
         raise SystemExit("aucune structure retenue")
     print("   %d structures canoniques ; non reconnues : %s ; ignorées : %s" % (len(structs), non_reconnus or "aucune", ignores or "aucune"))
@@ -644,15 +744,38 @@ def main():
     # 4. repère
     rapport = {"stade": cs, "source": SOURCE, "echelle": {"um_par_unite": um}, "non_reconnus": non_reconnus, "ignores": ignores, "journal": journal}
     if a.calage:
-        T = np.load(a.calage).ravel()
-        s_, R_, t_ = float(T[0]), T[1:10].reshape(3, 3), T[10:13]
+        T = np.load(a.calage, allow_pickle=True)
+        if T.shape == (4, 4) or T.shape == (3, 4):
+            A = np.asarray(T, float)[:3, :3]; t_ = np.asarray(T, float)[:3, 3]
+            s_ = float(np.cbrt(abs(np.linalg.det(A)))); R_ = A / s_
+        elif T.size == 13:
+            T = T.ravel(); s_, R_, t_ = float(T[0]), T[1:10].reshape(3, 3), T[10:13]
+        elif T.size == 12:
+            T = T.ravel(); A = T[:9].reshape(3, 3); t_ = T[9:12]; s_ = float(np.cbrt(abs(np.linalg.det(A)))); R_ = A / s_
+        else:
+            raise SystemExit("calage : forme %s non reconnue (13 nombres s,R,t ; 12 nombres A,t ; matrice 4x4 ou 3x4)" % (T.shape,))
+        miroir = a.calage_repere == "pipeline"
+        um = s_ * 1000.0
+        rapport["echelle"] = {"um_par_unite": um, "source": "calage %s" % os.path.basename(a.calage)}
         def transformer(V):
             W = (s_ * (R_ @ V.T)).T + t_
-            if a.calage_repere == "pipeline":
+            if miroir:
                 W[:, 0] = -W[:, 0]
             return W
-        rapport["orientation"] = {"methode": "calage fourni (%s, repère %s)" % (a.calage, a.calage_repere)}
-        print("   calage fourni : échelle %.4g, repère %s" % (s_, a.calage_repere))
+        # contrôle : les indices anatomiques sont-ils vérifiés tels quels, ou avec un miroir X ?
+        Rc = R_.copy()
+        if miroir:
+            Rc = np.diag([-1, 1, 1]) @ Rc
+        sc_tel, det_tel = _score(structs, Rc)
+        sc_mir, det_mir = _score(structs, np.diag([-1, 1, 1]) @ Rc)
+        rapport["orientation"] = {"methode": "calage fourni (%s, repère %s)" % (a.calage, a.calage_repere), "echelle_calage": s_,
+                                  "score": sc_tel, "indices": det_tel, "score_si_miroir_x": sc_mir, "det_R": float(np.linalg.det(R_))}
+        print("   calage fourni : échelle %.4g, repère %s, det(R) %.2f ; indices anatomiques : score %.1f tel quel, %.1f avec miroir X" % (s_, a.calage_repere, np.linalg.det(R_), sc_tel, sc_mir))
+        for d in det_tel:
+            print("      %s %s" % ("OK " if d["ok"] else "NON", d["indice"]))
+        if sc_mir > sc_tel:
+            print("   ATTENTION : le miroir X vérifie mieux les indices -> essayer --calage-repere %s" % ("modeles" if miroir else "pipeline"))
+        k_mm = 1.0
     else:
         meilleur, cand = orienter(structs)
         R = meilleur["R"]
