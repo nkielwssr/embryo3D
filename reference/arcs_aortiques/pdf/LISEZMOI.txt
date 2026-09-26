@@ -1,0 +1,6 @@
+Déposer ici, sans les renommer, les PDF 3D interactifs du matériel supplémentaire de :
+  Rana MS, Sizarov A, Christoffels VM, Moorman AFM. Am J Med Genet A 2014;164A:1372-1383
+  https://onlinelibrary.wiley.com/doi/10.1002/ajmg.a.35881 (onglet « Supporting Information »)
+puis lancer :  python embryo3d/reference/arcs_aortiques/extraire.py
+Les PDF ne sont pas versionnés (données lourdes, restent sur le PC ; voir .gitignore).
+Pour les faire traiter dans une session cloud (depuis la racine du dépôt) : git add -f reference/arcs_aortiques/pdf/*.pdf

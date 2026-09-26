@@ -179,3 +179,13 @@ Si `out/topographie/video360/etages_imposes.json` existe (session Extraction squ
 
 ## Membres séparés
 `split_membres.py <stade>` sépare le label `membres` en `membre_sup_gauche`, `membre_sup_droit`, `membre_inf_gauche`, `membre_inf_droit` (2 plus grosses composantes de chaque côté du plan médian, la plus crâniale = supérieur) dans `labels.npz` ; `meshexport` les exporte (collection Membres) et la scène maître les morphe pièce par pièce. Contrôle du morphing : `planche_morph.py sortie.png [stades]` ; vidéo : `blender_render_anim.py` (séquence PNG, caméra fixe cadrée sur CS20, option `--suivre`) puis `encode_frames.py`.
+
+## Référence externe : arcs aortiques (Rana et al. 2014, équipe Moorman, AMC)
+`reference/arcs_aortiques/` (voir son README) récupère les modèles 3D publiés en PDF 3D interactifs dans le matériel supplémentaire de
+Rana, Sizarov, Christoffels & Moorman, *Am J Med Genet A* 2014;164A:1372 (doi:10.1002/ajmg.a.35881). Ces modèles couvrent la lumière des artères des arcs
+pharyngiens, le sac aortique, les aortes dorsales, la voie de sortie, le pharynx, le tube neural et l'otocyste, avec un modèle par stade. Les PDF se téléchargent à la main
+(onglet *Supporting Information*) dans `reference/arcs_aortiques/pdf/`. Ensuite `python embryo3d/reference/arcs_aortiques/extraire.py` décode les flux U3D ou PRC en Python pur
+(port du décodeur U3D de référence et lecteur PRC), identifie chaque structure par son nom ou sa couleur de légende et écrit par stade
+`extraits/<CS>/manifest.json` (format `blender_build_scene.py`), des PLY en mm, un GLB, un aperçu et un rapport. `blender_arcs.py` monte tous les stades dans une
+scène, soit côte à côte, soit superposés avec un curseur `stade_arcs`. `chronologie.json` résume, source par source, l'apparition et la régression de chaque arc et son devenir.
+Ces modèles ne sont pas recalés sur nos embryons (repère d'origine, centré).

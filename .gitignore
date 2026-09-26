@@ -29,3 +29,7 @@ slicer_selftest_result.txt
 *.f4v
 *.blend
 *.blend1
+
+# Modèles de référence des arcs aortiques : PDF sources et extractions (restent sur le PC)
+reference/arcs_aortiques/pdf/*.pdf
+reference/arcs_aortiques/extraits/
