@@ -12,7 +12,7 @@ def _load_npz(path):
 
 HERE = os.path.dirname(os.path.abspath(__file__)); sys.path.insert(0, HERE)
 MAP = {'cardio/coeur.npz': {'coeur_plein': 'coeur_detoure', 'cavites_cardiaques': 'cavites_cardiaques', 'myocarde': 'myocarde'},
-       'digestif/digestif.npz': {'oesophage': 'digestif_oesophage', 'estomac': 'digestif_estomac', 'duodenum': 'digestif_duodenum',
+       'digestif/digestif.npz': {'pharynx': 'digestif_pharynx', 'oesophage': 'digestif_oesophage', 'estomac': 'digestif_estomac', 'duodenum': 'digestif_duodenum',
                                  'intestin_moyen': 'digestif_intestin_moyen', 'intestin_posterieur': 'digestif_intestin_posterieur'}}
 def run(stage_dir, scene=True):
     work = os.path.join(stage_dir, 'work'); out = os.path.join(stage_dir, 'out'); stage = 'CS%s' % re.search(r'CS\s*(\d+)', os.path.basename(stage_dir), re.I).group(1)

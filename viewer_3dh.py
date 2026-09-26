@@ -49,7 +49,7 @@ SYSTEMES = [
     ("coeur", "Cœur", "#b0202a", {"coeur_detoure": "#b0202a", "myocarde": "#b0202a", "cavites_cardiaques": "#f08a8a"}),
     ("arteres", "Artères", "#d62828", {"vaisseaux_aorte": "#d62828"}),
     ("veines", "Veines", "#2f6fd6", {"vaisseaux_cardinales": "#2f6fd6", "vaisseaux_ombilicaux": "#3d8bff", "vaisseaux_vitellins": "#1f4fd6", "vaisseaux_veines": "#2f6fd6"}),
-    ("digestif", "Tube digestif", "#f2c14e", {"digestif_oesophage": "#f2c14e", "digestif_estomac": "#f2c14e", "digestif_duodenum": "#f2c14e", "digestif_intestin_moyen": "#f2c14e", "digestif_intestin_posterieur": "#f2c14e"}),
+    ("digestif", "Tube digestif", "#f2c14e", {"digestif_pharynx": "#f2c14e", "digestif_oesophage": "#f2c14e", "digestif_estomac": "#f2c14e", "digestif_duodenum": "#f2c14e", "digestif_intestin_moyen": "#f2c14e", "digestif_intestin_posterieur": "#f2c14e"}),
     ("foie", "Foie", "#8c5a2b", {"foie": "#8c5a2b"}),
     ("colonne", "Squelette axial : cartilages, arcs, côtes, notochorde, axe", "#f1ead6", {"axe_vertebral": "#ff9f43", "etages_vertebraux": "#f1ead6", "somites_video": "#ffd27f", "etages_manuels": "#7fe07f", "etages_manuels_dorsal": "#4fc94f", "reper1": "#bfffbf", "reper2": "#bfffbf", "notochorde": "#ffffff", "squelette_axial_cartilage": "#f1ead6", "chondrocrane": "#e8e0c8", "cartilage_autre": "#d9d0b8", "corps_vertebraux": "#f5f0e0", "arcs_neuraux": "#e6dcc0", "cotes": "#d8ccb0"}),
     ("muscles", "Somites", "#9b59b6", {"somites": "#9b59b6"}),
@@ -117,7 +117,7 @@ main{position:relative;min-height:0}canvas{width:100%;height:100%;display:block}
  <div class="row"><button id="all">tout</button><button id="none">rien</button><button id="fit">recadrer</button></div>
  <label class="chk" id="morphLbl" style="display:none"><input type="checkbox" id="morph" checked> morphing continu (clés de la scène Blender)</label>
  <label class="chk"><input type="checkbox" id="autozoom"> zoom interpolé sur la croissance (décoché : échelle constante, caméra fixe)</label>
- <label class="chk" id="tubesLbl"><input type="checkbox" id="tubes" checked> tubes interpolés entre stades (digestif, aortes)</label>
+ <label class="chk" id="tubesLbl"><input type="checkbox" id="tubes" checked> tubes interpolés entre stades (pharynx, digestif, aortes, mésos)</label>
  <label class="chk"><input type="checkbox" id="loop" checked> lecture en boucle</label>
  <label class="chk">vitesse <select id="speed"><option value="1">1 j/s</option><option value="2" selected>2 j/s</option><option value="4">4 j/s</option></select></label>
  <div style="margin-top:auto;font-size:11px;color:var(--mut)">glisser = orbite · molette = zoom · clic droit = déplacer<br>version <span id="ver"></span></div>
@@ -165,7 +165,7 @@ function show(s){if(cur===s.id)return;if(!loaded[s.id]){load(s);return;}cur=s.id
  if(muscGroup)scene.remove(muscGroup);muscGroup=new THREE.Group();s.musc.forEach(m=>{const g=plyCache[m.url];if(g&&g.attributes){const mesh=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:new THREE.Color(colorOf[m.nom]||'#ff9f43'),roughness:0.55}));mesh.name=m.nom;muscGroup.add(mesh);}});scene.add(muscGroup);
  applyVis();$('st').textContent=s.id;$('badge').textContent=s.id;const n=nextOf(s);if(n)load(n);if(!fitted){fit();fitted=true;}updateInfo();}
 let fitted=false,camGoal=null;const camVel={p:new THREE.Vector3(),t:new THREE.Vector3()};
-const TUBE_SYS=n=>/^aorte/.test(n)?'arteres':'digestif';const TUBE_COL=n=>/^aorte/.test(n)?'#d62828':'#f2c14e';
+const TUBE_SYS=t=>t.famille==='aorte'?'arteres':'digestif';const TUBE_COL=t=>({aorte:'#d62828',meso:'#f4c9b8',digestif:'#f2c14e'})[t.famille]||'#f2c14e';
 function tubeMasque(name,s){if(!D.tubes||!$('tubes').checked||!s)return false;const P=D.tubes.presence;
  if(name==='vaisseaux_aorte')return D.tubes.noms.some(n=>/^aorte/.test(n)&&P[n]&&P[n][s.id]);
  const m=/^digestif_(.+)$/.exec(name);return !!(m&&P[m[1]]&&P[m[1]][s.id]);}
@@ -211,11 +211,13 @@ function morphStep(){return;const j=mq[0];if(!j)return;try{if(!j.t.boundsTree)j.
 function applyMorph(){return; /* interpolation par projection interdite (24/09) */ const s=stageAt(day),n=nextOf(s);if(!root)return;const k=(n&&$('morph').checked)?Math.max(0,Math.min(1,(day-s.mid)/(n.mid-s.mid))):0;root.traverse(m=>{if(m.isMesh&&m.morphTargetInfluences&&m.morphTargetInfluences.length)m.morphTargetInfluences[0]=(m.userData.to===(n&&n.id))?k:0;});if(n&&$('morph').checked&&day>s.mid)ensureMorph(s,n);}
 // ---- tubes à topologie commune (session VHE) : maillage fixe (N anneaux × M points), sommets interpolés entre les deux stades voisins
 const tubesGroup=new THREE.Group();scene.add(tubesGroup);let TUBES=null;
-if(D.tubes){fetch(D.tubes.fichier+'?v='+D.version).then(r=>r.arrayBuffer()).then(buf=>{const all=new Float32Array(buf);window.__tubesData=all;const {N,M,noms,stades}=D.tubes;const idx=[];
- for(let i=0;i<N-1;i++)for(let j=0;j<M;j++){const a=i*M+j,b=i*M+(j+1)%M,c=(i+1)*M+j,d=(i+1)*M+(j+1)%M;idx.push(a,c,b,b,c,d);}
- TUBES=noms.map((n,k)=>{const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(new Float32Array(N*M*3),3));g.setIndex(idx);
-  const m=new THREE.Mesh(g,new THREE.MeshStandardMaterial({color:new THREE.Color(TUBE_COL(n)),roughness:0.5,metalness:0,side:THREE.DoubleSide}));m.name='tube:'+n;m.visible=false;sysOf[m.name]=TUBE_SYS(n);tubesGroup.add(m);
-  return {n,m,base:k*D.tubes.taille,stride:N*M*3,pres:stades.map(s=>!!(D.tubes.presence[n]&&D.tubes.presence[n][s]))};});
+if(D.tubes){fetch(D.tubes.fichier+'?v='+D.version).then(r=>r.arrayBuffer()).then(buf=>{const all=new Float32Array(buf);window.__tubesData=all;const {noms,stades}=D.tubes;
+ const L=D.tubes.liste||noms.map((n,k)=>({n,N:D.tubes.N,M:D.tubes.M,ferme:true,famille:/^aorte/.test(n)?'aorte':'digestif',base:k*D.tubes.taille}));
+ const mkIdx=(N,M,ferme)=>{const idx=[];const J=ferme?M:M-1;for(let i=0;i<N-1;i++)for(let j=0;j<J;j++){const j2=(j+1)%M,a=i*M+j,b=i*M+j2,c=(i+1)*M+j,d=(i+1)*M+j2;idx.push(a,c,b,b,c,d);}return idx;};
+ TUBES=L.map(t=>{const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(new Float32Array(t.N*t.M*3),3));g.setIndex(mkIdx(t.N,t.M,t.ferme));
+  const mat=new THREE.MeshStandardMaterial({color:new THREE.Color(TUBE_COL(t)),roughness:0.5,metalness:0,side:THREE.DoubleSide});if(t.famille==='meso'){mat.transparent=true;mat.opacity=0.65;}
+  const m=new THREE.Mesh(g,mat);m.name='tube:'+t.n;m.visible=false;sysOf[m.name]=TUBE_SYS(t);tubesGroup.add(m);
+  return {n:t.n,m,base:t.base,stride:t.N*t.M*3,pres:stades.map(s=>!!(D.tubes.presence[t.n]&&D.tubes.presence[t.n][s]))};});
  window.__tubes=TUBES;applyVis();}).catch(e=>console.warn('tubes',e));}
 function pairAt(d){let a=ST[0],b=null;for(const s of ST){if(s.mid<=d)a=s;else{b=s;break;}}if(!b)return {a,b:a,k:0};if(d<=ST[0].mid)return {a:ST[0],b:ST[0],k:0};return {a,b,k:Math.max(0,Math.min(1,(d-a.mid)/(b.mid-a.mid)))};}
 function updateTubes(){if(!TUBES||!D.tubes)return;const on_=$('tubes').checked;const {a,b,k}=pairAt(day);const ia=D.tubes.stades.indexOf(a.id),ib=D.tubes.stades.indexOf(b.id);
@@ -273,20 +275,26 @@ os.makedirs(out_dir, exist_ok=True)
 
 
 def ecrire_tubes(out_dir):
-    """Tubes à topologie commune (session VHE) : embryons_3D/tubes_morph.npz {structure: (7 stades, N anneaux, M points, xyz mm)}
+    """Tubes à topologie commune (session VHE) : embryons_3D/tubes_morph.npz {structure: (7 stades, N anneaux, M points, xyz mm) pour un tube, (7, N, K, 3) pour une nappe de méso}
     → out_dir/tubes.bin (float32, structures concaténées) + métadonnées dans la page. None si absent."""
     npz, js = os.path.join("embryons_3D", "tubes_morph.npz"), os.path.join("embryons_3D", "tubes_morph.json")
     if not (os.path.exists(npz) and os.path.exists(js)):
         return None
     import numpy as np
     z = np.load(npz); j = json.load(open(js, encoding="utf-8"))
-    noms = list(z.files)
-    n_st, N, M = z[noms[0]].shape[:3]
-    arr = np.concatenate([z[n].astype("<f4").reshape(1, -1) for n in noms], 0)
+    noms = list(z.files); structs = j.get("structures", {})
+    liste, parts, base = [], [], 0          # une entrée par structure : forme propre (tube N×M fermé, nappe de méso N×K ouverte), famille, offset (float32)
+    for n in noms:
+        a = np.ascontiguousarray(z[n], dtype="<f4"); n_st, Nn, Mn = a.shape[:3]
+        inf = structs.get(n, {}); typ = inf.get("type", "tube")
+        liste.append({"n": n, "N": int(Nn), "M": int(Mn), "ferme": typ == "tube", "famille": inf.get("famille", "aorte" if n.startswith("aorte") else "digestif"),
+                      "base": int(base), "stride": int(Nn * Mn * 3)})
+        parts.append(a.reshape(-1)); base += int(a.size)
     with open(os.path.join(out_dir, "tubes.bin"), "wb") as f:
-        f.write(arr.tobytes())
-    return {"noms": noms, "stades": j["stades"], "N": int(N), "M": int(M), "presence": j["presence"], "fichier": "tubes.bin",
-            "taille": int(n_st * N * M * 3)}
+        f.write(np.concatenate(parts).tobytes())
+    N, M = liste[0]["N"], liste[0]["M"]
+    return {"noms": noms, "stades": j["stades"], "N": N, "M": M, "presence": j["presence"], "fichier": "tubes.bin",
+            "taille": int(n_st * N * M * 3), "liste": liste}
 
 
 data["tubes"] = ecrire_tubes(out_dir)

@@ -1,13 +1,27 @@
-"""Tubes à topologie commune (tube digestif + aortes) pour le morphing CS13 → CS20.
+"""Tubes à topologie commune (pharynx + tube digestif + aortes) et nappes de mésos pour le morphing CS13 → CS20.
 
 Chaque structure est reconstruite, à chaque stade, comme un tube de N anneaux × M sommets le long de sa ligne
 centrale (work/digestif/chemins.json, work/cardio/vaisseaux_chemins.json ; pour une poche « sac » comme l'estomac,
 ligne centrale et rayon équivalent tirés du masque, coupe par coupe). Coordonnées : mm, repère Blender du pipeline
 (mêmes mm par voxel et même centre que meshexport.py). Un segment absent à un stade est réduit à un point posé sur
 son raccord (fin ou début du segment voisin du même stade) : il « pousse » pendant le morphing.
-Sortie : embryons_3D/tubes_morph.npz  (clé '<structure>' -> tableau (7, N, M, 3)), + tubes_morph.json (stades, présence).
-usage : python embryo3d/tubes_morph.py"""
-import numpy as np, json, os
+Le pharynx (intestin pharyngien) est un segment digestif comme les autres : il est lu dans chemins.json s'il a été tracé
+(segment « pharynx » de embryo3d/digestif_points/<CS>.json), sinon réduit au début de l'œsophage.
+
+Mésos dorsaux (méso-œsophage, mésogastre dorsal, mésoduodénum, mésentère, mésocôlon dorsal) : pour chaque segment
+digestif, nappe de N lignes × K colonnes tendue entre le bord dorsal de chaque anneau et le bord ventral de l'axe
+aortique du stade (milieu des aortes dorsales paires quand elles se font face, puis aorte commune). L'attache glisse de
+façon monotone le long de l'aorte (projection au plus proche puis régression isotonique sur toute la chaîne digestive :
+pas de croisement, l'anse de l'intestin moyen donne un éventail depuis sa racine). Les lignes dont l'anneau est trop
+loin de l'aorte (> --portee mm) ou dont le pied tombe au-delà d'une extrémité tracée sont réduites à leur bord digestif
+(largeur nulle) ; un méso sans aorte au stade reste plaqué sur le tube (largeur nulle) et s'ouvre pendant le morphing.
+Le pharynx n'a pas de méso (il est plaqué sous la notochorde, entre les aortes).
+
+Sortie : embryons_3D/tubes_morph.npz (clé '<structure>' -> tableau (7, N, M, 3) pour un tube, (7, N, K, 3) pour un méso)
++ tubes_morph.json (stades, N, M, K, présence par stade, type/famille/forme par structure, attaches des mésos).
+Lecteurs : tubes_morph_blender.py (scène Blender), tubes_morph_planche.py (contrôle 2D), viewer_3dh.py (site), blender_build_scene.py.
+usage : python embryo3d/tubes_morph.py [--portee 3.0] [--colonnes 4] [--sans-mesos] [--sortie embryons_3D]"""
+import numpy as np, json, os, argparse
 from scipy import ndimage as ndi
 from scipy.interpolate import interp1d
 
@@ -17,7 +31,8 @@ STADES = [('CS13', 'CS13.f4v'), ('CS14', 'CS14_f4v'), ('CS15', 'CS15_f4v'), ('CS
 N, M = 64, 16
 # structure -> (fichier de chemins, clés acceptées par ordre de préférence, raccord si absent : (structure, 'fin'|'debut'))
 STRUCT = {
-    'oesophage':            ('digestif', ['oesophage'], None),
+    'pharynx':              ('digestif', ['pharynx', 'intestin_pharyngien'], ('oesophage', 'debut')),
+    'oesophage':            ('digestif', ['oesophage'], ('pharynx', 'fin')),
     'estomac':              ('digestif', ['estomac'], ('oesophage', 'fin')),
     'duodenum':             ('digestif', ['duodenum'], ('estomac', 'fin')),
     'intestin_moyen':       ('digestif', ['intestin_moyen'], ('duodenum', 'fin')),
@@ -26,6 +41,14 @@ STRUCT = {
     'aorte_dorsale_droite': ('cardio', ['aorte_dorsale_droite'], ('aorte_dorsale_gauche', 'debut')),
     'aorte_commune':        ('cardio', ['aorte_commune'], ('aorte_dorsale_gauche', 'fin')),
 }
+FAMILLE = {n: ('aorte' if n.startswith('aorte') else 'digestif') for n in STRUCT}
+# segments digestifs dans l'ordre crânio-caudal (chaîne pour la régression isotonique des attaches)
+CHAINE = ['oesophage', 'estomac', 'duodenum', 'intestin_moyen', 'intestin_posterieur']
+# segment digestif -> méso dorsal qui le relie à l'aorte
+MESOS = {'oesophage': 'meso_oesophage', 'estomac': 'mesogastre_dorsal', 'duodenum': 'mesoduodenum',
+         'intestin_moyen': 'mesentere', 'intestin_posterieur': 'mesocolon_dorsal'}
+CRANIO_CAUDAL = ('pharynx', 'oesophage', 'estomac', 'aorte')     # segments dont le sens est forcé de haut en bas
+DORSAL = np.array([0.0, 1.0, 0.0])                              # repère Blender du pipeline : +Y = dorsal
 
 def to_mm(P, man):
     m = man['mm_per_voxel']; c = np.array(man['center_voxel'])
@@ -66,44 +89,160 @@ def anneaux(C, R, ref=np.array([1.0, 0, 0])):
         V[i] = C[i] + R[i] * (np.cos(ang)[:, None] * n1 + np.sin(ang)[:, None] * n2)
     return V
 
-lignes = {}      # (stade, structure) -> (C mm, R mm)
-for st, dossier in STADES:
-    work, out = os.path.join(ROOT, dossier, 'work'), os.path.join(ROOT, dossier, 'out')
-    man = json.load(open(os.path.join(out, 'manifest.json'), encoding='utf-8'))
-    ch = {}
-    for f, key in (('digestif', os.path.join(work, 'digestif', 'chemins.json')), ('cardio', os.path.join(work, 'cardio', 'vaisseaux_chemins.json'))):
-        ch[f] = json.load(open(key, encoding='utf-8')) if os.path.exists(key) else {}
-    for nom, (f, cles, _) in STRUCT.items():
-        k = next((c for c in cles if c in ch[f]), None)
-        if k is None: continue
-        e = ch[f][k]
-        if e.get('type') == 'sac': C, R = sac_ligne(work, k)
-        else: C, R = np.array(e['centres']), np.array(e['rayons'])
-        if len(C) < 2: continue
-        if C[0, 1] > C[-1, 1] and nom.startswith(('oesophage', 'estomac', 'aorte')): C, R = C[::-1], R[::-1]   # sens crânio-caudal
-        Cm = to_mm(C, man); Rm = R * man['mm_per_voxel']
-        lignes[(st, nom)] = reechantillonne(Cm, Rm)
+# ---------------------------------------------------------------- mésos : axe aortique, projection monotone, nappe
+def axe_aortique(lg, st, seuil_paire=1.0):
+    """ligne médiane des aortes d'un stade (centres mm, rayons mm) : moyenne des aortes dorsales paires là où elles se font
+    face (point le plus proche à < seuil_paire mm ; la gauche fait foi ailleurs), puis aorte commune ; morceaux enchaînés
+    du plus crânial au plus caudal (Z moyen décroissant). None si aucune aorte tracée au stade."""
+    G, D, Cm = (lg.get((st, k)) for k in ('aorte_dorsale_gauche', 'aorte_dorsale_droite', 'aorte_commune'))
+    morceaux = []
+    if G is not None and D is not None:
+        (CG, RG), (CD, RD) = G, D
+        d = np.linalg.norm(CG[:, None] - CD[None], axis=2); j = d.argmin(1)
+        proche = d[np.arange(len(CG)), j] < seuil_paire
+        morceaux.append((np.where(proche[:, None], (CG + CD[j]) / 2, CG), np.where(proche, (RG + RD[j]) / 2, RG)))
+    elif G is not None: morceaux.append(G)
+    elif D is not None: morceaux.append(D)
+    if Cm is not None: morceaux.append(Cm)
+    if not morceaux: return None
+    morceaux.sort(key=lambda cr: -cr[0][:, 2].mean())
+    C = np.concatenate([c for c, _ in morceaux]); R = np.concatenate([r for _, r in morceaux])
+    keep = np.r_[True, np.linalg.norm(np.diff(C, axis=0), axis=1) > 1e-6]
+    return C[keep], R[keep]
 
-res, presence = {}, {}
-for nom, (_, _, raccord) in STRUCT.items():
-    arr = np.zeros((len(STADES), N, M, 3)); pres = []
-    for i, (st, _) in enumerate(STADES):
-        if (st, nom) in lignes:
-            C, R = lignes[(st, nom)]; arr[i] = anneaux(C, R); pres.append(True); continue
-        pres.append(False)
-        p = None; r = raccord; vus = {nom}
-        while r is not None and p is None and r[0] not in vus:   # remonte la chaîne des raccords
-            vus.add(r[0])
-            if (st, r[0]) in lignes:
-                C, _ = lignes[(st, r[0])]; p = C[-1] if r[1] == 'fin' else C[0]
-            else: r = STRUCT[r[0]][2]
-        if p is None:
-            p = np.mean([lignes[(st, n)][0].mean(0) for n in STRUCT if (st, n) in lignes], axis=0)
-        arr[i] = np.broadcast_to(p, (N, M, 3))
-    res[nom] = arr; presence[nom] = dict(zip([s for s, _ in STADES], pres))
-    print(f'{nom:22s}', ' '.join(('X' if v else '.') for v in pres))
-os.makedirs(os.path.join(ROOT, 'embryons_3D'), exist_ok=True)
-np.savez_compressed(os.path.join(ROOT, 'embryons_3D', 'tubes_morph.npz'), **res)
-json.dump({'stades': [s for s, _ in STADES], 'N': N, 'M': M, 'presence': presence},
-          open(os.path.join(ROOT, 'embryons_3D', 'tubes_morph.json'), 'w', encoding='utf-8'), indent=1, ensure_ascii=False)
-print('OK')
+def projeter(A, P):
+    """projection de points P (n,3) sur la polyligne A (m,3) : abscisse curviligne (mm) du point le plus proche"""
+    S, V = A[:-1], np.diff(A, axis=0); L = np.linalg.norm(V, axis=1) + 1e-12
+    t = np.clip(((P[:, None, :] - S[None]) * V[None]).sum(2) / L[None] ** 2, 0, 1)      # n x (m-1)
+    Q = S[None] + t[..., None] * V[None]
+    k = np.linalg.norm(P[:, None, :] - Q, axis=2).argmin(1); n = np.arange(len(P))
+    return np.r_[0, np.cumsum(L)][k] + t[n, k] * L[k]
+
+def isotone(y):
+    """régression isotonique (non décroissante, moindres carrés) par « pool adjacent violators »"""
+    blocs = []
+    for v in y:
+        blocs.append([float(v), 1])
+        while len(blocs) > 1 and blocs[-2][0] / blocs[-2][1] > blocs[-1][0] / blocs[-1][1]:
+            s, n = blocs.pop(); blocs[-1][0] += s; blocs[-1][1] += n
+    return np.concatenate([[s / n] * n for s, n in blocs])
+
+def attaches(axe, C, portee, tol=0.3):
+    """pour des centres d'anneaux C (n,3) en ordre crânio-caudal : point d'attache sur l'axe aortique (n,3), rayon aortique (n),
+    abscisse (n) et masque des lignes actives (pied sur la ligne tracée, distance ≤ portee)"""
+    A, RA = axe
+    cum = np.r_[0, np.cumsum(np.linalg.norm(np.diff(A, axis=0), axis=1))]
+    if len(A) < 2 or cum[-1] < 1e-6:
+        Pa = np.repeat(A[:1], len(C), 0); return Pa, np.repeat(RA[:1], len(C)), np.zeros(len(C)), np.linalg.norm(C - Pa, axis=1) <= portee
+    u = np.clip(isotone(projeter(A, C)), 0, cum[-1])
+    Pa = interp1d(cum, A, axis=0)(u); Ra = interp1d(cum, RA)(u)
+    T0 = A[1] - A[0]; T0 /= np.linalg.norm(T0); T1 = A[-1] - A[-2]; T1 /= np.linalg.norm(T1)
+    dist = np.linalg.norm(C - Pa, axis=1)
+    avant = (u <= 1e-6) & ((C - A[0]) @ T0 < -tol)          # pied avant le début tracé de l'aorte
+    apres = (u >= cum[-1] - 1e-6) & ((C - A[-1]) @ T1 > tol)  # pied après sa fin tracée
+    return Pa, Ra, u, (dist <= portee) & ~avant & ~apres
+
+def nappe(C, R, Pa, Ra, actif, K):
+    """nappe (n, K, 3) du bord dorsal des anneaux (centres C, rayons R) au bord ventral de l'aorte (attaches Pa, rayons Ra) ;
+    lignes inactives ou aortes accolées au tube : largeur nulle sur le bord du tube"""
+    n = Pa - C; dist = np.linalg.norm(n, axis=1)
+    n = np.where(dist[:, None] > 1e-9, n / (dist[:, None] + 1e-12), DORSAL)
+    t0 = R.copy(); t1 = np.where(actif, dist - Ra, t0); t1 = np.where(t1 > t0, t1, t0)
+    lam = np.linspace(0, 1, K)
+    return C[:, None, :] + n[:, None, :] * (t0[:, None] + (t1 - t0)[:, None] * lam[None, :])[:, :, None]
+
+# ---------------------------------------------------------------- lecture des lignes centrales
+def charger(stades=STADES):
+    """(stade, structure) -> (centres mm (N,3), rayons mm (N,)) pour chaque segment tracé"""
+    lignes = {}
+    for st, dossier in stades:
+        work, out = os.path.join(ROOT, dossier, 'work'), os.path.join(ROOT, dossier, 'out')
+        pm = os.path.join(out, 'manifest.json')
+        if not os.path.exists(pm): print(st, ': manifest absent, stade ignoré'); continue
+        man = json.load(open(pm, encoding='utf-8'))
+        ch = {}
+        for f, key in (('digestif', os.path.join(work, 'digestif', 'chemins.json')), ('cardio', os.path.join(work, 'cardio', 'vaisseaux_chemins.json'))):
+            ch[f] = json.load(open(key, encoding='utf-8')) if os.path.exists(key) else {}
+        for nom, (f, cles, _) in STRUCT.items():
+            k = next((c for c in cles if c in ch[f]), None)
+            if k is None: continue
+            e = ch[f][k]
+            if e.get('type') == 'sac': C, R = sac_ligne(work, k)
+            else: C, R = np.array(e['centres'], float), np.array(e['rayons'], float)
+            if len(C) < 2: continue
+            if C[0, 1] > C[-1, 1] and nom.startswith(CRANIO_CAUDAL): C, R = C[::-1], R[::-1]   # sens crânio-caudal (axe 1 : 0 = haut)
+            Cm = to_mm(C, man); Rm = R * man['mm_per_voxel']
+            lignes[(st, nom)] = reechantillonne(Cm, Rm)
+    return lignes
+
+def point_raccord(lignes, st, nom):
+    """point (mm) où un segment absent est réduit : raccord (fin/début du voisin), en remontant la chaîne des raccords"""
+    r = STRUCT[nom][2]; vus = {nom}
+    while r is not None and r[0] not in vus:
+        vus.add(r[0])
+        if (st, r[0]) in lignes:
+            C, _ = lignes[(st, r[0])]; return C[-1] if r[1] == 'fin' else C[0]
+        r = STRUCT[r[0]][2]
+    pres = [lignes[(st, n)][0].mean(0) for n in STRUCT if (st, n) in lignes]
+    return np.mean(pres, axis=0) if pres else np.zeros(3)
+
+def construire(lignes, stades=STADES, portee=3.0, K=4, mesos=True):
+    """tableaux (n_stades, N, M|K, 3) par structure + métadonnées (présence, type/famille/forme, attaches des mésos)"""
+    noms_st = [s for s, _ in stades]
+    res, presence, structures = {}, {}, {}
+    for nom in STRUCT:
+        arr = np.zeros((len(stades), N, M, 3)); pres = []
+        for i, st in enumerate(noms_st):
+            if (st, nom) in lignes:
+                C, R = lignes[(st, nom)]; arr[i] = anneaux(C, R); pres.append(True)
+            else:
+                arr[i] = np.broadcast_to(point_raccord(lignes, st, nom), (N, M, 3)); pres.append(False)
+        res[nom] = arr; presence[nom] = dict(zip(noms_st, pres))
+        structures[nom] = {'type': 'tube', 'famille': FAMILLE[nom], 'forme': [N, M]}
+    attach = {}
+    if mesos:
+        # attaches calculées sur toute la chaîne digestive du stade (monotones le long de l'aorte), puis découpées par segment
+        par_stade = {}
+        for i, st in enumerate(noms_st):
+            axe = axe_aortique(lignes, st); segs = [s for s in CHAINE if (st, s) in lignes]
+            if axe is None or not segs: par_stade[st] = None; continue
+            Ctot = np.concatenate([lignes[(st, s)][0] for s in segs])
+            Pa, Ra, u, actif = attaches(axe, Ctot, portee)
+            par_stade[st] = {s: (Pa[k * N:(k + 1) * N], Ra[k * N:(k + 1) * N], u[k * N:(k + 1) * N], actif[k * N:(k + 1) * N]) for k, s in enumerate(segs)}
+        for seg, nom in MESOS.items():
+            arr = np.zeros((len(stades), N, K, 3)); pres = []; attach[nom] = {}
+            for i, st in enumerate(noms_st):
+                if (st, seg) not in lignes:                       # segment absent : même point que le tube réduit
+                    arr[i] = np.broadcast_to(res[seg][i][0, 0], (N, K, 3)); pres.append(False); continue
+                C, R = lignes[(st, seg)]
+                a = (par_stade.get(st) or {}).get(seg)
+                if a is None:                                     # pas d'aorte au stade : plaqué sur le bord dorsal du tube
+                    arr[i] = nappe(C, R, C + DORSAL, np.zeros(N), np.zeros(N, bool), K); pres.append(False); continue
+                Pa, Ra, u, actif = a
+                arr[i] = nappe(C, R, Pa, Ra, actif, K); pres.append(bool(actif.any()))
+                larg = np.linalg.norm(arr[i][:, -1] - arr[i][:, 0], axis=1)
+                attach[nom][st] = {'lignes_actives': int(actif.sum()), 'abscisse_aorte_mm': [round(float(u[actif].min()), 2), round(float(u[actif].max()), 2)] if actif.any() else None,
+                                   'largeur_mediane_mm': round(float(np.median(larg[actif])), 3) if actif.any() else 0.0}
+            res[nom] = arr; presence[nom] = dict(zip(noms_st, pres))
+            structures[nom] = {'type': 'nappe', 'famille': 'meso', 'forme': [N, K], 'segment': seg, 'attache': 'axe aortique (aortes dorsales / aorte commune)'}
+    meta = {'stades': noms_st, 'N': N, 'M': M, 'K': K, 'presence': presence, 'structures': structures,
+            'mesos': {'portee_max_mm': portee, 'colonnes': K, 'attaches': attach} if mesos else None}
+    return res, meta
+
+if __name__ == '__main__':
+    ap = argparse.ArgumentParser(description=__doc__.split('\n')[0])
+    ap.add_argument('--portee', type=float, default=3.0, help='distance maximale anneau digestif ↔ aorte pour tendre le méso (mm)')
+    ap.add_argument('--colonnes', type=int, default=4, help='colonnes de la nappe (bord digestif → bord aortique)')
+    ap.add_argument('--sans-mesos', action='store_true', help='tubes seulement (pas de nappes)')
+    ap.add_argument('--sortie', default=os.path.join(ROOT, 'embryons_3D'), help='dossier de tubes_morph.npz / .json')
+    args = ap.parse_args()
+    lignes = charger()
+    res, meta = construire(lignes, portee=args.portee, K=max(2, args.colonnes), mesos=not args.sans_mesos)
+    for nom in res:
+        pres = meta['presence'][nom]; typ = meta['structures'][nom]['type']
+        print(f'{nom:22s} {typ:5s}', ' '.join(('X' if pres[s] else '.') for s in meta['stades']),
+              '' if typ == 'tube' else '  ' + ' '.join(f"{s}:{a['lignes_actives']}" for s, a in meta['mesos']['attaches'][nom].items()))
+    os.makedirs(args.sortie, exist_ok=True)
+    np.savez_compressed(os.path.join(args.sortie, 'tubes_morph.npz'), **res)
+    json.dump(meta, open(os.path.join(args.sortie, 'tubes_morph.json'), 'w', encoding='utf-8'), indent=1, ensure_ascii=False)
+    print('OK', os.path.join(args.sortie, 'tubes_morph.npz'))

@@ -226,7 +226,7 @@ if len(stages) > 1:
         print('VERTEBRES morphées :', len([k for k in vert_sets[0] if not _re.match(r'^occ', k)]), 'niveaux (occipitaux exclus)')
     else:
         print('VERTEBRES non morphées (nommage des niveaux non commun aux stades)')
-    # ---------------- tubes morphables (session VHE) : tube digestif et aortes à topologie commune, une forme par stade (embryons_3D/tubes_morph.npz)
+    # ---------------- tubes morphables (session VHE) : pharynx, tube digestif et aortes à topologie commune, une forme par stade (embryons_3D/tubes_morph.npz)
     tubes_npz = os.path.join(os.path.dirname(os.path.abspath(out_blend)), 'tubes_morph.npz')
     if not os.path.exists(tubes_npz): tubes_npz = os.path.join(os.path.dirname(os.path.abspath(manifest_path)), 'tubes_morph.npz')
     TUBES_VHE = False   # 24/09 : l'utilisateur ne veut pas des tubes morphés (digestif + aortes) ; bloc conservé mais désactivé
@@ -239,6 +239,7 @@ if len(stages) > 1:
         col_tube = {'aorte': (0.9, 0.15, 0.15)}
         for key in tz.files:
             A = tz[key]                                                   # (n_stades, N anneaux, M sommets, 3) en mm, repère de meshexport
+            if tj.get('structures', {}).get(key, {}).get('type', 'tube') != 'tube': continue   # nappes de mésos (N × K) : voir tubes_morph_blender.py
             if A.ndim != 4 or A.shape[0] != len(t_stades): print('tube %s : forme inattendue %s' % (key, A.shape)); continue
             S_, N_, M_, _ = A.shape
             def tube_coords(k):

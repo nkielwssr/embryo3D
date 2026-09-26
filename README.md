@@ -104,7 +104,7 @@ bash embryo3d/build_all.sh                               # scènes par stade + s
 ```
 
 Structures ajoutées par ces étapes : `somites`, `notochorde`, `coeur_detoure`, `myocarde`, `cavites_cardiaques`,
-`digestif_oesophage|estomac|duodenum|intestin_moyen|intestin_posterieur`, `vaisseaux_aorte` (+ `vaisseaux_cardinales|ombilicaux|vitellins` quand tracés).
+`digestif_pharynx|oesophage|estomac|duodenum|intestin_moyen|intestin_posterieur`, `vaisseaux_aorte` (+ `vaisseaux_cardinales|ombilicaux|vitellins` quand tracés).
 Coordination multi-sessions : seule cette chaîne écrit `labels.npz`/`manifest.json` ; la session « Reconstruction 3D depuis vidéos VHE » produit
 `work/cardio/*.npz`, `work/digestif/*.npz` ; la session « Agrégateur » lit les manifestes et publie `embryons_3D/agregateur.html` (états dans `taches_etat.json`).
 
@@ -176,6 +176,35 @@ Triangulation de l'œil sur plusieurs vues (`reperes_video.py <montage> --vue2 -
 
 ## Vertèbres animées (nommage imposé)
 Si `out/topographie/video360/etages_imposes.json` existe (session Extraction squelette : même liste de noms de niveaux pour les 7 stades, ex. C1…Co3), `axial_recrutement.py` le lit en priorité (mode manuel, pas de niveaux de queue) et exporte par niveau un PLY complet (`vertebre_<nom>`) et un PLY corps seul (`corps_<nom>`) dans `out/vertebres/`. `blender_build_scene.py` morphe alors les corps niveau par niveau dans la scène maître (collection « Vertèbres (morph) »), uniquement si les noms sont identiques sur tous les stades ; sinon les vertèbres restent masquées comme toute structure non animée.
+
+## Tubes morphables : pharynx, tube digestif, aortes et mésos (26/09)
+`python embryo3d/tubes_morph.py [--portee 3.0] [--colonnes 4] [--sans-mesos]` lit les lignes centrales tracées par points de passage
+(work/digestif/chemins.json, work/cardio/vaisseaux_chemins.json ; estomac « sac » : ligne et rayon équivalent tirés du masque) et écrit
+`embryons_3D/tubes_morph.npz` + `tubes_morph.json` : une forme par stade et par structure, à topologie commune, en mm dans le repère du pipeline.
+- **Tubes** (64 anneaux × 16 sommets) : `pharynx`, `oesophage`, `estomac`, `duodenum`, `intestin_moyen`, `intestin_posterieur`,
+  `aorte_dorsale_gauche|droite`, `aorte_commune`. Un segment absent à un stade est réduit à un point sur son raccord (début/fin du voisin) et
+  « pousse » pendant le morphing. Le pharynx est un segment digestif comme les autres : il apparaît dès qu'un segment `pharynx` (alias
+  `intestin_pharyngien`) est tracé dans `digestif_points/<CS>.json` (points relevés sur `digestif_planches.py`, du fond de la cavité buccale à
+  l'origine de l'œsophage derrière la voie de sortie du cœur ; en amont de l'œsophage, sens haut → bas), puis `digestif_build.py`,
+  `digestif_export.py` (PLY `<CS>_pharynx.ply`, confiance moyenne) et `fusion_systemes.py` (label `digestif_pharynx`). Aucun pharynx n'est
+  tracé à ce jour : tant qu'il manque, il reste réduit au début de l'œsophage.
+- **Mésos dorsaux** (nappes 64 lignes × 4 colonnes) : `meso_oesophage`, `mesogastre_dorsal`, `mesoduodenum`, `mesentere`, `mesocolon_dorsal`,
+  tendus entre le bord dorsal de chaque anneau digestif et le bord ventral de l'axe aortique du stade (milieu des aortes dorsales paires là où
+  elles se font face à < 1 mm, puis aorte commune). L'attache est la projection au plus proche, rendue monotone le long de l'aorte par régression
+  isotonique sur toute la chaîne digestive (pas de croisement ; l'anse de l'intestin moyen donne un éventail depuis sa racine). Une ligne dont
+  l'anneau est à plus de `--portee` mm de l'aorte, ou dont le pied tombe au-delà d'une extrémité tracée, est réduite à son bord digestif (largeur
+  nulle) ; sans aorte au stade le méso reste plaqué sur le tube et s'ouvre pendant le morphing. Conséquence des tracés actuels : CS16 (aortes
+  paires au niveau de l'œsophage) ne tend que le méso-œsophage, CS17 (tronc commun court) surtout le mésentère et le mésoduodénum.
+  `tubes_morph.json` → `mesos.attaches` donne par méso et par stade le nombre de lignes tendues, l'intervalle d'abscisse aortique et la largeur
+  médiane. Le pharynx n'a pas de méso ; les mésos ventraux (mésogastre ventral, ligament falciforme vers le foie) ne sont pas construits.
+- **Contrôle 2D sans Blender** : `python embryo3d/tubes_morph_planche.py embryons_3D/rendus/tubes_planche.png [0 0.5 1 … 6] [--px-mm 30]`
+  (profil + face à échelle commune, valeurs fractionnaires = interpolation entre stades, structures absentes listées).
+- **Scène Blender** : `blender -b -P embryo3d/tubes_morph_blender.py -- embryons_3D/tubes_morph.blend [embryons_3D/rendus/tubes] [--epaisseur 0.05]`
+  → collection « Tubes morphables » (sous-collections Tube digestif / Aortes / Mésos dorsaux), une shape key par stade pilotée par `stage`, mêmes
+  keyframes que la scène maître ; les nappes portent un Solidify (0,05 mm) et un matériau translucide double face. La scène maître garde son bloc
+  tubes désactivé (`TUBES_VHE = False`, décision du 24/09) ; la collection se lie dans une autre scène par `bpy.data.libraries.load`.
+- Le site (`viewer_3dh.py`) lit les formes par structure (`liste` dans les métadonnées) : tubes fermés, nappes ouvertes translucides sous le
+  système « Tube digestif ».
 
 ## Membres séparés
 `split_membres.py <stade>` sépare le label `membres` en `membre_sup_gauche`, `membre_sup_droit`, `membre_inf_gauche`, `membre_inf_droit` (2 plus grosses composantes de chaque côté du plan médian, la plus crâniale = supérieur) dans `labels.npz` ; `meshexport` les exporte (collection Membres) et la scène maître les morphe pièce par pièce. Contrôle du morphing : `planche_morph.py sortie.png [stades]` ; vidéo : `blender_render_anim.py` (séquence PNG, caméra fixe cadrée sur CS20, option `--suivre`) puis `encode_frames.py`.

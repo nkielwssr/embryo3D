@@ -6,9 +6,9 @@ import numpy as np, json, os, sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from meshexport import mask_to_mesh
 
-COULEURS = {'oesophage': (0.85, 0.40, 0.70), 'estomac': (0.95, 0.60, 0.20), 'duodenum': (0.30, 0.75, 0.35),
+COULEURS = {'pharynx': (0.80, 0.25, 0.25), 'oesophage': (0.85, 0.40, 0.70), 'estomac': (0.95, 0.60, 0.20), 'duodenum': (0.30, 0.75, 0.35),
             'intestin_moyen': (0.95, 0.85, 0.25), 'intestin_posterieur': (0.30, 0.55, 0.95)}
-CONFIANCE = {'oesophage': 'bonne', 'estomac': 'bonne', 'duodenum': 'moyenne',
+CONFIANCE = {'pharynx': 'moyenne', 'oesophage': 'bonne', 'estomac': 'bonne', 'duodenum': 'moyenne',
              'intestin_moyen': 'approximative', 'intestin_posterieur': 'approximative'}
 
 for d in sys.argv[1:]:
