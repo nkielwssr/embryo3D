@@ -1,0 +1,50 @@
+{
+ "stade": "CS20",
+ "coeur": {
+  "seuil_tissu": 12,
+  "sac": "convexe",
+  "ouverture": 4,
+  "boite": [
+   [
+    70,
+    270
+   ],
+   [
+    400,
+    535
+   ],
+   [
+    190,
+    370
+   ]
+  ],
+  "graines": [
+   [
+    170,
+    470,
+    280
+   ],
+   [
+    150,
+    480,
+    290
+   ],
+   [
+    190,
+    460,
+    270
+   ],
+   [
+    160,
+    500,
+    300
+   ]
+  ],
+  "erosion_sac": 6,
+  "exclure": [
+   "foie",
+   "snc"
+  ]
+ },
+ "confiance_coeur": "bonne (automatique contrôlé)"
+}

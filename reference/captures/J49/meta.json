@@ -1,0 +1,154 @@
+{
+ "stage": {
+  "jour": 49,
+  "id": "J49",
+  "titre_fr": "Embryon, 49 jours",
+  "carnegie": "CS19",
+  "carnegie_plage": "CS19-20",
+  "semaine_pf": 7,
+  "jours_carnegie": "47-51",
+  "crl_mm_min": 16,
+  "crl_mm_max": 22,
+  "crl_mm": 19.0,
+  "reperes": "Doigts separes (encoches), tronc s'allonge et se redresse, coudes, membres inferieurs en avant.",
+  "nos_coupes": "CS19_f4v",
+  "page_voka": "https://voka.io/3d-anatomy/embryology/first-trimester/human-embryo-day-49/",
+  "catalogue_voka": "https://catalog.voka.io/en/models/bca0620c-bc76-40ec-be54-3271bc217411/53623f0b-89eb-4fbb-9c0d-655c1e0eb084/fd22b7cd-b13a-409e-ae67-f9cb3088c492/95631033-c747-4f97-965c-ed8dabc9b8e1",
+  "image_voka": "voka_pages/voka_J49.webp",
+  "description_voka": "This detailed visualization of the human embryo at Day 49 highlights the further development of the heart and nervous system. By presenting these changes in three dimensions, the model enables students and researchers to study organogenesis with clarity and precision. This 3D model is invaluable for medical education, embryology courses, and scientific investigations focused on early human development and congenital anomaly research."
+ },
+ "views": [
+  {
+   "file": "J49_az000_el+00.png",
+   "az": 0,
+   "el": 0
+  },
+  {
+   "file": "J49_az045_el+00.png",
+   "az": 45,
+   "el": 0
+  },
+  {
+   "file": "J49_az090_el+00.png",
+   "az": 90,
+   "el": 0
+  },
+  {
+   "file": "J49_az135_el+00.png",
+   "az": 135,
+   "el": 0
+  },
+  {
+   "file": "J49_az180_el+00.png",
+   "az": 180,
+   "el": 0
+  },
+  {
+   "file": "J49_az225_el+00.png",
+   "az": 225,
+   "el": 0
+  },
+  {
+   "file": "J49_az270_el+00.png",
+   "az": 270,
+   "el": 0
+  },
+  {
+   "file": "J49_az315_el+00.png",
+   "az": 315,
+   "el": 0
+  },
+  {
+   "file": "J49_az000_el+60.png",
+   "az": 0,
+   "el": 60
+  },
+  {
+   "file": "J49_az045_el+60.png",
+   "az": 45,
+   "el": 60
+  },
+  {
+   "file": "J49_az090_el+60.png",
+   "az": 90,
+   "el": 60
+  },
+  {
+   "file": "J49_az135_el+60.png",
+   "az": 135,
+   "el": 60
+  },
+  {
+   "file": "J49_az180_el+60.png",
+   "az": 180,
+   "el": 60
+  },
+  {
+   "file": "J49_az225_el+60.png",
+   "az": 225,
+   "el": 60
+  },
+  {
+   "file": "J49_az270_el+60.png",
+   "az": 270,
+   "el": 60
+  },
+  {
+   "file": "J49_az315_el+60.png",
+   "az": 315,
+   "el": 60
+  },
+  {
+   "file": "J49_az000_el-60.png",
+   "az": 0,
+   "el": -60
+  },
+  {
+   "file": "J49_az045_el-60.png",
+   "az": 45,
+   "el": -60
+  },
+  {
+   "file": "J49_az090_el-60.png",
+   "az": 90,
+   "el": -60
+  },
+  {
+   "file": "J49_az135_el-60.png",
+   "az": 135,
+   "el": -60
+  },
+  {
+   "file": "J49_az180_el-60.png",
+   "az": 180,
+   "el": -60
+  },
+  {
+   "file": "J49_az225_el-60.png",
+   "az": 225,
+   "el": -60
+  },
+  {
+   "file": "J49_az270_el-60.png",
+   "az": 270,
+   "el": -60
+  },
+  {
+   "file": "J49_az315_el-60.png",
+   "az": 315,
+   "el": -60
+  }
+ ],
+ "box": {
+  "x": 60,
+  "y": 110,
+  "width": 1270,
+  "height": 830
+ },
+ "px_per_360": 2300,
+ "viewport": {
+  "width": 1400,
+  "height": 1000
+ },
+ "note": "az = rotation horizontale depuis la vue par défaut (0 = vue latérale VOKA) ; el > 0 = vu de dessus. Fond uniforme -> silhouettes par silhouettes.py"
+}

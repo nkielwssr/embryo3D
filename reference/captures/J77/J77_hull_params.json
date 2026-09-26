@@ -1,0 +1,9 @@
+{
+ "sign_az": -1,
+ "sign_el": 1,
+ "k_az": 1.0,
+ "k_el": 1.5,
+ "pivot_dy_px": 0.0,
+ "voxels": 132745,
+ "voxels_az_seul": 177810
+}

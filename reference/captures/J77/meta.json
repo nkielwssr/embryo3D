@@ -1,0 +1,154 @@
+{
+ "stage": {
+  "jour": 77,
+  "id": "J77",
+  "titre_fr": "Foetus, 77 jours",
+  "carnegie": "F11",
+  "carnegie_plage": "foetus 11 sem.",
+  "semaine_pf": 11,
+  "jours_carnegie": "77",
+  "crl_mm_min": 68,
+  "crl_mm_max": 75,
+  "crl_mm": 71.5,
+  "reperes": "Sexe externe reconnaissable, cou visible, ossification primaire etendue.",
+  "nos_coupes": "aucune (stade manquant -> proportions a prendre sur VOKA)",
+  "page_voka": "https://voka.io/3d-anatomy/embryology/first-trimester/human-embryo-day-77/",
+  "catalogue_voka": "https://catalog.voka.io/en/models/bca0620c-bc76-40ec-be54-3271bc217411/53623f0b-89eb-4fbb-9c0d-655c1e0eb084/fd22b7cd-b13a-409e-ae67-f9cb3088c492/733c9d7e-b4ec-4659-a8a0-546677b95c08",
+  "image_voka": "voka_pages/voka_J77.webp",
+  "description_voka": "This 3D visualization of a Day 77 human embryo highlights ongoing refinement of the heart, brain, and skeletal structures. This model provides an interactive way to observe the progression of organ development, bridging the gap between theory and practical understanding. Medical students, educators, and researchers will find it especially useful as a reliable resource for studying early prenatal growth."
+ },
+ "views": [
+  {
+   "file": "J77_az000_el+00.png",
+   "az": 0,
+   "el": 0
+  },
+  {
+   "file": "J77_az045_el+00.png",
+   "az": 45,
+   "el": 0
+  },
+  {
+   "file": "J77_az090_el+00.png",
+   "az": 90,
+   "el": 0
+  },
+  {
+   "file": "J77_az135_el+00.png",
+   "az": 135,
+   "el": 0
+  },
+  {
+   "file": "J77_az180_el+00.png",
+   "az": 180,
+   "el": 0
+  },
+  {
+   "file": "J77_az225_el+00.png",
+   "az": 225,
+   "el": 0
+  },
+  {
+   "file": "J77_az270_el+00.png",
+   "az": 270,
+   "el": 0
+  },
+  {
+   "file": "J77_az315_el+00.png",
+   "az": 315,
+   "el": 0
+  },
+  {
+   "file": "J77_az000_el+60.png",
+   "az": 0,
+   "el": 60
+  },
+  {
+   "file": "J77_az045_el+60.png",
+   "az": 45,
+   "el": 60
+  },
+  {
+   "file": "J77_az090_el+60.png",
+   "az": 90,
+   "el": 60
+  },
+  {
+   "file": "J77_az135_el+60.png",
+   "az": 135,
+   "el": 60
+  },
+  {
+   "file": "J77_az180_el+60.png",
+   "az": 180,
+   "el": 60
+  },
+  {
+   "file": "J77_az225_el+60.png",
+   "az": 225,
+   "el": 60
+  },
+  {
+   "file": "J77_az270_el+60.png",
+   "az": 270,
+   "el": 60
+  },
+  {
+   "file": "J77_az315_el+60.png",
+   "az": 315,
+   "el": 60
+  },
+  {
+   "file": "J77_az000_el-60.png",
+   "az": 0,
+   "el": -60
+  },
+  {
+   "file": "J77_az045_el-60.png",
+   "az": 45,
+   "el": -60
+  },
+  {
+   "file": "J77_az090_el-60.png",
+   "az": 90,
+   "el": -60
+  },
+  {
+   "file": "J77_az135_el-60.png",
+   "az": 135,
+   "el": -60
+  },
+  {
+   "file": "J77_az180_el-60.png",
+   "az": 180,
+   "el": -60
+  },
+  {
+   "file": "J77_az225_el-60.png",
+   "az": 225,
+   "el": -60
+  },
+  {
+   "file": "J77_az270_el-60.png",
+   "az": 270,
+   "el": -60
+  },
+  {
+   "file": "J77_az315_el-60.png",
+   "az": 315,
+   "el": -60
+  }
+ ],
+ "box": {
+  "x": 60,
+  "y": 110,
+  "width": 1270,
+  "height": 830
+ },
+ "px_per_360": 2300,
+ "viewport": {
+  "width": 1400,
+  "height": 1000
+ },
+ "note": "az = rotation horizontale depuis la vue par défaut (0 = vue latérale VOKA) ; el > 0 = vu de dessus. Fond uniforme -> silhouettes par silhouettes.py"
+}

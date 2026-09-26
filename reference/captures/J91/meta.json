@@ -1,0 +1,154 @@
+{
+ "stage": {
+  "jour": 91,
+  "id": "J91",
+  "titre_fr": "Foetus, 91 jours",
+  "carnegie": "F13",
+  "carnegie_plage": "foetus 13 sem.",
+  "semaine_pf": 13,
+  "jours_carnegie": "91",
+  "crl_mm_min": 95,
+  "crl_mm_max": 105,
+  "crl_mm": 100.0,
+  "reperes": "Fin du 1er trimestre ; corps s'allonge, tete relativement plus petite.",
+  "nos_coupes": "aucune (stade manquant -> proportions a prendre sur VOKA)",
+  "page_voka": "https://voka.io/3d-anatomy/embryology/first-trimester/human-embryo-day-91/",
+  "catalogue_voka": "https://catalog.voka.io/en/models/bca0620c-bc76-40ec-be54-3271bc217411/53623f0b-89eb-4fbb-9c0d-655c1e0eb084/fd22b7cd-b13a-409e-ae67-f9cb3088c492/872297df-2195-4d52-bac6-43e1b0cb7a90",
+  "image_voka": "voka_pages/voka_J91.webp",
+  "description_voka": "Observe the human embryo at Day 91, when major organ systems are well-established and structural refinement continues throughout the body. This interactive 3D model provides a comprehensive view of development, supporting the study of normal growth patterns. It is particularly beneficial for medical students, educators, and researchers seeking detailed and practical tools for teaching, learning, and analyzing early prenatal development."
+ },
+ "views": [
+  {
+   "file": "J91_az000_el+00.png",
+   "az": 0,
+   "el": 0
+  },
+  {
+   "file": "J91_az045_el+00.png",
+   "az": 45,
+   "el": 0
+  },
+  {
+   "file": "J91_az090_el+00.png",
+   "az": 90,
+   "el": 0
+  },
+  {
+   "file": "J91_az135_el+00.png",
+   "az": 135,
+   "el": 0
+  },
+  {
+   "file": "J91_az180_el+00.png",
+   "az": 180,
+   "el": 0
+  },
+  {
+   "file": "J91_az225_el+00.png",
+   "az": 225,
+   "el": 0
+  },
+  {
+   "file": "J91_az270_el+00.png",
+   "az": 270,
+   "el": 0
+  },
+  {
+   "file": "J91_az315_el+00.png",
+   "az": 315,
+   "el": 0
+  },
+  {
+   "file": "J91_az000_el+60.png",
+   "az": 0,
+   "el": 60
+  },
+  {
+   "file": "J91_az045_el+60.png",
+   "az": 45,
+   "el": 60
+  },
+  {
+   "file": "J91_az090_el+60.png",
+   "az": 90,
+   "el": 60
+  },
+  {
+   "file": "J91_az135_el+60.png",
+   "az": 135,
+   "el": 60
+  },
+  {
+   "file": "J91_az180_el+60.png",
+   "az": 180,
+   "el": 60
+  },
+  {
+   "file": "J91_az225_el+60.png",
+   "az": 225,
+   "el": 60
+  },
+  {
+   "file": "J91_az270_el+60.png",
+   "az": 270,
+   "el": 60
+  },
+  {
+   "file": "J91_az315_el+60.png",
+   "az": 315,
+   "el": 60
+  },
+  {
+   "file": "J91_az000_el-60.png",
+   "az": 0,
+   "el": -60
+  },
+  {
+   "file": "J91_az045_el-60.png",
+   "az": 45,
+   "el": -60
+  },
+  {
+   "file": "J91_az090_el-60.png",
+   "az": 90,
+   "el": -60
+  },
+  {
+   "file": "J91_az135_el-60.png",
+   "az": 135,
+   "el": -60
+  },
+  {
+   "file": "J91_az180_el-60.png",
+   "az": 180,
+   "el": -60
+  },
+  {
+   "file": "J91_az225_el-60.png",
+   "az": 225,
+   "el": -60
+  },
+  {
+   "file": "J91_az270_el-60.png",
+   "az": 270,
+   "el": -60
+  },
+  {
+   "file": "J91_az315_el-60.png",
+   "az": 315,
+   "el": -60
+  }
+ ],
+ "box": {
+  "x": 60,
+  "y": 110,
+  "width": 1270,
+  "height": 830
+ },
+ "px_per_360": 2300,
+ "viewport": {
+  "width": 1400,
+  "height": 1000
+ },
+ "note": "az = rotation horizontale depuis la vue par défaut (0 = vue latérale VOKA) ; el > 0 = vu de dessus. Fond uniforme -> silhouettes par silhouettes.py"
+}

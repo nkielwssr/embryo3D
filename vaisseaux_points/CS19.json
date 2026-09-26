@@ -1,0 +1,60 @@
+{
+ "stade": "CS19",
+ "fichier": "vaisseaux.npz",
+ "controle": "controle_vaisseaux.png",
+ "segments": [
+  {
+   "nom": "aorte_dorsale",
+   "rmax": 4,
+   "rayon_recalage": 2,
+   "points": [
+    [
+     165,
+     410,
+     458
+    ],
+    [
+     168,
+     426,
+     458
+    ],
+    [
+     170,
+     442,
+     458
+    ],
+    [
+     170,
+     458,
+     457
+    ],
+    [
+     170,
+     474,
+     452
+    ],
+    [
+     172,
+     490,
+     445
+    ],
+    [
+     172,
+     506,
+     436
+    ],
+    [
+     176,
+     522,
+     428
+    ],
+    [
+     178,
+     538,
+     430
+    ]
+   ]
+  }
+ ],
+ "confiance": "moyenne (aorte descendante thoracique) ; cardinales postérieures : définitivement non traçables dans ce volume (régression à ce stade ; lumières latérales = cavités pleurales/cœlomiques)"
+}

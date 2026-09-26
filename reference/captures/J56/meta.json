@@ -1,0 +1,154 @@
+{
+ "stage": {
+  "jour": 56,
+  "id": "J56",
+  "titre_fr": "Embryon, 56 jours",
+  "carnegie": "CS23",
+  "carnegie_plage": "CS22-23",
+  "semaine_pf": 8,
+  "jours_carnegie": "56-57",
+  "crl_mm_min": 27,
+  "crl_mm_max": 31,
+  "crl_mm": 29.0,
+  "reperes": "Fin de la periode embryonnaire : tete arrondie, paupieres, doigts et orteils libres, queue disparue, hernie ombilicale physiologique.",
+  "nos_coupes": "aucune (stade manquant -> proportions a prendre sur VOKA)",
+  "page_voka": "https://voka.io/3d-anatomy/embryology/first-trimester/human-embryo-day-56/",
+  "catalogue_voka": "https://catalog.voka.io/en/models/bca0620c-bc76-40ec-be54-3271bc217411/53623f0b-89eb-4fbb-9c0d-655c1e0eb084/fd22b7cd-b13a-409e-ae67-f9cb3088c492/322f5c54-eb62-4e78-901c-92b5e11d5ec7",
+  "image_voka": "voka_pages/voka_J56.webp",
+  "description_voka": "Step into the Day 56 stage of human embryonic growth, when limb differentiation progresses and the major organ systems become more defined. This interactive 3D model makes it easier to observe intricate developmental changes and understand their spatial context. It is highly beneficial for medical trainees, educators, and developmental biologists seeking reliable references for studying embryonic progression."
+ },
+ "views": [
+  {
+   "file": "J56_az000_el+00.png",
+   "az": 0,
+   "el": 0
+  },
+  {
+   "file": "J56_az045_el+00.png",
+   "az": 45,
+   "el": 0
+  },
+  {
+   "file": "J56_az090_el+00.png",
+   "az": 90,
+   "el": 0
+  },
+  {
+   "file": "J56_az135_el+00.png",
+   "az": 135,
+   "el": 0
+  },
+  {
+   "file": "J56_az180_el+00.png",
+   "az": 180,
+   "el": 0
+  },
+  {
+   "file": "J56_az225_el+00.png",
+   "az": 225,
+   "el": 0
+  },
+  {
+   "file": "J56_az270_el+00.png",
+   "az": 270,
+   "el": 0
+  },
+  {
+   "file": "J56_az315_el+00.png",
+   "az": 315,
+   "el": 0
+  },
+  {
+   "file": "J56_az000_el+60.png",
+   "az": 0,
+   "el": 60
+  },
+  {
+   "file": "J56_az045_el+60.png",
+   "az": 45,
+   "el": 60
+  },
+  {
+   "file": "J56_az090_el+60.png",
+   "az": 90,
+   "el": 60
+  },
+  {
+   "file": "J56_az135_el+60.png",
+   "az": 135,
+   "el": 60
+  },
+  {
+   "file": "J56_az180_el+60.png",
+   "az": 180,
+   "el": 60
+  },
+  {
+   "file": "J56_az225_el+60.png",
+   "az": 225,
+   "el": 60
+  },
+  {
+   "file": "J56_az270_el+60.png",
+   "az": 270,
+   "el": 60
+  },
+  {
+   "file": "J56_az315_el+60.png",
+   "az": 315,
+   "el": 60
+  },
+  {
+   "file": "J56_az000_el-60.png",
+   "az": 0,
+   "el": -60
+  },
+  {
+   "file": "J56_az045_el-60.png",
+   "az": 45,
+   "el": -60
+  },
+  {
+   "file": "J56_az090_el-60.png",
+   "az": 90,
+   "el": -60
+  },
+  {
+   "file": "J56_az135_el-60.png",
+   "az": 135,
+   "el": -60
+  },
+  {
+   "file": "J56_az180_el-60.png",
+   "az": 180,
+   "el": -60
+  },
+  {
+   "file": "J56_az225_el-60.png",
+   "az": 225,
+   "el": -60
+  },
+  {
+   "file": "J56_az270_el-60.png",
+   "az": 270,
+   "el": -60
+  },
+  {
+   "file": "J56_az315_el-60.png",
+   "az": 315,
+   "el": -60
+  }
+ ],
+ "box": {
+  "x": 60,
+  "y": 110,
+  "width": 1270,
+  "height": 830
+ },
+ "px_per_360": 2300,
+ "viewport": {
+  "width": 1400,
+  "height": 1000
+ },
+ "note": "az = rotation horizontale depuis la vue par défaut (0 = vue latérale VOKA) ; el > 0 = vu de dessus. Fond uniforme -> silhouettes par silhouettes.py"
+}

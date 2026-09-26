@@ -1,0 +1,117 @@
+{
+ "stade": "CS20",
+ "fichier": "vaisseaux.npz",
+ "controle": "controle_vaisseaux.png",
+ "segments": [
+  {
+   "nom": "aorte_dorsale_gauche",
+   "rmax": 5,
+   "rayon_recalage": 3,
+   "points": [
+    [
+     122,
+     350,
+     372
+    ],
+    [
+     123,
+     370,
+     378
+    ],
+    [
+     126,
+     390,
+     382
+    ],
+    [
+     132,
+     410,
+     386
+    ],
+    [
+     138,
+     435,
+     388
+    ],
+    [
+     140,
+     450,
+     388
+    ],
+    [
+     141,
+     465,
+     390
+    ],
+    [
+     143,
+     480,
+     390
+    ],
+    [
+     146,
+     495,
+     388
+    ],
+    [
+     152,
+     510,
+     388
+    ],
+    [
+     160,
+     525,
+     383
+    ],
+    [
+     160,
+     540,
+     382
+    ],
+    [
+     160,
+     555,
+     370
+    ],
+    [
+     158,
+     574,
+     345
+    ],
+    [
+     160,
+     588,
+     333
+    ],
+    [
+     163,
+     602,
+     322
+    ]
+   ]
+  },
+  {
+   "nom": "aorte_dorsale_droite",
+   "rmax": 5,
+   "rayon_recalage": 3,
+   "points": [
+    [
+     200,
+     350,
+     375
+    ],
+    [
+     200,
+     370,
+     378
+    ],
+    [
+     199,
+     390,
+     380
+    ]
+   ]
+  }
+ ],
+ "confiance": "moyenne (aorte descendante + arc droit court) ; cardinales postérieures : définitivement non traçables dans ce volume (régression à ce stade ; lumières latérales = cavités pleurales/cœlomiques)"
+}

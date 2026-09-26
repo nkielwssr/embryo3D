@@ -1,0 +1,278 @@
+﻿veine;section;x;y;label_EHD;notochorde_x;notochorde_y;notochorde_interpolee;dx_gauche_px;dd_dorsal_px;s_estime_mon_axe
+cardinale_anterieure;39;101.0;327.0;primary head vein;172.0;264.0;True;-71.0;-63.0;232
+cardinale_anterieure;39;247.0;236.0;primary head vein;172.0;264.0;True;75.0;28.0;232
+cardinale_anterieure;40;101.0;324.0;primary head vein;172.0;264.0;True;-71.0;-60.0;232
+cardinale_anterieure;40;247.0;236.0;primary head vein;172.0;264.0;True;75.0;28.0;232
+cardinale_anterieure;41;103.0;326.0;primary head vein;172.0;264.0;True;-69.0;-62.0;232
+cardinale_anterieure;41;107.0;244.0;primary head vein;172.0;264.0;True;-65.0;20.0;232
+cardinale_anterieure;41;250.0;240.0;primary head vein;172.0;264.0;True;78.0;24.0;232
+cardinale_anterieure;42;253.0;243.0;primary head vein;172.0;264.0;True;81.0;21.0;232
+cardinale_anterieure;43;251.0;254.0;primary head vein;172.0;264.0;True;79.0;10.0;232
+cardinale_anterieure;44;112.0;222.0;primary head vein;172.0;264.0;True;-60.0;42.0;232
+cardinale_anterieure;45;111.0;220.0;primary head vein;172.0;264.0;True;-61.0;44.0;232
+cardinale_anterieure;46;111.0;219.0;primary head vein;172.0;264.0;True;-61.0;45.0;232
+cardinale_anterieure;47;238.0;209.0;primary head vein;172.0;264.0;True;66.0;55.0;232
+cardinale_anterieure;47;252.0;330.0;primary head vein;172.0;264.0;True;80.0;-66.0;232
+cardinale_anterieure;48;235.0;199.0;primary head vein;172.0;264.0;True;63.0;65.0;232
+cardinale_anterieure;48;251.0;328.0;primary head vein;172.0;264.0;True;79.0;-64.0;232
+cardinale_anterieure;49;249.0;336.0;primary head vein;172.0;264.0;True;77.0;-72.0;232
+cardinale_anterieure;50;117.0;198.0;primary head vein;172.0;264.0;True;-55.0;66.0;232
+cardinale_anterieure;50;248.0;339.0;primary head vein;172.0;264.0;True;76.0;-75.0;232
+cardinale_anterieure;51;117.0;191.0;primary head vein;172.0;264.0;True;-55.0;73.0;232
+cardinale_anterieure;52;237.0;190.0;precardinal vein;172.0;264.0;True;65.0;74.0;232
+cardinale_anterieure;52;250.0;355.0;primary head vein;172.0;264.0;True;78.0;-91.0;232
+cardinale_anterieure;53;237.0;189.0;precardinal vein;172.0;264.0;True;65.0;75.0;232
+cardinale_anterieure;53;250.0;367.0;primary head vein;172.0;264.0;True;78.0;-103.0;232
+cardinale_anterieure;55;250.0;372.0;primary head vein;172.0;264.0;True;78.0;-108.0;232
+cardinale_anterieure;56;112.0;184.0;precardinal vein;172.0;264.0;False;-60.0;80.0;235
+cardinale_anterieure;60;113.0;159.0;precardinal vein;176.0;347.0;False;-63.0;188.0;248
+cardinale_anterieure;61;111.0;172.0;precardinal vein;173.7;324.7;True;-62.7;152.7;252
+cardinale_anterieure;61;245.0;416.0;primary head vein;173.7;324.7;True;71.3;-91.3;252
+cardinale_anterieure;62;113.0;174.0;precardinal vein;171.3;302.3;True;-58.3;128.3;255
+cardinale_anterieure;62;247.0;418.0;primary head vein;171.3;302.3;True;75.7;-115.7;255
+cardinale_anterieure;66;231.0;181.0;precardinal vein;169.5;276.5;False;61.5;95.5;269
+cardinale_anterieure;67;233.0;182.0;precardinal vein;172.0;277.5;False;61.0;95.5;272
+cardinale_anterieure;68;231.0;180.0;precardinal vein;177.0;388.0;False;54.0;208.0;275
+cardinale_anterieure;69;225.0;182.0;precardinal vein;175.0;392.0;False;50.0;210.0;279
+cardinale_anterieure;70;110.0;173.0;precardinal vein;167.0;147.0;False;-57.0;-26.0;282
+cardinale_anterieure;70;237.0;445.0;primary head vein;167.0;147.0;False;70.0;-298.0;282
+cardinale_anterieure;71;111.0;174.0;precardinal vein;167.5;276.5;False;-56.5;102.5;286
+cardinale_anterieure;75;107.0;160.0;precardinal vein;166.1;232.6;True;-59.1;72.6;302
+cardinale_anterieure;76;104.0;159.0;precardinal vein;165.8;221.7;True;-61.8;62.7;306
+cardinale_anterieure;77;104.0;156.0;precardinal vein;165.4;210.7;True;-61.4;54.7;310
+cardinale_anterieure;78;101.0;151.0;precardinal vein;165.1;199.7;True;-64.1;48.7;315
+cardinale_anterieure;79;101.0;152.0;precardinal vein;164.8;188.8;True;-63.8;36.8;319
+cardinale_anterieure;80;102.0;149.0;precardinal vein;164.4;177.8;True;-62.4;28.8;322
+cardinale_anterieure;81;100.0;144.0;precardinal vein;164.1;166.8;True;-64.1;22.8;326
+cardinale_anterieure;82;102.0;150.0;precardinal vein;163.7;155.8;True;-61.7;5.8;329
+cardinale_anterieure;87;220.0;166.0;precardinal vein;162.0;101.0;False;58.0;-65.0;347
+cardinale_anterieure;88;223.0;166.0;precardinal vein;162.0;101.0;False;61.0;-65.0;351
+cardinale_anterieure;89;225.0;165.0;precardinal vein;162.0;98.0;False;63.0;-67.0;355
+cardinale_anterieure;90;224.0;160.0;precardinal vein;162.0;98.0;False;62.0;-62.0;358
+cardinale_anterieure;91;226.0;158.0;precardinal vein;163.0;98.0;False;63.0;-60.0;362
+cardinale_anterieure;92;225.0;163.0;precardinal vein;166.0;99.0;False;59.0;-64.0;366
+cardinale_anterieure;93;221.0;165.0;precardinal vein;167.0;105.0;False;54.0;-60.0;370
+cardinale_anterieure;94;227.0;164.0;precardinal vein;168.0;96.0;False;59.0;-68.0;375
+cardinale_anterieure;95;223.0;168.0;precardinal vein;168.0;95.0;False;55.0;-73.0;379
+cardinale_anterieure;96;95.0;163.0;precardinal vein;166.8;94.2;True;-71.8;-68.8;383
+cardinale_anterieure;97;94.0;159.0;precardinal vein;165.5;93.5;True;-71.5;-65.5;387
+cardinale_anterieure;99;98.0;156.0;precardinal vein;163.0;92.0;False;-65.0;-64.0;396
+cardinale_commune;100;223.0;176.0;common cardinal vein;162.0;91.0;False;61.0;-85.0;400
+cardinale_commune;101;222.0;174.0;common cardinal vein;162.0;91.0;False;60.0;-83.0;404
+cardinale_commune;102;222.0;175.0;common cardinal vein;163.0;92.0;False;59.0;-83.0;409
+cardinale_commune;103;224.0;174.0;common cardinal vein;162.0;90.0;False;62.0;-84.0;413
+cardinale_commune;104;222.0;180.0;common cardinal vein;161.0;91.0;False;61.0;-89.0;417
+cardinale_commune;105;223.0;186.0;common cardinal vein;161.0;92.0;False;62.0;-94.0;421
+cardinale_commune;106;220.0;188.0;common cardinal vein;161.0;91.0;False;59.0;-97.0;425
+cardinale_commune;107;215.0;184.0;common cardinal vein;161.0;91.0;False;54.0;-93.0;429
+cardinale_commune;108;215.0;187.0;common cardinal vein;161.0;90.0;False;54.0;-97.0;432
+cardinale_commune;109;216.0;191.0;common cardinal vein;162.0;90.0;False;54.0;-101.0;436
+cardinale_commune;110;91.0;195.0;common cardinal vein;162.0;89.0;False;-71.0;-106.0;440
+cardinale_commune;110;213.0;190.0;common cardinal vein;162.0;89.0;False;51.0;-101.0;440
+cardinale_commune;111;217.0;192.0;common cardinal vein;167.0;91.0;False;50.0;-101.0;444
+cardinale_commune;112;213.0;194.0;common cardinal vein;169.0;91.0;False;44.0;-103.0;448
+cardinale_commune;113;216.0;195.0;left common cardinal vein;167.0;92.0;False;49.0;-103.0;452
+cardinale_commune;114;214.0;193.0;left common cardinal vein;167.0;88.0;False;47.0;-105.0;456
+cardinale_posterieure;100;219.0;134.0;postcardinal vein;162.0;91.0;False;57.0;-43.0;400
+cardinale_posterieure;101;218.0;131.0;postcardinal vein;162.0;91.0;False;56.0;-40.0;404
+cardinale_posterieure;102;217.0;133.0;postcardinal vein;163.0;92.0;False;54.0;-41.0;409
+cardinale_posterieure;103;218.0;130.0;postcardinal vein;162.0;90.0;False;56.0;-40.0;413
+cardinale_posterieure;104;216.0;130.0;postcardinal vein;161.0;91.0;False;55.0;-39.0;417
+cardinale_posterieure;105;164.0;152.0;postcardinal vein;161.0;92.0;False;3.0;-60.0;421
+cardinale_posterieure;106;214.0;137.0;postcardinal vein;161.0;91.0;False;53.0;-46.0;425
+cardinale_posterieure;107;104.0;129.0;postcardinal vein;161.0;91.0;False;-57.0;-38.0;429
+cardinale_posterieure;108;108.0;128.0;postcardinal vein;161.0;90.0;False;-53.0;-38.0;432
+cardinale_posterieure;109;107.0;125.0;postcardinal vein;162.0;90.0;False;-55.0;-35.0;436
+cardinale_posterieure;110;106.0;125.0;postcardinal vein;162.0;89.0;False;-56.0;-36.0;440
+cardinale_posterieure;111;107.0;122.0;postcardinal vein;167.0;91.0;False;-60.0;-31.0;444
+cardinale_posterieure;112;107.0;120.0;postcardinal vein;169.0;91.0;False;-62.0;-29.0;448
+cardinale_posterieure;113;107.0;125.0;postcardinal vein;167.0;92.0;False;-60.0;-33.0;452
+cardinale_posterieure;114;109.0;121.0;postcardinal vein;167.0;88.0;False;-58.0;-33.0;456
+cardinale_posterieure;115;107.0;120.0;postcardinal vein;169.0;89.0;False;-62.0;-31.0;459
+cardinale_posterieure;116;111.0;122.0;postcardinal vein;172.0;91.0;False;-61.0;-31.0;463
+cardinale_posterieure;117;114.0;124.0;postcardinal vein;170.0;93.0;False;-56.0;-31.0;467
+cardinale_posterieure;118;111.0;125.0;postcardinal vein;172.0;92.0;False;-61.0;-33.0;471
+cardinale_posterieure;119;111.0;125.0;postcardinal vein;169.0;95.0;False;-58.0;-30.0;475
+cardinale_posterieure;120;114.0;126.0;postcardinal vein;168.0;94.0;False;-54.0;-32.0;479
+cardinale_posterieure;121;110.0;123.0;postcardinal vein;163.0;90.0;False;-53.0;-33.0;483
+cardinale_posterieure;122;111.0;120.0;postcardinal vein;164.0;92.0;False;-53.0;-28.0;487
+cardinale_posterieure;127;123.0;124.0;postcardinal vein;170.0;98.0;False;-47.0;-26.0;505
+cardinale_posterieure;128;121.0;115.0;postcardinal vein;171.0;94.0;False;-50.0;-21.0;508
+cardinale_posterieure;129;122.0;123.0;postcardinal vein;172.0;96.0;False;-50.0;-27.0;512
+cardinale_posterieure;130;120.0;119.0;postcardinal vein;171.0;96.0;True;-51.0;-23.0;516
+cardinale_posterieure;131;119.0;124.0;postcardinal vein;170.0;96.0;True;-51.0;-28.0;520
+cardinale_posterieure;132;123.0;124.0;postcardinal vein;169.0;96.0;False;-46.0;-28.0;524
+cardinale_posterieure;133;125.0;127.0;postcardinal vein;170.0;97.0;False;-45.0;-30.0;528
+cardinale_posterieure;134;124.0;128.0;postcardinal vein;170.0;100.0;False;-46.0;-28.0;532
+cardinale_posterieure;135;122.0;125.0;postcardinal vein;171.0;97.0;False;-49.0;-28.0;536
+cardinale_posterieure;136;124.0;128.0;postcardinal vein;170.2;98.4;True;-46.2;-29.6;540
+cardinale_posterieure;137;124.0;121.0;postcardinal vein;169.4;99.8;True;-45.4;-21.2;544
+cardinale_posterieure;138;123.0;130.0;postcardinal vein;168.6;101.2;True;-45.6;-28.8;548
+cardinale_posterieure;139;125.0;127.0;postcardinal vein;167.8;102.6;True;-42.8;-24.4;552
+cardinale_posterieure;141;123.0;127.0;postcardinal vein;170.0;105.0;False;-47.0;-22.0;559
+cardinale_posterieure;142;123.0;126.0;postcardinal vein;169.0;106.5;True;-46.0;-19.5;563
+cardinale_posterieure;143;122.0;132.0;postcardinal vein;168.0;108.0;False;-46.0;-24.0;567
+cardinale_posterieure;144;123.0;135.0;postcardinal vein;171.0;109.0;False;-48.0;-26.0;571
+cardinale_posterieure;145;122.0;137.0;postcardinal vein;169.0;107.0;False;-47.0;-30.0;575
+cardinale_posterieure;146;120.0;135.0;postcardinal vein;169.0;109.0;False;-49.0;-26.0;579
+cardinale_posterieure;147;201.0;142.0;postcardinal vein;162.0;107.0;False;39.0;-35.0;583
+cardinale_posterieure;148;202.0;143.0;postcardinal vein;162.0;107.0;False;40.0;-36.0;587
+cardinale_posterieure;149;201.0;142.0;postcardinal vein;161.5;108.0;True;39.5;-34.0;591
+cardinale_posterieure;151;203.0;142.0;postcardinal vein;159.0;108.0;False;44.0;-34.0;595
+cardinale_posterieure;152;200.0;142.0;postcardinal vein;159.6;108.6;True;40.4;-33.4;592
+cardinale_posterieure;153;205.0;144.0;postcardinal vein;160.1;109.2;True;44.9;-34.8;589
+cardinale_posterieure;154;204.0;144.0;postcardinal vein;160.7;109.8;True;43.3;-34.2;585
+cardinale_posterieure;155;205.0;143.0;postcardinal vein;161.2;110.4;True;43.8;-32.6;581
+cardinale_posterieure;156;119.0;142.0;postcardinal vein;161.8;111.1;True;-42.8;-30.9;578
+cardinale_posterieure;157;207.0;145.0;postcardinal vein;162.3;111.7;True;44.7;-33.3;574
+cardinale_posterieure;158;204.0;145.0;postcardinal vein;162.9;112.3;True;41.1;-32.7;571
+cardinale_posterieure;159;117.0;138.0;postcardinal vein;163.4;112.9;True;-46.4;-25.1;567
+cardinale_posterieure;159;124.0;110.0;postcardinal vein;163.4;112.9;True;-39.4;2.9;567
+cardinale_posterieure;160;120.0;137.0;postcardinal vein;164.0;113.5;True;-44.0;-23.5;563
+cardinale_posterieure;162;116.0;139.0;postcardinal vein;165.1;114.7;True;-49.1;-24.3;556
+cardinale_posterieure;170;119.0;145.0;postcardinal vein;163.0;119.0;False;-44.0;-26.0;526
+cardinale_posterieure;172;118.0;146.0;postcardinal vein;165.8;168.7;True;-47.8;22.7;518
+cardinale_posterieure;173;213.0;154.0;postcardinal vein;167.2;193.5;True;45.8;39.5;515
+cardinale_posterieure;174;119.0;147.0;postcardinal vein;168.7;218.3;True;-49.7;71.3;511
+cardinale_posterieure;175;122.0;149.0;postcardinal vein;170.1;243.2;True;-48.1;94.2;507
+cardinale_posterieure;176;124.0;152.0;postcardinal vein;171.5;268.0;False;-47.5;116.0;503
+cardinale_posterieure;177;121.0;151.0;postcardinal vein;172.0;268.0;False;-51.0;117.0;499
+ombilicale_gauche;120;230.0;203.0;left umbilical vein;168.0;94.0;False;62.0;-109.0;479
+ombilicale_gauche;121;228.0;202.0;left umbilical vein;163.0;90.0;False;65.0;-112.0;483
+ombilicale_gauche;126;228.0;207.0;left umbilical vein;170.0;94.0;False;58.0;-113.0;501
+ombilicale_gauche;127;231.0;210.0;left umbilical vein;170.0;98.0;False;61.0;-112.0;505
+ombilicale_gauche;128;230.0;207.0;left umbilical vein;171.0;94.0;False;59.0;-113.0;508
+ombilicale_gauche;138;225.0;228.0;left umbilical vein;168.6;101.2;True;56.4;-126.8;548
+ombilicale_gauche;139;221.0;231.0;left umbilical vein;167.8;102.6;True;53.2;-128.4;552
+ombilicale_gauche;140;222.0;234.0;left umbilical vein;167.0;104.0;False;55.0;-130.0;555
+ombilicale_gauche;152;214.0;231.0;left umbilical vein;159.6;108.6;True;54.4;-122.4;592
+ombilicale_gauche;153;210.0;232.0;left umbilical vein;160.1;109.2;True;49.9;-122.8;589
+ombilicale_gauche;154;210.0;233.0;left umbilical vein;160.7;109.8;True;49.3;-123.2;585
+ombilicale_gauche;156;210.0;229.0;left umbilical vein;161.8;111.1;True;48.2;-117.9;578
+ombilicale_gauche;157;208.0;227.0;left umbilical vein;162.3;111.7;True;45.7;-115.3;574
+ombilicale_gauche;158;211.0;227.0;left umbilical vein;162.9;112.3;True;48.1;-114.7;571
+ombilicale_gauche;159;203.0;224.0;left umbilical vein;163.4;112.9;True;39.6;-111.1;567
+ombilicale_gauche;160;212.0;225.0;left umbilical vein;164.0;113.5;True;48.0;-111.5;563
+ombilicale_gauche;162;149.0;257.0;left umbilical vein;165.1;114.7;True;-16.1;-142.3;556
+ombilicale_gauche;163;211.0;225.0;left umbilical vein;165.7;115.3;True;45.3;-109.7;552
+ombilicale_gauche;164;210.0;226.0;left umbilical vein;166.2;115.9;True;43.8;-110.1;548
+ombilicale_gauche;165;207.0;221.0;left umbilical vein;166.8;116.6;True;40.2;-104.4;545
+ombilicale_gauche;168;208.0;226.0;left umbilical vein;168.4;118.4;True;39.6;-107.6;533
+ombilicale_gauche;169;212.0;225.0;left umbilical vein;169.0;119.0;False;43.0;-106.0;530
+ombilicale_gauche;170;214.0;226.0;left umbilical vein;163.0;119.0;False;51.0;-107.0;526
+ombilicale_gauche;179;222.0;233.0;left umbilical vein;178.0;408.0;False;44.0;175.0;492
+ombilicale_gauche;180;218.0;239.0;left umbilical vein;178.0;408.0;False;40.0;169.0;488
+ombilicale_gauche;180;232.1;293.1;left umbilical vein;178.0;408.0;False;54.1;114.9;488
+ombilicale_gauche;180;244.0;278.1;left umbilical vein;178.0;408.0;False;66.0;129.9;488
+ombilicale_gauche;181;221.0;233.0;left umbilical vein;179.0;407.0;False;42.0;174.0;484
+ombilicale_gauche;181;238.0;273.0;left umbilical vein;179.0;407.0;False;59.0;134.0;484
+ombilicale_gauche;182;220.0;238.0;left umbilical vein;179.0;407.0;True;41.0;169.0;481
+ombilicale_gauche;182;239.9;269.0;left umbilical vein;179.0;407.0;True;60.9;138.0;481
+ombilicale_gauche;183;223.0;243.0;left umbilical vein;179.0;407.0;False;44.0;164.0;477
+ombilicale_gauche;183;239.0;272.0;left umbilical vein;179.0;407.0;False;60.0;135.0;477
+ombilicale_gauche;184;221.0;239.2;left umbilical vein;176.0;408.0;False;45.0;168.8;473
+ombilicale_gauche;184;236.0;268.0;left umbilical vein;176.0;408.0;False;60.0;140.0;473
+ombilicale_gauche;185;216.0;236.0;left umbilical vein;181.0;408.0;False;35.0;172.0;470
+ombilicale_gauche;185;239.0;262.0;left umbilical vein;181.0;408.0;False;58.0;146.0;470
+ombilicale_gauche;186;234.0;256.0;left umbilical vein;182.5;410.5;True;51.5;154.5;466
+ombilicale_gauche;187;227.0;253.0;left umbilical vein;184.0;413.0;False;43.0;160.0;462
+ombilicale_gauche;188;231.0;253.0;left umbilical vein;187.0;411.0;False;44.0;158.0;459
+ombilicale_droite;122;87.0;191.0;right umbilical vein;164.0;92.0;False;-77.0;-99.0;487
+ombilicale_droite;123;85.0;190.0;right umbilical vein;168.0;92.0;False;-83.0;-98.0;491
+ombilicale_droite;124;81.0;191.0;right umbilical vein;168.0;90.0;False;-87.0;-101.0;494
+ombilicale_droite;125;78.0;189.0;right umbilical vein;165.0;93.0;False;-87.0;-96.0;497
+ombilicale_droite;126;76.0;188.0;right umbilical vein;170.0;94.0;False;-94.0;-94.0;501
+ombilicale_droite;127;78.0;194.0;right umbilical vein (involuting);170.0;98.0;False;-92.0;-96.0;505
+ombilicale_droite;128;78.0;193.0;right umbilical vein (involuting);171.0;94.0;False;-93.0;-99.0;508
+ombilicale_droite;128;114.0;188.0;right umbilical vein (involuting);171.0;94.0;False;-57.0;-94.0;508
+ombilicale_droite;129;79.0;194.0;right umbilical vein;172.0;96.0;False;-93.0;-98.0;512
+ombilicale_droite;130;77.0;196.0;right umbilical vein;171.0;96.0;True;-94.0;-100.0;516
+ombilicale_droite;131;79.0;198.0;right umbilical vein;170.0;96.0;True;-91.0;-102.0;520
+ombilicale_droite;152;103.0;225.0;right umbilical vein;159.6;108.6;True;-56.6;-116.4;592
+ombilicale_droite;153;104.0;227.0;right umbilical vein;160.1;109.2;True;-56.1;-117.8;589
+ombilicale_droite;154;104.0;222.0;right umbilical vein;160.7;109.8;True;-56.7;-112.2;585
+ombilicale_droite;156;105.0;223.0;right umbilical vein;161.8;111.1;True;-56.8;-111.9;578
+ombilicale_droite;157;148.0;331.0;right umbilical vein;162.3;111.7;True;-14.3;-219.3;574
+ombilicale_droite;160;58.0;245.0;right umbilical vein;164.0;113.5;True;-106.0;-131.5;563
+ombilicale_droite;162;154.0;212.0;right umbilical vein;165.1;114.7;True;-11.1;-97.3;556
+ombilicale_droite;165;53.5;216.0;right umbilical vein;166.8;116.6;True;-113.3;-99.4;545
+ombilicale_droite;174;53.0;215.5;right umbilical vein;168.7;218.3;True;-115.7;2.8;511
+ombilicale_droite;175;52.0;215.5;right umbilical vein;170.1;243.2;True;-118.1;27.7;507
+ombilicale_droite;179;109.0;232.0;right umbilical vein;178.0;408.0;False;-69.0;176.0;492
+ombilicale_droite;180;107.0;235.0;right umbilical vein;178.0;408.0;False;-71.0;173.0;488
+ombilicale_droite;181;108.0;238.0;right umbilical vein;179.0;407.0;False;-71.0;169.0;484
+ombilicale_droite;182;106.0;232.0;right umbilical vein;179.0;407.0;True;-73.0;175.0;481
+ombilicale_droite;183;106.0;229.0;right umbilical vein;179.0;407.0;False;-73.0;178.0;477
+ombilicale_droite;184;102.0;233.0;right umbilical vein;176.0;408.0;False;-74.0;175.0;473
+ombilicale_droite;185;107.0;231.0;right umbilical vein;181.0;408.0;False;-74.0;177.0;470
+ombilicale_droite;186;109.0;236.0;right umbilical vein;182.5;410.5;True;-73.5;174.5;466
+ombilicale_droite;187;112.0;238.0;right umbilical vein;184.0;413.0;False;-72.0;175.0;462
+ombilicale_droite;188;113.0;237.0;right umbilical vein;187.0;411.0;False;-74.0;174.0;459
+ombilicale_droite;193;110.0;254.0;right umbilical vein;185.0;411.0;False;-75.0;157.0;443
+ombilicale_droite;194;55.0;241.0;right umbilical vein;188.0;411.0;False;-133.0;170.0;440
+ombilicale_droite;195;115.0;263.0;right umbilical vein;188.0;410.0;False;-73.0;147.0;437
+ombilicale_droite;196;111.0;258.0;right umbilical vein;187.9;391.1;True;-76.9;133.1;434
+ombilicale_droite;197;113.0;253.0;right umbilical vein;187.7;372.1;True;-74.7;119.1;431
+ombilicale_commune;154;222.0;384.0;common umbilical vein;160.7;109.8;True;61.3;-274.2;585
+ombilicale_commune;155;224.0;388.0;common umbilical vein;161.2;110.4;True;62.8;-277.6;581
+ombilicale_commune;156;209.0;384.0;common umbilical vein;161.8;111.1;True;47.2;-272.9;578
+ombilicale_commune;157;203.0;380.0;common umbilical vein;162.3;111.7;True;40.7;-268.3;574
+ombilicale_commune;158;201.0;377.0;common umbilical vein;162.9;112.3;True;38.1;-264.7;571
+ombilicale_commune;159;214.0;368.0;common umbilical vein;163.4;112.9;True;50.6;-255.1;567
+ombilicale_commune;160;198.0;371.0;common umbilical vein;164.0;113.5;True;34.0;-257.5;563
+ombilicale_commune;162;186.0;360.0;common umbilical vein;165.1;114.7;True;20.9;-245.3;556
+vitelline_gauche;150;178.0;220.0;left vitelline (omphalomesenteric) vein;161.0;109.0;False;17.0;-111.0;594
+vitelline_gauche;152;181.0;217.0;left vitelline (omphalomesenteric) vein;159.6;108.6;True;21.4;-108.4;592
+vitelline_gauche;153;183.0;219.0;left vitelline (omphalomesenteric) vein;160.1;109.2;True;22.9;-109.8;589
+vitelline_gauche;154;183.0;221.0;left vitelline (omphalomesenteric) vein;160.7;109.8;True;22.3;-111.2;585
+vitelline_gauche;155;98.0;284.0;left vitelline (omphalomesenteric) vein;161.2;110.4;True;-63.2;-173.6;581
+vitelline_gauche;156;102.0;284.0;left vitelline (omphalomesenteric) vein;161.8;111.1;True;-59.8;-172.9;578
+vitelline_gauche;156;178.0;230.0;left vitelline (omphalomesenteric) vein;161.8;111.1;True;16.2;-118.9;578
+vitelline_gauche;157;178.4;228.6;left vitelline (omphalomesenteric) vein;162.3;111.7;True;16.1;-116.9;574
+vitelline_gauche;158;178.0;226.0;left vitelline (omphalomesenteric) vein;162.9;112.3;True;15.1;-113.7;571
+vitelline_gauche;161;166.0;247.0;left vitelline (omphalomesenteric) vein;164.6;114.1;True;1.4;-132.9;560
+vitelline_gauche;162;208.0;221.0;left vitelline (omphalomesenteric) vein;165.1;114.7;True;42.9;-106.3;556
+vitelline_droite;163;120.0;246.0;right vitelline (omphalomesenteric) vein;165.7;115.3;True;-45.7;-130.7;552
+vitelline_droite;163;155.0;226.0;right vitelline (omphalomesenteric) vein;165.7;115.3;True;-10.7;-110.7;552
+vitelline_droite;164;117.0;249.0;right vitelline (omphalomesenteric) vein;166.2;115.9;True;-49.2;-133.1;548
+vitelline;151;134.0;208.0;vitelline (omphalomesenteric) vein;159.0;108.0;False;-25.0;-100.0;595
+vitelline;159;176.0;233.0;vitelline (omphalomesenteric) vein;163.4;112.9;True;12.6;-120.1;567
+subcardinale;156;132.0;143.0;subcardinal vein;161.8;111.1;True;-29.8;-31.9;578
+subcardinale;157;194.0;146.0;subcardinal vein;162.3;111.7;True;31.7;-34.3;574
+subcardinale;158;192.0;147.0;subcardinal vein;162.9;112.3;True;29.1;-34.7;571
+subcardinale;159;193.0;147.0;subcardinal vein;163.4;112.9;True;29.6;-34.1;567
+subcardinale;174;136.0;160.0;subcardinal vein;168.7;218.3;True;-32.7;58.3;511
+subcardinale;175;135.0;160.0;subcardinal vein;170.1;243.2;True;-35.1;83.2;507
+subcardinale;176;136.0;163.0;subcardinal vein;171.5;268.0;False;-35.5;105.0;503
+subcardinale;177;133.0;162.0;subcardinal vein;172.0;268.0;False;-39.0;106.0;499
+hepatocardiaque;123;107.0;156.0;hepatocardiac vein;168.0;92.0;False;-61.0;-64.0;491
+hepatocardiaque;124;104.0;158.0;hepatocardiac vein;168.0;90.0;False;-64.0;-68.0;494
+hepatocardiaque;125;103.0;161.0;hepatocardiac vein;165.0;93.0;False;-62.0;-68.0;497
+hepatocardiaque;125;196.0;182.0;hepatocardiac vein;165.0;93.0;False;31.0;-89.0;497
+hepatocardiaque;126;103.0;157.0;hepatocardiac vein;170.0;94.0;False;-67.0;-63.0;501
+hepatocardiaque;126;199.0;181.0;hepatocardiac vein;170.0;94.0;False;29.0;-87.0;501
+hepatocardiaque;127;101.0;165.0;hepatocardiac vein;170.0;98.0;False;-69.0;-67.0;505
+hepatocardiaque;127;199.0;179.0;hepatocardiac vein;170.0;98.0;False;29.0;-81.0;505
+hepatocardiaque;128;104.0;162.0;hepatocardiac vein;171.0;94.0;False;-67.0;-68.0;508
+hepatocardiaque;129;107.0;165.0;hepatocardiac vein;172.0;96.0;False;-65.0;-69.0;512
+hepatocardiaque;136;205.0;184.0;hepatocardiac vein;170.2;98.4;True;34.8;-85.6;540
+hepatocardiaque;137;203.0;185.0;hepatocardiac vein;169.4;99.8;True;33.6;-85.2;544
+hepatocardiaque;138;205.0;193.0;hepatocardiac vein;168.6;101.2;True;36.4;-91.8;548
+hepatocardiaque;139;201.0;197.0;hepatocardiac vein;167.8;102.6;True;33.2;-94.4;552
+hepatocardiaque;140;108.0;185.0;right hepatocardiac vein;167.0;104.0;False;-59.0;-81.0;555
+hepatocardiaque;140;204.0;197.0;left hepatocardiac vein;167.0;104.0;False;37.0;-93.0;555
+hepatocardiaque;141;124.0;199.0;right hepatocardiac vein;170.0;105.0;False;-46.0;-94.0;559
+hepatocardiaque;141;194.0;204.0;left hepatocardiac vein;170.0;105.0;False;24.0;-99.0;559
+hepatocardiaque;142;123.0;198.0;right hepatocardiac vein;169.0;106.5;True;-46.0;-91.5;563
+hepatocardiaque;142;187.0;206.0;left hepatocardiac vein;169.0;106.5;True;18.0;-99.5;563
+hepatocardiaque;143;122.0;201.0;right hepatocardiac vein;168.0;108.0;False;-46.0;-93.0;567
+hepatocardiaque;143;192.0;206.0;left hepatocardiac vein;168.0;108.0;False;24.0;-98.0;567
+hepatocardiaque;144;123.0;200.0;right hepatocardiac vein;171.0;109.0;False;-48.0;-91.0;571
+hepatocardiaque;144;184.0;209.0;left hepatocardiac vein;171.0;109.0;False;13.0;-100.0;571
+jonction_pre_postcardinale;96;218.0;157.0;junction of postcardinal and precardinal veins;166.8;94.2;True;51.2;-62.8;383
+jonction_pre_postcardinale;97;218.0;159.0;junction of postcardinal and precardinal veins;165.5;93.5;True;52.5;-65.5;387
+jonction_pre_postcardinale;98;220.0;157.0;junction of postcardinal and precardinal veins;164.2;92.8;True;55.8;-64.2;392
+sinus_venosus_jonctions;115;104.0;192.0;junction of right hepatocardiac vein and sinus venosus;169.0;89.0;False;-65.0;-103.0;459
+sinus_venosus_jonctions;115;206.0;200.0;junction of left common cardinal and left umbilical veins with left sinus horn;169.0;89.0;False;37.0;-111.0;459
+sinus_venosus_jonctions;117;170.0;224.0;junction of left common cardinal vein and sinus venosus;170.0;93.0;False;0.0;-131.0;467
+sinus_venosus_jonctions;118;170.0;228.0;junction of left common cardinal vein and sinus venosus;172.0;92.0;False;-2.0;-136.0;471

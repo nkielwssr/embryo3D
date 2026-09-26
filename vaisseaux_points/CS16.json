@@ -1,0 +1,52 @@
+{
+ "stade": "CS16",
+ "fichier": "vaisseaux.npz",
+ "controle": "controle_vaisseaux.png",
+ "segments": [
+  {
+   "nom": "aorte_dorsale_gauche",
+   "rmax": 6,
+   "rayon_recalage": 4,
+   "points": [
+    [
+     191,
+     360,
+     485
+    ],
+    [
+     195,
+     392,
+     485
+    ],
+    [
+     195,
+     405,
+     486
+    ]
+   ]
+  },
+  {
+   "nom": "aorte_dorsale_droite",
+   "rmax": 6,
+   "rayon_recalage": 4,
+   "points": [
+    [
+     255,
+     360,
+     485
+    ],
+    [
+     245,
+     392,
+     485
+    ],
+    [
+     245,
+     405,
+     486
+    ]
+   ]
+  }
+ ],
+ "confiance": "moyenne (segment court, paires) ; cardinales postérieures : définitivement non traçables dans ce volume (régression à ce stade ; lumières latérales = cavités pleurales/cœlomiques)"
+}

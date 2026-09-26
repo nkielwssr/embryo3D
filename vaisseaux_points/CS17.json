@@ -1,0 +1,30 @@
+{
+ "stade": "CS17",
+ "fichier": "vaisseaux.npz",
+ "controle": "controle_vaisseaux.png",
+ "segments": [
+  {
+   "nom": "aorte_commune",
+   "rmax": 6,
+   "rayon_recalage": 4,
+   "points": [
+    [
+     241,
+     408,
+     441
+    ],
+    [
+     243,
+     426,
+     436
+    ],
+    [
+     244,
+     444,
+     432
+    ]
+   ]
+  }
+ ],
+ "confiance": "faible (tronc commun court) ; cardinales postérieures : définitivement non traçables dans ce volume (régression à ce stade ; lumières latérales = cavités pleurales/cœlomiques)"
+}

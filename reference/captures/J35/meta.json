@@ -1,0 +1,154 @@
+{
+ "stage": {
+  "jour": 35,
+  "id": "J35",
+  "titre_fr": "Embryon, 35 jours",
+  "carnegie": "CS15",
+  "carnegie_plage": "CS14-15",
+  "semaine_pf": 5,
+  "jours_carnegie": "35-36",
+  "crl_mm_min": 7,
+  "crl_mm_max": 9,
+  "crl_mm": 8.0,
+  "reperes": "Palette de la main, fosse nasale, cupule optique avec cristallin, 4 arcs, hemisphères cerebraux.",
+  "nos_coupes": "CS15_f4v",
+  "page_voka": "https://voka.io/3d-anatomy/embryology/first-trimester/human-embryo-day-35/",
+  "catalogue_voka": "https://catalog.voka.io/en/models/bca0620c-bc76-40ec-be54-3271bc217411/53623f0b-89eb-4fbb-9c0d-655c1e0eb084/fd22b7cd-b13a-409e-ae67-f9cb3088c492/3975678f-7de0-4d4b-84ac-e0ab50c4fdac",
+  "image_voka": "voka_pages/voka_J35.webp",
+  "description_voka": "Learn about the developmental stage of a Day 35 human embryo, highlighting the advanced formation of the brain, eyes, and major organ systems. This model provides a comprehensive and interactive perspective on organ development and body patterning, making intricate processes more accessible for learners. It is especially useful for medical students, educators, and researchers who need accurate visual representations to support training, research, and clinical understanding of early embryonic growth."
+ },
+ "views": [
+  {
+   "file": "J35_az000_el+00.png",
+   "az": 0,
+   "el": 0
+  },
+  {
+   "file": "J35_az045_el+00.png",
+   "az": 45,
+   "el": 0
+  },
+  {
+   "file": "J35_az090_el+00.png",
+   "az": 90,
+   "el": 0
+  },
+  {
+   "file": "J35_az135_el+00.png",
+   "az": 135,
+   "el": 0
+  },
+  {
+   "file": "J35_az180_el+00.png",
+   "az": 180,
+   "el": 0
+  },
+  {
+   "file": "J35_az225_el+00.png",
+   "az": 225,
+   "el": 0
+  },
+  {
+   "file": "J35_az270_el+00.png",
+   "az": 270,
+   "el": 0
+  },
+  {
+   "file": "J35_az315_el+00.png",
+   "az": 315,
+   "el": 0
+  },
+  {
+   "file": "J35_az000_el+60.png",
+   "az": 0,
+   "el": 60
+  },
+  {
+   "file": "J35_az045_el+60.png",
+   "az": 45,
+   "el": 60
+  },
+  {
+   "file": "J35_az090_el+60.png",
+   "az": 90,
+   "el": 60
+  },
+  {
+   "file": "J35_az135_el+60.png",
+   "az": 135,
+   "el": 60
+  },
+  {
+   "file": "J35_az180_el+60.png",
+   "az": 180,
+   "el": 60
+  },
+  {
+   "file": "J35_az225_el+60.png",
+   "az": 225,
+   "el": 60
+  },
+  {
+   "file": "J35_az270_el+60.png",
+   "az": 270,
+   "el": 60
+  },
+  {
+   "file": "J35_az315_el+60.png",
+   "az": 315,
+   "el": 60
+  },
+  {
+   "file": "J35_az000_el-60.png",
+   "az": 0,
+   "el": -60
+  },
+  {
+   "file": "J35_az045_el-60.png",
+   "az": 45,
+   "el": -60
+  },
+  {
+   "file": "J35_az090_el-60.png",
+   "az": 90,
+   "el": -60
+  },
+  {
+   "file": "J35_az135_el-60.png",
+   "az": 135,
+   "el": -60
+  },
+  {
+   "file": "J35_az180_el-60.png",
+   "az": 180,
+   "el": -60
+  },
+  {
+   "file": "J35_az225_el-60.png",
+   "az": 225,
+   "el": -60
+  },
+  {
+   "file": "J35_az270_el-60.png",
+   "az": 270,
+   "el": -60
+  },
+  {
+   "file": "J35_az315_el-60.png",
+   "az": 315,
+   "el": -60
+  }
+ ],
+ "box": {
+  "x": 60,
+  "y": 110,
+  "width": 1270,
+  "height": 830
+ },
+ "px_per_360": 2300,
+ "viewport": {
+  "width": 1400,
+  "height": 1000
+ },
+ "note": "az = rotation horizontale depuis la vue par défaut (0 = vue latérale VOKA) ; el > 0 = vu de dessus. Fond uniforme -> silhouettes par silhouettes.py"
+}

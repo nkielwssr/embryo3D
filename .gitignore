@@ -1,0 +1,31 @@
+# Code seulement : les données lourdes restent sur le PC
+# (vidéos, atlas, volumes, rendus, captures).
+
+# Profil navigateur Playwright du module VOKA (cookies, cache)
+reference/.voka_profile/
+
+# Python
+__pycache__/
+*.pyc
+
+# Journaux et sorties d'exécution
+*.log
+*_log.txt
+slicer_cmd_out.txt
+slicer_selftest_result.txt
+
+# Images et maillages
+*.png
+*.webp
+*.jpg
+*.ply
+*.obj
+*.glb
+*.stl
+*.nrrd
+*.npy
+*.npz
+*.mp4
+*.f4v
+*.blend
+*.blend1

@@ -1,0 +1,154 @@
+{
+ "stage": {
+  "jour": 70,
+  "id": "J70",
+  "titre_fr": "Foetus, 70 jours",
+  "carnegie": "F10",
+  "carnegie_plage": "foetus 10 sem.",
+  "semaine_pf": 10,
+  "jours_carnegie": "70",
+  "crl_mm_min": 55,
+  "crl_mm_max": 61,
+  "crl_mm": 58.0,
+  "reperes": "Intestin rentre dans l'abdomen, visage humain, membres proportionnes.",
+  "nos_coupes": "aucune (stade manquant -> proportions a prendre sur VOKA)",
+  "page_voka": "https://voka.io/3d-anatomy/embryology/first-trimester/human-embryo-day-70/",
+  "catalogue_voka": "https://catalog.voka.io/en/models/bca0620c-bc76-40ec-be54-3271bc217411/53623f0b-89eb-4fbb-9c0d-655c1e0eb084/fd22b7cd-b13a-409e-ae67-f9cb3088c492/f8953844-b803-41a4-a813-5b2c47431182",
+  "image_voka": "voka_pages/voka_J70.webp",
+  "description_voka": "Explore the human embryo at Day 70, when the limbs, digits, and facial features become increasingly distinct, and organ systems continue to mature. This 3D model offers a clear spatial representation of these developmental changes, helping learners visualize complex structures and their relationships. It is particularly valuable for medical students, embryologists, and educators who need accurate anatomical references for study, teaching, and research in early human development."
+ },
+ "views": [
+  {
+   "file": "J70_az000_el+00.png",
+   "az": 0,
+   "el": 0
+  },
+  {
+   "file": "J70_az045_el+00.png",
+   "az": 45,
+   "el": 0
+  },
+  {
+   "file": "J70_az090_el+00.png",
+   "az": 90,
+   "el": 0
+  },
+  {
+   "file": "J70_az135_el+00.png",
+   "az": 135,
+   "el": 0
+  },
+  {
+   "file": "J70_az180_el+00.png",
+   "az": 180,
+   "el": 0
+  },
+  {
+   "file": "J70_az225_el+00.png",
+   "az": 225,
+   "el": 0
+  },
+  {
+   "file": "J70_az270_el+00.png",
+   "az": 270,
+   "el": 0
+  },
+  {
+   "file": "J70_az315_el+00.png",
+   "az": 315,
+   "el": 0
+  },
+  {
+   "file": "J70_az000_el+60.png",
+   "az": 0,
+   "el": 60
+  },
+  {
+   "file": "J70_az045_el+60.png",
+   "az": 45,
+   "el": 60
+  },
+  {
+   "file": "J70_az090_el+60.png",
+   "az": 90,
+   "el": 60
+  },
+  {
+   "file": "J70_az135_el+60.png",
+   "az": 135,
+   "el": 60
+  },
+  {
+   "file": "J70_az180_el+60.png",
+   "az": 180,
+   "el": 60
+  },
+  {
+   "file": "J70_az225_el+60.png",
+   "az": 225,
+   "el": 60
+  },
+  {
+   "file": "J70_az270_el+60.png",
+   "az": 270,
+   "el": 60
+  },
+  {
+   "file": "J70_az315_el+60.png",
+   "az": 315,
+   "el": 60
+  },
+  {
+   "file": "J70_az000_el-60.png",
+   "az": 0,
+   "el": -60
+  },
+  {
+   "file": "J70_az045_el-60.png",
+   "az": 45,
+   "el": -60
+  },
+  {
+   "file": "J70_az090_el-60.png",
+   "az": 90,
+   "el": -60
+  },
+  {
+   "file": "J70_az135_el-60.png",
+   "az": 135,
+   "el": -60
+  },
+  {
+   "file": "J70_az180_el-60.png",
+   "az": 180,
+   "el": -60
+  },
+  {
+   "file": "J70_az225_el-60.png",
+   "az": 225,
+   "el": -60
+  },
+  {
+   "file": "J70_az270_el-60.png",
+   "az": 270,
+   "el": -60
+  },
+  {
+   "file": "J70_az315_el-60.png",
+   "az": 315,
+   "el": -60
+  }
+ ],
+ "box": {
+  "x": 60,
+  "y": 110,
+  "width": 1270,
+  "height": 830
+ },
+ "px_per_360": 2300,
+ "viewport": {
+  "width": 1400,
+  "height": 1000
+ },
+ "note": "az = rotation horizontale depuis la vue par défaut (0 = vue latérale VOKA) ; el > 0 = vu de dessus. Fond uniforme -> silhouettes par silhouettes.py"
+}

@@ -1,0 +1,248 @@
+{
+ "stade": "CS15",
+ "fichier": "vaisseaux.npz",
+ "controle": "controle_vaisseaux.png",
+ "segments": [
+  {
+   "nom": "aorte_dorsale_gauche",
+   "rmax": 6,
+   "rayon_recalage": 4,
+   "points": [
+    [
+     201,
+     344,
+     497
+    ],
+    [
+     203,
+     362,
+     511
+    ],
+    [
+     199,
+     380,
+     512
+    ],
+    [
+     198,
+     412,
+     512
+    ],
+    [
+     204,
+     444,
+     510
+    ],
+    [
+     221,
+     476,
+     500
+    ]
+   ]
+  },
+  {
+   "nom": "aorte_dorsale_droite",
+   "rmax": 6,
+   "rayon_recalage": 4,
+   "points": [
+    [
+     268,
+     344,
+     497
+    ],
+    [
+     264,
+     362,
+     511
+    ],
+    [
+     260,
+     380,
+     512
+    ],
+    [
+     258,
+     412,
+     512
+    ],
+    [
+     247,
+     444,
+     510
+    ],
+    [
+     221,
+     476,
+     500
+    ]
+   ]
+  },
+  {
+   "nom": "aorte_commune",
+   "rmax": 7,
+   "rayon_recalage": 4,
+   "points": [
+    [
+     221,
+     476,
+     500
+    ],
+    [
+     220,
+     508,
+     490
+    ],
+    [
+     222,
+     524,
+     479
+    ],
+    [
+     222,
+     540,
+     467
+    ],
+    [
+     222,
+     556,
+     452
+    ],
+    [
+     222,
+     572,
+     437
+    ]
+   ]
+  },
+  {
+   "nom": "cardinale_anterieure_gauche",
+   "rmax": 5,
+   "rayon_recalage": 3,
+   "points": [
+    [
+     178,
+     337,
+     503
+    ],
+    [
+     179,
+     345,
+     502
+    ],
+    [
+     180,
+     353,
+     500
+    ],
+    [
+     179,
+     361,
+     500
+    ],
+    [
+     179,
+     369,
+     498
+    ],
+    [
+     177,
+     409,
+     518
+    ],
+    [
+     177,
+     417,
+     520
+    ],
+    [
+     183,
+     433,
+     516
+    ],
+    [
+     178,
+     441,
+     519
+    ],
+    [
+     182,
+     449,
+     519
+    ],
+    [
+     183,
+     457,
+     510
+    ],
+    [
+     178,
+     465,
+     512
+    ]
+   ]
+  },
+  {
+   "nom": "cardinale_anterieure_droite",
+   "rmax": 5,
+   "rayon_recalage": 3,
+   "points": [
+    [
+     286,
+     337,
+     505
+    ],
+    [
+     285,
+     345,
+     504
+    ],
+    [
+     285,
+     353,
+     502
+    ],
+    [
+     284,
+     361,
+     502
+    ],
+    [
+     284,
+     369,
+     501
+    ],
+    [
+     285,
+     377,
+     501
+    ],
+    [
+     282,
+     385,
+     505
+    ],
+    [
+     286,
+     393,
+     499
+    ],
+    [
+     293,
+     425,
+     523
+    ],
+    [
+     294,
+     449,
+     521
+    ],
+    [
+     296,
+     457,
+     518
+    ]
+   ]
+  }
+ ],
+ "confiance": "bonne (paires puis tronc commun prolongé vers le bas, fin approximative) ; cardinales antérieures (précardinales, région otique → sinus veineux) : faible à moyenne (s 337-465, trou 370-409 à gauche et 393-425 à droite interpolés)"
+}

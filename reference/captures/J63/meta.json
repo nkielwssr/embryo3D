@@ -1,0 +1,154 @@
+{
+ "stage": {
+  "jour": 63,
+  "id": "J63",
+  "titre_fr": "Foetus, 63 jours",
+  "carnegie": "F9",
+  "carnegie_plage": "foetus 9 sem.",
+  "semaine_pf": 9,
+  "jours_carnegie": "63",
+  "crl_mm_min": 40,
+  "crl_mm_max": 50,
+  "crl_mm": 45.0,
+  "reperes": "Tete ~ moitie du CRL, yeux fermes, ongles debutants, hernie ombilicale encore presente.",
+  "nos_coupes": "aucune (stade manquant -> proportions a prendre sur VOKA)",
+  "page_voka": "https://voka.io/3d-anatomy/embryology/first-trimester/human-embryo-day-63/",
+  "catalogue_voka": "https://catalog.voka.io/en/models/bca0620c-bc76-40ec-be54-3271bc217411/53623f0b-89eb-4fbb-9c0d-655c1e0eb084/fd22b7cd-b13a-409e-ae67-f9cb3088c492/2e646624-82e2-42f8-9df7-39305ba6c328",
+  "image_voka": "voka_pages/voka_J63.webp",
+  "description_voka": "Observe the human embryo at Day 63, showcasing nearly complete formation of major organ systems and the refinement of limb structures. This 3D model provides a practical way to visualize complex developmental processes that are difficult to grasp from textbooks alone. It is especially useful for medical students, educators, and researchers who require accurate and interactive tools for teaching, learning, and analyzing early human development."
+ },
+ "views": [
+  {
+   "file": "J63_az000_el+00.png",
+   "az": 0,
+   "el": 0
+  },
+  {
+   "file": "J63_az045_el+00.png",
+   "az": 45,
+   "el": 0
+  },
+  {
+   "file": "J63_az090_el+00.png",
+   "az": 90,
+   "el": 0
+  },
+  {
+   "file": "J63_az135_el+00.png",
+   "az": 135,
+   "el": 0
+  },
+  {
+   "file": "J63_az180_el+00.png",
+   "az": 180,
+   "el": 0
+  },
+  {
+   "file": "J63_az225_el+00.png",
+   "az": 225,
+   "el": 0
+  },
+  {
+   "file": "J63_az270_el+00.png",
+   "az": 270,
+   "el": 0
+  },
+  {
+   "file": "J63_az315_el+00.png",
+   "az": 315,
+   "el": 0
+  },
+  {
+   "file": "J63_az000_el+60.png",
+   "az": 0,
+   "el": 60
+  },
+  {
+   "file": "J63_az045_el+60.png",
+   "az": 45,
+   "el": 60
+  },
+  {
+   "file": "J63_az090_el+60.png",
+   "az": 90,
+   "el": 60
+  },
+  {
+   "file": "J63_az135_el+60.png",
+   "az": 135,
+   "el": 60
+  },
+  {
+   "file": "J63_az180_el+60.png",
+   "az": 180,
+   "el": 60
+  },
+  {
+   "file": "J63_az225_el+60.png",
+   "az": 225,
+   "el": 60
+  },
+  {
+   "file": "J63_az270_el+60.png",
+   "az": 270,
+   "el": 60
+  },
+  {
+   "file": "J63_az315_el+60.png",
+   "az": 315,
+   "el": 60
+  },
+  {
+   "file": "J63_az000_el-60.png",
+   "az": 0,
+   "el": -60
+  },
+  {
+   "file": "J63_az045_el-60.png",
+   "az": 45,
+   "el": -60
+  },
+  {
+   "file": "J63_az090_el-60.png",
+   "az": 90,
+   "el": -60
+  },
+  {
+   "file": "J63_az135_el-60.png",
+   "az": 135,
+   "el": -60
+  },
+  {
+   "file": "J63_az180_el-60.png",
+   "az": 180,
+   "el": -60
+  },
+  {
+   "file": "J63_az225_el-60.png",
+   "az": 225,
+   "el": -60
+  },
+  {
+   "file": "J63_az270_el-60.png",
+   "az": 270,
+   "el": -60
+  },
+  {
+   "file": "J63_az315_el-60.png",
+   "az": 315,
+   "el": -60
+  }
+ ],
+ "box": {
+  "x": 60,
+  "y": 110,
+  "width": 1270,
+  "height": 830
+ },
+ "px_per_360": 2300,
+ "viewport": {
+  "width": 1400,
+  "height": 1000
+ },
+ "note": "az = rotation horizontale depuis la vue par défaut (0 = vue latérale VOKA) ; el > 0 = vu de dessus. Fond uniforme -> silhouettes par silhouettes.py"
+}

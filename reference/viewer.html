@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<title>Référence embryons</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { --bg:#f4f1ee; --panel:#ffffff; --ink:#2b2724; --muted:#7a716b; --accent:#b8564f; --line:#e2dbd5; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --bg:#1d1b19; --panel:#262321; --ink:#efe9e3; --muted:#a39a92; --accent:#e08a82; --line:#3a3532; } }
+  :root[data-theme="dark"] { --bg:#1d1b19; --panel:#262321; --ink:#efe9e3; --muted:#a39a92; --accent:#e08a82; --line:#3a3532; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.45 system-ui, Segoe UI, sans-serif; }
+  header { display:flex; gap:12px; align-items:center; padding:10px 16px; border-bottom:1px solid var(--line); background:var(--panel); flex-wrap:wrap; }
+  header h1 { font-size:16px; margin:0 12px 0 0; font-weight:600; }
+  header .stages button { border:1px solid var(--line); background:var(--bg); color:var(--ink); padding:4px 8px; border-radius:6px; cursor:pointer; margin:2px; }
+  header .stages button.on { background:var(--accent); color:#fff; border-color:var(--accent); }
+  main { display:grid; grid-template-columns: minmax(0,1fr) minmax(0,1fr); gap:12px; padding:12px 16px; }
+  @media (max-width: 900px) { main { grid-template-columns: minmax(0,1fr); } }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:12px; min-height:420px; min-width:0; }
+  .card h2 { font-size:13px; text-transform:uppercase; letter-spacing:.06em; color:var(--muted); margin:0 0 8px; }
+  #vokaImg { width:100%; max-height:520px; object-fit:contain; background:#c8c8c8; border-radius:8px; }
+  #strip { display:flex; gap:6px; overflow-x:auto; margin-top:8px; max-width:100%; }
+  #strip img { flex:0 0 auto; }
+  #strip img { height:70px; border-radius:4px; cursor:pointer; border:2px solid transparent; }
+  #strip img.on { border-color:var(--accent); }
+  #gl { width:100%; height:520px; border-radius:8px; background:#c8c8c8; display:block; }
+  .row { display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-top:8px; }
+  select, input[type=range] { max-width:100%; }
+  .facts { margin-top:8px; font-size:13px; color:var(--muted); }
+  .facts b { color:var(--ink); }
+  .warn { font-size:12px; color:var(--muted); margin-top:6px; }
+  #parts { display:block; }
+  #parts details.sys { border:1px solid var(--line); border-radius:8px; padding:4px 8px; margin:6px 0; }
+  #parts summary { cursor:pointer; font-weight:600; font-size:13px; }
+  #parts .sub { margin:4px 0 4px 18px; display:flex; flex-wrap:wrap; gap:4px; align-items:center; }
+  #parts .subt { font-size:11px; color:var(--muted); width:100%; }
+  #parts label { font-size:12px; border:1px solid var(--line); border-radius:6px; padding:2px 6px; }
+  #parts .sw { display:inline-block; width:10px; height:10px; border-radius:2px; margin-right:4px; vertical-align:middle; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Référence externe VOKA ↔ nos reconstructions</h1>
+  <div class="stages" id="stages"></div>
+</header>
+<main>
+  <section class="card">
+    <h2>VOKA (regard seulement) — <span id="stTitle"></span></h2>
+    <img id="vokaImg" alt="vue VOKA">
+    <div id="strip"></div>
+    <div class="facts" id="facts"></div>
+    <div class="row">
+      <a id="openVoka" target="_blank" rel="noopener">Ouvrir ce stade dans le catalogue VOKA (connecté)</a>
+    </div>
+    <div class="warn">Captures et images VOKA = référence privée (forme de l'enveloppe, proportions, aspect de la peau). Rien n'est extrait du viewer.</div>
+  </section>
+  <section class="card">
+    <h2>Notre modèle (WebGL)</h2>
+    <canvas id="gl"></canvas>
+    <div class="row">
+      <select id="modelSel"><option value="">— choisir un GLB/PLY (lance serve.py) —</option></select>
+      <label>azimut <input id="az" type="range" min="0" max="359" value="0"></label>
+      <label>élévation <input id="el" type="range" min="-89" max="89" value="0"></label>
+      <button id="snap">Caler sur la vue VOKA sélectionnée</button>
+      <label><input id="wire" type="checkbox"> fil de fer</label>
+      <label><input id="mirror" type="checkbox"> miroir X</label>
+    </div>
+    <div class="facts" id="modelFacts"></div>
+    <div class="row" id="parts"></div>
+  </section>
+</main>
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+               "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { PLYLoader } from 'three/addons/loaders/PLYLoader.js';
+
+const $ = id => document.getElementById(id);
+let data = null, captures = {}, cur = null, curView = { az: 0, el: 0 };
+let SYSTEMES = ['Autres'], STRUCT_SYS = {};   // hiérarchie de l'agrégateur (servie par serve.py)
+
+async function loadJSON(u) { const r = await fetch(u); return r.ok ? r.json() : null; }
+
+async function init() {
+  data = await loadJSON('voka_stages.json');
+  const api = await loadJSON('/api/models').catch(() => null);
+  if (api) {
+    captures = api.captures || {};
+    if (api.systemes) { SYSTEMES = api.systemes; STRUCT_SYS = api.struct_sys || {}; }
+    for (const m of api.models) { const o = document.createElement('option'); o.value = m.path; o.textContent = m.label; $('modelSel').appendChild(o); }
+  }
+  for (const s of data.stades) {
+    const b = document.createElement('button'); b.textContent = `${s.id} · ${s.carnegie}`; b.onclick = () => show(s.id); $('stages').appendChild(b);
+  }
+  let saved = null; try { saved = localStorage.getItem('refStage'); } catch (e) {}
+  show(saved && data.stades.some(s => s.id === saved) ? saved : data.stades[0].id);
+}
+
+function show(id) {
+  cur = data.stades.find(s => s.id === id);
+  try { localStorage.setItem('refStage', id); } catch (e) {}
+  [...$('stages').children].forEach(b => b.classList.toggle('on', b.textContent.startsWith(id + ' ')));
+  $('stTitle').textContent = `${cur.titre_fr} (${cur.carnegie_plage}, semaine ${cur.semaine_pf})`;
+  $('openVoka').href = cur.catalogue_voka.replace('/en/', '/fr/');
+  $('facts').innerHTML = `<b>CRL littérature</b> ${cur.crl_mm_min}–${cur.crl_mm_max} mm · <b>jours Carnegie</b> ${cur.jours_carnegie} · <b>nos coupes</b> ${cur.nos_coupes}<br>${cur.reperes}`;
+  const strip = $('strip'); strip.innerHTML = '';
+  const views = (captures[id] || []).map(p => ({ src: p, az: +(p.match(/_az(\d+)/) || [0, 0])[1], el: +(p.match(/_el([+-]\d+)/) || [0, 0])[1] }));
+  const base = { src: cur.image_voka, az: 0, el: 0 };
+  for (const v of [base, ...views]) {
+    const im = document.createElement('img'); im.src = v.src; im.title = `az ${v.az}° el ${v.el}°`;
+    im.onclick = () => { $('vokaImg').src = v.src; curView = v; [...strip.children].forEach(c => c.classList.toggle('on', c === im)); };
+    strip.appendChild(im);
+  }
+  strip.firstChild.click();
+}
+
+// ---------------- WebGL
+const canvas = $('gl');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+const scene = new THREE.Scene(); scene.background = new THREE.Color(0xc8c8c8);
+const camera = new THREE.PerspectiveCamera(30, 1, 0.1, 5000);
+const controls = new OrbitControls(camera, canvas);
+scene.add(new THREE.HemisphereLight(0xffffff, 0x887766, 1.2));
+const key = new THREE.DirectionalLight(0xffffff, 1.6); key.position.set(1, -1, 1.5); scene.add(key);
+let root = null, radius = 10;
+
+function resize() { const w = canvas.clientWidth, h = canvas.clientHeight; renderer.setSize(w, h, false); camera.aspect = w / h; camera.updateProjectionMatrix(); }
+new ResizeObserver(resize).observe(canvas);
+
+function setModel(obj) {
+  if (root) scene.remove(root);
+  root = obj; scene.add(root);
+  const box = new THREE.Box3().setFromObject(root); const c = box.getCenter(new THREE.Vector3()); const s = box.getSize(new THREE.Vector3());
+  root.position.sub(c); radius = Math.max(s.x, s.y, s.z);
+  controls.target.set(0, 0, 0); placeCamera();
+  $('modelFacts').innerHTML = `<b>extension</b> ${s.x.toFixed(1)} × ${s.y.toFixed(1)} × ${s.z.toFixed(1)} (unités du fichier, mm si export pipeline)`;
+}
+
+// caméra : repère pipeline X gauche→droite, Y ventral→dorsal, Z haut. Vue latérale VOKA az 0 = on regarde le côté gauche (depuis -X)
+function placeCamera() {
+  const az = THREE.MathUtils.degToRad(+$('az').value), el = THREE.MathUtils.degToRad(+$('el').value);
+  const d = radius * 2.2;
+  camera.position.set(-Math.cos(el) * Math.cos(az) * d, -Math.cos(el) * Math.sin(az) * d, Math.sin(el) * d);
+  camera.up.set(0, 0, 1); camera.lookAt(0, 0, 0); controls.update();
+}
+$('az').oninput = placeCamera; $('el').oninput = placeCamera;
+$('snap').onclick = () => { $('az').value = curView.az; $('el').value = curView.el; placeCamera(); };
+$('wire').onchange = () => root && root.traverse(o => { if (o.isMesh) o.material.wireframe = $('wire').checked; });
+$('mirror').onchange = () => { if (root) root.scale.x = $('mirror').checked ? -1 : 1; };
+
+$('modelSel').onchange = async e => {
+  const p = e.target.value; if (!p) return;
+  if (p.endsWith('.glb')) new GLTFLoader().load(p, g => {
+    g.scene.traverse(o => { if (o.isMesh && o.material) {
+      const m = o.material; m.side = THREE.DoubleSide;
+      if ('metalness' in m) { m.metalness = 0; m.roughness = Math.max(m.roughness ?? 0.6, 0.45); }   // glTF : métallique = 1 par défaut -> noir sans environnement
+      if (/enveloppe/i.test(o.name) && m.opacity >= 1) { m.opacity = 0.35; }      // peau semi-transparente par défaut
+      if (m.opacity < 1) { m.transparent = true; m.depthWrite = false; }
+    } });
+    setModel(g.scene); listParts(g.scene);
+  });
+  else { $('parts').innerHTML = ''; new PLYLoader().load(p, geo => { geo.computeVertexNormals(); setModel(new THREE.Mesh(geo, new THREE.MeshStandardMaterial({ color: 0xe8c9bd, roughness: 0.4, side: THREE.DoubleSide }))); }); }
+};
+
+// structures du GLB classées comme dans l'agrégateur : système → sous-groupe → structure, une case par niveau
+function listParts(root) {
+  const box = $('parts'); box.innerHTML = '';
+  const meshes = []; root.traverse(o => { if (o.isMesh) meshes.push(o); });
+  const tree = new Map();
+  for (const m of meshes) {
+    const [sys, sub] = STRUCT_SYS[m.name] || ['Autres', m.name || 'mesh'];
+    if (!tree.has(sys)) tree.set(sys, new Map());
+    if (!tree.get(sys).has(sub)) tree.get(sys).set(sub, []);
+    tree.get(sys).get(sub).push(m);
+  }
+  const order = [...SYSTEMES, ...[...tree.keys()].filter(k => !SYSTEMES.includes(k))];
+  for (const sys of order) {
+    if (!tree.has(sys)) continue;
+    const det = document.createElement('details'); det.open = true; det.className = 'sys';
+    const sum = document.createElement('summary');
+    const cbS = document.createElement('input'); cbS.type = 'checkbox'; cbS.checked = true;
+    const inputs = [];
+    cbS.onchange = () => inputs.forEach(cb => { cb.checked = cbS.checked; cb.onchange(); });
+    sum.appendChild(cbS); sum.appendChild(document.createTextNode(' ' + sys));
+    det.appendChild(sum);
+    for (const [sub, list] of tree.get(sys)) {
+      const g = document.createElement('div'); g.className = 'sub';
+      const t = document.createElement('span'); t.className = 'subt'; t.textContent = sub; g.appendChild(t);
+      list.sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+      for (const m of list) {
+        const lab = document.createElement('label');
+        const cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = true; cb.onchange = () => { m.visible = cb.checked; };
+        inputs.push(cb);
+        const sw = document.createElement('span'); sw.className = 'sw'; sw.style.background = '#' + (m.material.color ? m.material.color.getHexString() : '888');
+        lab.appendChild(cb); lab.appendChild(sw); lab.appendChild(document.createTextNode(m.name || 'mesh'));
+        g.appendChild(lab);
+      }
+      det.appendChild(g);
+    }
+    box.appendChild(det);
+  }
+}
+
+(function loop() { requestAnimationFrame(loop); renderer.render(scene, camera); })();
+resize(); init();
+</script>
+</body>
+</html>

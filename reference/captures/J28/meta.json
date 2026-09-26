@@ -1,0 +1,154 @@
+{
+ "stage": {
+  "jour": 28,
+  "id": "J28",
+  "titre_fr": "Embryon, 28 jours",
+  "carnegie": "CS13",
+  "carnegie_plage": "CS13",
+  "semaine_pf": 4,
+  "jours_carnegie": "28-30",
+  "crl_mm_min": 4,
+  "crl_mm_max": 6,
+  "crl_mm": 5.0,
+  "reperes": "Bourgeons des membres superieurs, 4 arcs pharyngiens, vesicule optique, otocyste ferme. Corps en C.",
+  "nos_coupes": "CS13.f4v",
+  "page_voka": "https://voka.io/3d-anatomy/embryology/first-trimester/human-embryo-day-28/",
+  "catalogue_voka": "https://catalog.voka.io/en/models/bca0620c-bc76-40ec-be54-3271bc217411/53623f0b-89eb-4fbb-9c0d-655c1e0eb084/fd22b7cd-b13a-409e-ae67-f9cb3088c492/da041867-aebc-4edf-96f0-bf6c2a3a5171",
+  "image_voka": "voka_pages/voka_J28.webp",
+  "description_voka": "Examine the human embryo at Day 28, a period marked by rapid organogenesis and the early development of the heart and limb buds. This 3D visualization makes complex structures and spatial relationships easier to comprehend than traditional 2D resources. It is highly beneficial for embryology students, healthcare professionals, and researchers focused on prenatal development, offering a reliable reference for study, teaching, and analysis of early human growth patterns."
+ },
+ "views": [
+  {
+   "file": "J28_az000_el+00.png",
+   "az": 0,
+   "el": 0
+  },
+  {
+   "file": "J28_az045_el+00.png",
+   "az": 45,
+   "el": 0
+  },
+  {
+   "file": "J28_az090_el+00.png",
+   "az": 90,
+   "el": 0
+  },
+  {
+   "file": "J28_az135_el+00.png",
+   "az": 135,
+   "el": 0
+  },
+  {
+   "file": "J28_az180_el+00.png",
+   "az": 180,
+   "el": 0
+  },
+  {
+   "file": "J28_az225_el+00.png",
+   "az": 225,
+   "el": 0
+  },
+  {
+   "file": "J28_az270_el+00.png",
+   "az": 270,
+   "el": 0
+  },
+  {
+   "file": "J28_az315_el+00.png",
+   "az": 315,
+   "el": 0
+  },
+  {
+   "file": "J28_az000_el+60.png",
+   "az": 0,
+   "el": 60
+  },
+  {
+   "file": "J28_az045_el+60.png",
+   "az": 45,
+   "el": 60
+  },
+  {
+   "file": "J28_az090_el+60.png",
+   "az": 90,
+   "el": 60
+  },
+  {
+   "file": "J28_az135_el+60.png",
+   "az": 135,
+   "el": 60
+  },
+  {
+   "file": "J28_az180_el+60.png",
+   "az": 180,
+   "el": 60
+  },
+  {
+   "file": "J28_az225_el+60.png",
+   "az": 225,
+   "el": 60
+  },
+  {
+   "file": "J28_az270_el+60.png",
+   "az": 270,
+   "el": 60
+  },
+  {
+   "file": "J28_az315_el+60.png",
+   "az": 315,
+   "el": 60
+  },
+  {
+   "file": "J28_az000_el-60.png",
+   "az": 0,
+   "el": -60
+  },
+  {
+   "file": "J28_az045_el-60.png",
+   "az": 45,
+   "el": -60
+  },
+  {
+   "file": "J28_az090_el-60.png",
+   "az": 90,
+   "el": -60
+  },
+  {
+   "file": "J28_az135_el-60.png",
+   "az": 135,
+   "el": -60
+  },
+  {
+   "file": "J28_az180_el-60.png",
+   "az": 180,
+   "el": -60
+  },
+  {
+   "file": "J28_az225_el-60.png",
+   "az": 225,
+   "el": -60
+  },
+  {
+   "file": "J28_az270_el-60.png",
+   "az": 270,
+   "el": -60
+  },
+  {
+   "file": "J28_az315_el-60.png",
+   "az": 315,
+   "el": -60
+  }
+ ],
+ "box": {
+  "x": 60,
+  "y": 110,
+  "width": 1270,
+  "height": 830
+ },
+ "px_per_360": 2300,
+ "viewport": {
+  "width": 1400,
+  "height": 1000
+ },
+ "note": "az = rotation horizontale depuis la vue par défaut (0 = vue latérale VOKA) ; el > 0 = vu de dessus. Fond uniforme -> silhouettes par silhouettes.py"
+}

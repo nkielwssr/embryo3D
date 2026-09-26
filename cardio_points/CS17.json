@@ -1,0 +1,14 @@
+{
+ "stade": "CS17",
+ "coeur": {
+  "seuil_tissu": 12,
+  "sac": "convexe",
+  "erosion_sac": 6,
+  "ouverture": 4,
+  "exclure": [
+   "foie",
+   "snc"
+  ]
+ },
+ "confiance_coeur": "moyenne (automatique)"
+}

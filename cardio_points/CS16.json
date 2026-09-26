@@ -1,0 +1,41 @@
+{
+ "stade": "CS16",
+ "coeur": {
+  "seuil_tissu": 12,
+  "sac": "label_corrige",
+  "ouverture": 0,
+  "exclure": [
+   "snc"
+  ],
+  "graines": [
+   [
+    170,
+    420,
+    330
+   ],
+   [
+    220,
+    395,
+    320
+   ]
+  ],
+  "erosion_sac": 1,
+  "plus_grande": false,
+  "seuil_pale": 6,
+  "boite": [
+   [
+    151,
+    267
+   ],
+   [
+    293,
+    450
+   ],
+   [
+    305,
+    422
+   ]
+  ]
+ },
+ "confiance_coeur": "bonne (corrigé à la main dans 3D Slicer)"
+}

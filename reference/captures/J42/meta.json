@@ -1,0 +1,154 @@
+{
+ "stage": {
+  "jour": 42,
+  "id": "J42",
+  "titre_fr": "Embryon, 42 jours",
+  "carnegie": "CS17",
+  "carnegie_plage": "CS16-17",
+  "semaine_pf": 6,
+  "jours_carnegie": "41-43",
+  "crl_mm_min": 11,
+  "crl_mm_max": 14,
+  "crl_mm": 12.5,
+  "reperes": "Rayons digitaux de la main, pied en palette, nuque marquee, bourrelets auriculaires, pigment retinien.",
+  "nos_coupes": "CS18_f4v (mal nomme)",
+  "page_voka": "https://voka.io/3d-anatomy/embryology/first-trimester/human-embryo-day-42/",
+  "catalogue_voka": "https://catalog.voka.io/en/models/bca0620c-bc76-40ec-be54-3271bc217411/53623f0b-89eb-4fbb-9c0d-655c1e0eb084/fd22b7cd-b13a-409e-ae67-f9cb3088c492/4fa8f167-684b-47f6-8419-26593eccf1d1",
+  "image_voka": "voka_pages/voka_J42.webp",
+  "description_voka": "Explore the human embryo at Day 42. This 3D model offers a detailed view of early organ development and spatial relationships between emerging structures, making complex processes easier to understand. It is particularly useful for medical students, embryologists, and educators who need accurate visual references for teaching, learning, and research in early prenatal development."
+ },
+ "views": [
+  {
+   "file": "J42_az000_el+00.png",
+   "az": 0,
+   "el": 0
+  },
+  {
+   "file": "J42_az045_el+00.png",
+   "az": 45,
+   "el": 0
+  },
+  {
+   "file": "J42_az090_el+00.png",
+   "az": 90,
+   "el": 0
+  },
+  {
+   "file": "J42_az135_el+00.png",
+   "az": 135,
+   "el": 0
+  },
+  {
+   "file": "J42_az180_el+00.png",
+   "az": 180,
+   "el": 0
+  },
+  {
+   "file": "J42_az225_el+00.png",
+   "az": 225,
+   "el": 0
+  },
+  {
+   "file": "J42_az270_el+00.png",
+   "az": 270,
+   "el": 0
+  },
+  {
+   "file": "J42_az315_el+00.png",
+   "az": 315,
+   "el": 0
+  },
+  {
+   "file": "J42_az000_el+60.png",
+   "az": 0,
+   "el": 60
+  },
+  {
+   "file": "J42_az045_el+60.png",
+   "az": 45,
+   "el": 60
+  },
+  {
+   "file": "J42_az090_el+60.png",
+   "az": 90,
+   "el": 60
+  },
+  {
+   "file": "J42_az135_el+60.png",
+   "az": 135,
+   "el": 60
+  },
+  {
+   "file": "J42_az180_el+60.png",
+   "az": 180,
+   "el": 60
+  },
+  {
+   "file": "J42_az225_el+60.png",
+   "az": 225,
+   "el": 60
+  },
+  {
+   "file": "J42_az270_el+60.png",
+   "az": 270,
+   "el": 60
+  },
+  {
+   "file": "J42_az315_el+60.png",
+   "az": 315,
+   "el": 60
+  },
+  {
+   "file": "J42_az000_el-60.png",
+   "az": 0,
+   "el": -60
+  },
+  {
+   "file": "J42_az045_el-60.png",
+   "az": 45,
+   "el": -60
+  },
+  {
+   "file": "J42_az090_el-60.png",
+   "az": 90,
+   "el": -60
+  },
+  {
+   "file": "J42_az135_el-60.png",
+   "az": 135,
+   "el": -60
+  },
+  {
+   "file": "J42_az180_el-60.png",
+   "az": 180,
+   "el": -60
+  },
+  {
+   "file": "J42_az225_el-60.png",
+   "az": 225,
+   "el": -60
+  },
+  {
+   "file": "J42_az270_el-60.png",
+   "az": 270,
+   "el": -60
+  },
+  {
+   "file": "J42_az315_el-60.png",
+   "az": 315,
+   "el": -60
+  }
+ ],
+ "box": {
+  "x": 60,
+  "y": 110,
+  "width": 1270,
+  "height": 830
+ },
+ "px_per_360": 2300,
+ "viewport": {
+  "width": 1400,
+  "height": 1000
+ },
+ "note": "az = rotation horizontale depuis la vue par défaut (0 = vue latérale VOKA) ; el > 0 = vu de dessus. Fond uniforme -> silhouettes par silhouettes.py"
+}
