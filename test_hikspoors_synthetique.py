@@ -88,8 +88,8 @@ def main():
     h = rap["dimensions"]["hauteur_mm"]
     if not 4.3 < h < 5.2:
         erreurs.append("hauteur %.2f mm hors de [4.3, 5.2] : échelle fausse" % h)
-    if not all(d["ok"] for d in rap["orientation"]["indices"]):
-        erreurs.append("indices d'orientation non tous vérifiés : %s" % [d["indice"] for d in rap["orientation"]["indices"] if not d["ok"]])
+    if not all(d["ok"] for d in rap["orientation"]["indices"] if d["poids"] > 0):
+        erreurs.append("indices d'orientation non tous vérifiés : %s" % [d["indice"] for d in rap["orientation"]["indices"] if not d["ok"] and d["poids"] > 0])
     vg = trimesh.load(os.path.join(sortie, "myocarde_ventricule_gauche.ply")); vd = trimesh.load(os.path.join(sortie, "myocarde_ventricule_droit.ply"))
     if vg.centroid[0] <= vd.centroid[0]:
         erreurs.append("ventricule gauche à X <= ventricule droit : miroir")

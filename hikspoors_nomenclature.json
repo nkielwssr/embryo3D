@@ -2,14 +2,15 @@
  "_doc": [
   "Table de nomenclature : noms des structures des PDF 3D Hikspoors et al. 2022 (Maastricht, hdbratlas.org) -> noms canoniques embryo3D.",
   "Lue par hikspoors_modele.py. Les motifs sont des expressions régulières (re.search, insensible à la casse) appliquées au nom NORMALISÉ",
-  "du nœud U3D : minuscules, accents retirés, tout caractère non alphanumérique remplacé par '_'. Première règle qui correspond = retenue.",
+  "du nœud U3D : minuscules, accents retirés, tout caractère non alphanumérique remplacé par '_'. Ordre : 'prioritaires', puis règles 'cardiaque' (type × chambre, chambre seule), puis 'regles' ; première règle qui correspond = retenue.",
   "'nom' peut contenir {cote} (gauche/droit/vide, déduit du nom source) et {1} (premier groupe capturé du motif). 'nom_fr' idem avec {cote_fr}.",
   "'groupe' = union dérivée écrite en plus (coeur, cavites_cardiaques, arteres, veines) pour le morphing entre stades.",
   "systeme ∈ nerveux, digestif, vasculaire, os_cartilages, muscles, derme, appendiculaire, respiratoire, urogenital, endocrine, annexes, tissus, autre.",
   "Les noms non reconnus sont conservés (nom = source, systeme = autre, non_reconnu = true) et listés dans rapport.json : compléter la table.",
-  "Section 'video' : correspondance des labels de notre pipeline vidéo (meshexport.py) vers les mêmes noms canoniques (video_vers_modele.py)."
+  "Section 'video' : correspondance des labels de notre pipeline vidéo (meshexport.py) vers les mêmes noms canoniques (video_vers_modele.py).",
+  "'prioritaires' : noms réels des PDF (inventaire du relais, CS9/13/18/20/23) qui contiennent « card », « atri », « ventric »… et seraient sinon pris par les règles cardiaques (cardinal_vein, pericard, epicard, endocardial_cushion, cardiac_jelly, primary_atrial_septum…). Motifs en [a-z0-9]* et non \\w* : '_' est un caractère de mot."
  ],
- "version": "26/09/2026",
+ "version": "26/09/2026 (2)",
  "ignorer": [
   "scale_cube",
   "scalecube",
@@ -33,8 +34,403 @@
   "gauche": "(^|_)(l|left|lft|links|gauche|g)(_|$)|(^|_)(l)(v|a)(_|$)",
   "droit": "(^|_)(r|right|rt|rechts|droit|d)(_|$)|(^|_)(r)(v|a)(_|$)"
  },
+ "prioritaires": [
+  {
+   "motif": "loop_?wire|central_?thread|central_?line|fil_central|axis_of_heart|heart_axis|midline_of_heart",
+   "nom": "axe_tube_cardiaque",
+   "nom_fr": "fil de la boucle cardiaque (repère des auteurs)",
+   "systeme": "vasculaire",
+   "groupe": null,
+   "confiance": "moyenne",
+   "_doc": "loop_wire_heart_tube (CS13) : fil de repère des auteurs, pas un tissu ; hors unions et hors morphing"
+  },
+  {
+   "motif": "pericardial_?reflect",
+   "nom": "reflexion_pericardique",
+   "nom_fr": "réflexion péricardique",
+   "systeme": "annexes",
+   "groupe": null,
+   "confiance": "bonne"
+  },
+  {
+   "motif": "epicard|proepicard|pro_epicard",
+   "nom": "epicarde",
+   "nom_fr": "épicarde",
+   "systeme": "vasculaire",
+   "groupe": "coeur",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "pericard",
+   "nom": "pericarde",
+   "nom_fr": "péricarde",
+   "systeme": "annexes",
+   "groupe": null,
+   "confiance": "bonne"
+  },
+  {
+   "motif": "(^|_)(sup|superior)_?endocardial_?cushion",
+   "nom": "coussin_endocardique_superieur",
+   "nom_fr": "coussin endocardique supérieur",
+   "systeme": "vasculaire",
+   "groupe": "coeur",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "(^|_)(inf|inferior)_?endocardial_?cushion",
+   "nom": "coussin_endocardique_inferieur",
+   "nom_fr": "coussin endocardique inférieur",
+   "systeme": "vasculaire",
+   "groupe": "coeur",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "cushion|coussin|endocardial_?ridge|av_ridge",
+   "nom": "coussins_endocardiques_{1}",
+   "nom_fr": "coussins endocardiques {1}",
+   "systeme": "vasculaire",
+   "groupe": "coeur",
+   "capture": "(superior|inferior|left|right|lateral|dorsal|ventral|sup|inf|oft|avc|conal|truncal)",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "(^|_)oft_?cardiac_?jelly|cardiac_?jelly_?oft",
+   "nom": "gelee_cardiaque_voie_efferente",
+   "nom_fr": "gelée cardiaque de la voie efférente",
+   "systeme": "vasculaire",
+   "groupe": "coeur",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "cardiac_?jelly|gelee_cardiaque",
+   "nom": "gelee_cardiaque",
+   "nom_fr": "gelée cardiaque",
+   "systeme": "vasculaire",
+   "groupe": "coeur",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "common_?card|(^|_)ccv(_|$)|duct_of_cuvier|cuvier",
+   "nom": "veine_cardinale_commune_{cote}",
+   "nom_fr": "veine cardinale commune {cote_fr}",
+   "systeme": "vasculaire",
+   "groupe": "veines",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "anterior_?cardinal|(^|_)acv(_|$)|cranial_?cardinal|precardinal",
+   "nom": "veine_cardinale_anterieure_{cote}",
+   "nom_fr": "veine cardinale antérieure {cote_fr}",
+   "systeme": "vasculaire",
+   "groupe": "veines",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "posterior_?cardinal|(^|_)pcv(_|$)|caudal_?cardinal|postcardinal",
+   "nom": "veine_cardinale_posterieure_{cote}",
+   "nom_fr": "veine cardinale postérieure {cote_fr}",
+   "systeme": "vasculaire",
+   "groupe": "veines",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "subcardinal|supracardinal|sacrocardinal",
+   "nom": "veine_{1}_{cote}",
+   "nom_fr": "veine {1} {cote_fr}",
+   "systeme": "vasculaire",
+   "groupe": "veines",
+   "capture": "(subcardinal|supracardinal|sacrocardinal)",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "cardinal",
+   "nom": "veine_cardinale_{cote}",
+   "nom_fr": "veine cardinale {cote_fr}",
+   "systeme": "vasculaire",
+   "groupe": "veines",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "(^|_)hcc(_|$)|hepatocard|hepato_card|canal_hepato",
+   "nom": "canal_hepatocardiaque_{cote}",
+   "nom_fr": "canal hépatocardiaque {cote_fr}",
+   "systeme": "vasculaire",
+   "groupe": "veines",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "(^|_)san(_|$)|sinus_?node|sa_?node|sinoatrial|sinuatrial|noeud_sinusal",
+   "nom": "noeud_sinusal",
+   "nom_fr": "nœud sinusal",
+   "systeme": "vasculaire",
+   "groupe": "coeur",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "(^|_)(ccs|css)(_?[0-9]+)?(_|$)|conduct|his_bundle|bundle_of_his|purkinje",
+   "nom": "systeme_conduction",
+   "nom_fr": "système de conduction cardiaque",
+   "systeme": "vasculaire",
+   "groupe": "coeur",
+   "confiance": "bonne",
+   "_doc": "CCS (CS18, CS23), CCS_1 (CS18 NEWvalves), CSS (CS20, coquille des auteurs)"
+  },
+  {
+   "motif": "myocardial_?dmp|dmp_?myocard",
+   "nom": "myocarde_protrusion_mesenchymateuse_dorsale",
+   "nom_fr": "myocarde de la protrusion mésenchymateuse dorsale",
+   "systeme": "vasculaire",
+   "groupe": "coeur",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "(^|_)dmp(_|$)|dorsal_?mesenchymal_?protrusion",
+   "nom": "protrusion_mesenchymateuse_dorsale",
+   "nom_fr": "protrusion mésenchymateuse dorsale",
+   "systeme": "vasculaire",
+   "groupe": "coeur",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "(^|_)paas?_?[1-6](_|$)",
+   "nom": "arc_aortique_{1}_{cote}",
+   "nom_fr": "artère du {1}e arc pharyngien {cote_fr}",
+   "systeme": "vasculaire",
+   "groupe": "arteres",
+   "capture": "([1-6])(_|$)",
+   "confiance": "bonne",
+   "_doc": "PAAs_n = pharyngeal arch arteries (les deux côtés dans un maillage)"
+  },
+  {
+   "motif": "(^|_)(vit|vitelline|omphalomesenteric)_?vein|vitell[a-z0-9]*_?vein",
+   "nom": "veine_vitelline_{cote}",
+   "nom_fr": "veine vitelline {cote_fr}",
+   "systeme": "vasculaire",
+   "groupe": "veines",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "(^|_)(umb|umbilical)_?vein|umbil[a-z0-9]*_?vein",
+   "nom": "veine_ombilicale_{cote}",
+   "nom_fr": "veine ombilicale {cote_fr}",
+   "systeme": "vasculaire",
+   "groupe": "veines",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "(^|_)(musc|muscular)_?ventricular_?septum|ventricular_?septum|interventric",
+   "nom": "septum_interventriculaire",
+   "nom_fr": "septum interventriculaire",
+   "systeme": "vasculaire",
+   "groupe": "coeur",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "outlet_?septum|oft_?septum|conal_?septum",
+   "nom": "septum_voie_efferente",
+   "nom_fr": "septum de la voie efférente",
+   "systeme": "vasculaire",
+   "groupe": "coeur",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "primary_?atrial_?septum|septum_?prim|primary_?septum",
+   "nom": "septum_primum",
+   "nom_fr": "septum primum",
+   "systeme": "vasculaire",
+   "groupe": "coeur",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "secondary_?atrial_?septum|septum_?secund|secondary_?septum",
+   "nom": "septum_secundum",
+   "nom_fr": "septum secundum",
+   "systeme": "vasculaire",
+   "groupe": "coeur",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "atrial_?septum|interatri|septum_atri",
+   "nom": "septum_interatrial",
+   "nom_fr": "septum interatrial",
+   "systeme": "vasculaire",
+   "groupe": "coeur",
+   "confiance": "moyenne"
+  },
+  {
+   "motif": "(^|_)ao_[a-z0-9_]*leaflet",
+   "nom": "valve_aortique_{1}",
+   "nom_fr": "valve aortique : feuillet {1}",
+   "systeme": "vasculaire",
+   "groupe": "coeur",
+   "capture": "ao_([a-z0-9_]+?)_?leaflet",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "(^|_)pulm_[a-z0-9_]*leaflet",
+   "nom": "valve_pulmonaire_{1}",
+   "nom_fr": "valve pulmonaire : feuillet {1}",
+   "systeme": "vasculaire",
+   "groupe": "coeur",
+   "capture": "pulm_([a-z0-9_]+?)_?leaflet",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "asc[a-z0-9]*_?ao[a-z0-9]*_?wall|aort[a-z0-9]*_?wall",
+   "nom": "paroi_aorte_ascendante",
+   "nom_fr": "paroi de l'aorte ascendante",
+   "systeme": "vasculaire",
+   "groupe": "arteres",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "pulm[a-z0-9]*_?trunk_?wall",
+   "nom": "paroi_tronc_pulmonaire",
+   "nom_fr": "paroi du tronc pulmonaire",
+   "systeme": "vasculaire",
+   "groupe": "arteres",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "pulm[a-z0-9]*_?trunk|truncus_?pulm",
+   "nom": "tronc_pulmonaire",
+   "nom_fr": "tronc pulmonaire",
+   "systeme": "vasculaire",
+   "groupe": "arteres",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "pulmonary_?arter|pulm_?arter",
+   "nom": "arteres_pulmonaires",
+   "nom_fr": "artères pulmonaires",
+   "systeme": "vasculaire",
+   "groupe": "arteres",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "coronary_?sinus|sinus_coron",
+   "nom": "sinus_coronaire",
+   "nom_fr": "sinus coronaire",
+   "systeme": "vasculaire",
+   "groupe": "veines",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "lumen_?oft_?sub_?aort",
+   "nom": "cavite_voie_efferente_sous_aortique",
+   "nom_fr": "cavité de la voie efférente, partie sous-aortique",
+   "systeme": "vasculaire",
+   "groupe": "cavites_cardiaques",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "lumen_?oft_?sub_?pulm",
+   "nom": "cavite_voie_efferente_sous_pulmonaire",
+   "nom_fr": "cavité de la voie efférente, partie sous-pulmonaire",
+   "systeme": "vasculaire",
+   "groupe": "cavites_cardiaques",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "myocard[a-z0-9]*_?pulm[a-z0-9]*_?vein",
+   "nom": "myocarde_veines_pulmonaires",
+   "nom_fr": "myocarde des veines pulmonaires",
+   "systeme": "vasculaire",
+   "groupe": "coeur",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "pulm[a-z0-9]*_?vein|veine_pulm|(^|_)pv(_|$)",
+   "nom": "veine_pulmonaire_{cote}",
+   "nom_fr": "veine pulmonaire {cote_fr}",
+   "systeme": "vasculaire",
+   "groupe": "veines",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "arterial_?plexus",
+   "nom": "plexus_arteriel",
+   "nom_fr": "plexus artériel",
+   "systeme": "vasculaire",
+   "groupe": "arteres",
+   "confiance": "moyenne"
+  },
+  {
+   "motif": "venous_?plexus",
+   "nom": "plexus_veineux",
+   "nom_fr": "plexus veineux",
+   "systeme": "vasculaire",
+   "groupe": "veines",
+   "confiance": "moyenne"
+  },
+  {
+   "motif": "(^|_)(intraembryonic_?)?(coelom|celom)[a-z0-9]*$",
+   "nom": "coelome",
+   "nom_fr": "cœlome",
+   "systeme": "annexes",
+   "groupe": null,
+   "confiance": "bonne"
+  },
+  {
+   "motif": "(^|_)nccs?(_|$)|neural_?crest|crete_neurale|crest_?cell",
+   "nom": "cellules_crete_neurale",
+   "nom_fr": "cellules des crêtes neurales",
+   "systeme": "tissus",
+   "groupe": null,
+   "confiance": "bonne"
+  },
+  {
+   "motif": "lung_?lobe",
+   "nom": "lobes_pulmonaires",
+   "nom_fr": "lobes pulmonaires",
+   "systeme": "respiratoire",
+   "groupe": null,
+   "confiance": "bonne",
+   "_doc": "CS23 : lobes (rose) ; l'arbre bronchique violet est « poumons » (lungs à CS18/20, main_branches_lungs à CS23, même couleur)"
+  },
+  {
+   "motif": "main_?branch[a-z0-9]*_?lung",
+   "nom": "poumons",
+   "nom_fr": "poumons (arbre bronchique)",
+   "systeme": "respiratoire",
+   "groupe": null,
+   "confiance": "bonne"
+  },
+  {
+   "motif": "(^|_)(sup|superior)_?(caval|cava|vena_?cava)|(^|_)svc(_|$)|vena_cava_sup|veine_cave_sup",
+   "nom": "veine_cave_superieure_{cote}",
+   "nom_fr": "veine cave supérieure {cote_fr}",
+   "systeme": "vasculaire",
+   "groupe": "veines",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "(^|_)(inf|inferior)_?(caval|cava|vena_?cava)|(^|_)ivc(_|$)|vena_cava_inf|veine_cave_inf",
+   "nom": "veine_cave_inferieure",
+   "nom_fr": "veine cave inférieure",
+   "systeme": "vasculaire",
+   "groupe": "veines",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "cranial_?vein|head_?vein",
+   "nom": "veines_craniennes",
+   "nom_fr": "veines crâniennes",
+   "systeme": "vasculaire",
+   "groupe": "veines",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "spinal_?gangl|dorsal_?root_?gangl|(^|_)drg(_|$)",
+   "nom": "ganglions_spinaux_{cote}",
+   "nom_fr": "ganglions spinaux {cote_fr}",
+   "systeme": "nerveux",
+   "groupe": null,
+   "confiance": "bonne"
+  }
+ ],
  "cardiaque": {
-  "_doc": "Règles générées : pour chaque type × chambre (nom = prefixe_suffixe) ; puis chaque chambre seule -> coeur_<suffixe> (groupe coeur).",
+  "_doc": "Règles générées : pour chaque type × chambre (nom = prefixe_suffixe) ; puis chaque chambre seule -> coeur_<suffixe> (groupe coeur). Évaluées après 'prioritaires'. Chambre « coeur » : heart, cardiac, card isolé ou myocard seul (plus « card » dans cardinal, pericard, epicard, endocardial, myocard_venous_sinus…).",
   "types": [
    {
     "motif": "lumen|lumina|cavit|blood|sang|lumiere|interior",
@@ -87,22 +483,22 @@
   ],
   "chambres": [
    {
-    "motif": "(^|_)(lv|left_?ventric\\w*|ventric\\w*_?(l|left|g|gauche))(_|$)",
+    "motif": "(^|_)(lv|left_?ventric[a-z0-9]*|ventric[a-z0-9]*_?(l|left|g|gauche))(_|$)",
     "suffixe": "ventricule_gauche",
     "nom_fr": "du ventricule gauche"
    },
    {
-    "motif": "(^|_)(rv|right_?ventric\\w*|ventric\\w*_?(r|right|d|droit))(_|$)",
+    "motif": "(^|_)(rv|right_?ventric[a-z0-9]*|ventric[a-z0-9]*_?(r|right|d|droit))(_|$)",
     "suffixe": "ventricule_droit",
     "nom_fr": "du ventricule droit"
    },
    {
-    "motif": "(^|_)(la|left_?atri\\w*|atri\\w*_?(l|left|g|gauche))(_|$)",
+    "motif": "(^|_)(la|left_?atri[a-z0-9]*|atri[a-z0-9]*_?(l|left|g|gauche))(_|$)",
     "suffixe": "oreillette_gauche",
     "nom_fr": "de l'oreillette gauche"
    },
    {
-    "motif": "(^|_)(ra|right_?atri\\w*|atri\\w*_?(r|right|d|droit))(_|$)",
+    "motif": "(^|_)(ra|right_?atri[a-z0-9]*|atri[a-z0-9]*_?(r|right|d|droit))(_|$)",
     "suffixe": "oreillette_droite",
     "nom_fr": "de l'oreillette droite"
    },
@@ -117,7 +513,7 @@
     "nom_fr": "du canal atrioventriculaire"
    },
    {
-    "motif": "(^|_)sv(_|$)|sinus_?venos|sinus_?veineux|sinus_horn|corne",
+    "motif": "(^|_)sv(_|$)|sinus_?venos|sinus_?veineux|venous_?sinus|sinus_horn|corne",
     "suffixe": "sinus_veineux",
     "nom_fr": "du sinus veineux"
    },
@@ -137,7 +533,7 @@
     "nom_fr": "du tube cardiaque"
    },
    {
-    "motif": "heart|coeur|cardiac|card",
+    "motif": "heart|coeur|cardiac|(^|_)card(_|$)|^myoc[a-z0-9]*$",
     "suffixe": "coeur",
     "nom_fr": "du cœur"
    }
@@ -218,45 +614,6 @@
  ],
  "regles": [
   {
-   "motif": "central_?thread|central_?line|fil_central|axis_of_heart|heart_axis|midline_of_heart",
-   "nom": "axe_tube_cardiaque",
-   "nom_fr": "axe du tube cardiaque",
-   "systeme": "vasculaire",
-   "groupe": null,
-   "couleur": [
-    0.9,
-    0.9,
-    0.2
-   ],
-   "confiance": "faible"
-  },
-  {
-   "motif": "epicard|proepicard|pro_epicard",
-   "nom": "epicarde",
-   "nom_fr": "épicarde",
-   "systeme": "vasculaire",
-   "groupe": "coeur",
-   "couleur": [
-    0.85,
-    0.55,
-    0.45
-   ],
-   "confiance": "bonne"
-  },
-  {
-   "motif": "pericard",
-   "nom": "pericarde",
-   "nom_fr": "péricarde",
-   "systeme": "annexes",
-   "groupe": null,
-   "couleur": [
-    0.75,
-    0.85,
-    1.0
-   ],
-   "confiance": "bonne"
-  },
-  {
    "motif": "dorsal_?mesocard|mesocard",
    "nom": "mesocarde_dorsal",
    "nom_fr": "mésocarde dorsal",
@@ -266,19 +623,6 @@
     0.85,
     0.65,
     0.55
-   ],
-   "confiance": "bonne"
-  },
-  {
-   "motif": "sinus_?node|sa_?node|sinoatrial|sinuatrial|noeud_sinusal",
-   "nom": "noeud_sinusal",
-   "nom_fr": "nœud sinusal",
-   "systeme": "vasculaire",
-   "groupe": "coeur",
-   "couleur": [
-    1.0,
-    0.85,
-    0.3
    ],
    "confiance": "bonne"
   },
@@ -294,46 +638,6 @@
     0.3
    ],
    "confiance": "bonne"
-  },
-  {
-   "motif": "conduct|his_bundle|bundle_of_his|purkinje",
-   "nom": "systeme_conduction",
-   "nom_fr": "système de conduction",
-   "systeme": "vasculaire",
-   "groupe": "coeur",
-   "couleur": [
-    1.0,
-    0.8,
-    0.4
-   ],
-   "confiance": "moyenne"
-  },
-  {
-   "motif": "cushion|coussin|endocardial_?ridge|av_ridge",
-   "nom": "coussins_endocardiques_{1}",
-   "nom_fr": "coussins endocardiques",
-   "systeme": "vasculaire",
-   "groupe": "coeur",
-   "couleur": [
-    0.95,
-    0.8,
-    0.7
-   ],
-   "confiance": "bonne",
-   "capture": "(superior|inferior|left|right|lateral|dorsal|ventral|sup|inf|oft|avc|conal|truncal)"
-  },
-  {
-   "motif": "neural_?crest|crete_neurale|crest_cell",
-   "nom": "cellules_crete_neurale",
-   "nom_fr": "cellules des crêtes neurales",
-   "systeme": "tissus",
-   "groupe": null,
-   "couleur": [
-    0.55,
-    0.35,
-    0.75
-   ],
-   "confiance": "moyenne"
   },
   {
    "motif": "ridge|crete|column|colonne|septum_(oft|conal|truncal|aortico|ap)|aorticopulmonary|aortopulmonary|spiral",
@@ -429,58 +733,6 @@
    "capture": "([a-z0-9]+)_?(valve|leaflet|cusp)"
   },
   {
-   "motif": "septum_?prim|primary_?septum",
-   "nom": "septum_primum",
-   "nom_fr": "septum primum",
-   "systeme": "vasculaire",
-   "groupe": "coeur",
-   "couleur": [
-    0.9,
-    0.5,
-    0.5
-   ],
-   "confiance": "bonne"
-  },
-  {
-   "motif": "septum_?secund|secondary_?septum",
-   "nom": "septum_secundum",
-   "nom_fr": "septum secundum",
-   "systeme": "vasculaire",
-   "groupe": "coeur",
-   "couleur": [
-    0.9,
-    0.5,
-    0.5
-   ],
-   "confiance": "bonne"
-  },
-  {
-   "motif": "ventricular_?septum|interventric|septum_ventric|ivs",
-   "nom": "septum_interventriculaire",
-   "nom_fr": "septum interventriculaire",
-   "systeme": "vasculaire",
-   "groupe": "coeur",
-   "couleur": [
-    0.85,
-    0.35,
-    0.35
-   ],
-   "confiance": "bonne"
-  },
-  {
-   "motif": "atrial_?septum|interatri|septum_atri",
-   "nom": "septum_interatrial",
-   "nom_fr": "septum interatrial",
-   "systeme": "vasculaire",
-   "groupe": "coeur",
-   "couleur": [
-    0.9,
-    0.5,
-    0.5
-   ],
-   "confiance": "bonne"
-  },
-  {
    "motif": "foramen_?oval|ostium_?(prim|secund)|foramen_?prim|foramen_?secund",
    "nom": "foramen_{1}",
    "nom_fr": "foramen / ostium",
@@ -493,19 +745,6 @@
    ],
    "confiance": "moyenne",
    "capture": "(oval\\w*|prim\\w*|secund\\w*)"
-  },
-  {
-   "motif": "hepatocard|hepato_card|canal_hepato",
-   "nom": "canal_hepatocardiaque_{cote}",
-   "nom_fr": "canal hépatocardiaque {cote_fr}",
-   "systeme": "vasculaire",
-   "groupe": "veines",
-   "couleur": [
-    0.3,
-    0.45,
-    0.85
-   ],
-   "confiance": "bonne"
   },
   {
    "motif": "ductus_?venos|canal_veineux|dv(_|$)",
@@ -521,32 +760,6 @@
    "confiance": "bonne"
   },
   {
-   "motif": "ivc|inferior_?(vena_)?cav|vena_cava_inf|caval_vein_inf|infrahepatic|suprahepatic|veine_cave_inf",
-   "nom": "veine_cave_inferieure",
-   "nom_fr": "veine cave inférieure",
-   "systeme": "vasculaire",
-   "groupe": "veines",
-   "couleur": [
-    0.25,
-    0.4,
-    0.85
-   ],
-   "confiance": "bonne"
-  },
-  {
-   "motif": "svc|superior_?(vena_)?cav|vena_cava_sup|veine_cave_sup",
-   "nom": "veine_cave_superieure_{cote}",
-   "nom_fr": "veine cave supérieure {cote_fr}",
-   "systeme": "vasculaire",
-   "groupe": "veines",
-   "couleur": [
-    0.25,
-    0.4,
-    0.85
-   ],
-   "confiance": "bonne"
-  },
-  {
    "motif": "azygos|azygous|hemiazygos",
    "nom": "veine_azygos_{cote}",
    "nom_fr": "veine azygos {cote_fr}",
@@ -555,111 +768,6 @@
    "couleur": [
     0.35,
     0.5,
-    0.85
-   ],
-   "confiance": "bonne"
-  },
-  {
-   "motif": "vitelline_?vein|omphalomesenteric_?vein|vv(_|$)|veine_vitelline|vitell.*vein",
-   "nom": "veine_vitelline_{cote}",
-   "nom_fr": "veine vitelline {cote_fr}",
-   "systeme": "vasculaire",
-   "groupe": "veines",
-   "couleur": [
-    0.4,
-    0.55,
-    0.9
-   ],
-   "confiance": "bonne"
-  },
-  {
-   "motif": "umbilical_?vein|uv(_|$)|veine_ombilic|umbil.*vein",
-   "nom": "veine_ombilicale_{cote}",
-   "nom_fr": "veine ombilicale {cote_fr}",
-   "systeme": "vasculaire",
-   "groupe": "veines",
-   "couleur": [
-    0.45,
-    0.3,
-    0.8
-   ],
-   "confiance": "bonne"
-  },
-  {
-   "motif": "common_?cardinal|ccv|duct_of_cuvier|cuvier",
-   "nom": "veine_cardinale_commune_{cote}",
-   "nom_fr": "veine cardinale commune {cote_fr}",
-   "systeme": "vasculaire",
-   "groupe": "veines",
-   "couleur": [
-    0.25,
-    0.55,
-    0.9
-   ],
-   "confiance": "bonne"
-  },
-  {
-   "motif": "anterior_?cardinal|acv|cranial_?cardinal|precardinal",
-   "nom": "veine_cardinale_anterieure_{cote}",
-   "nom_fr": "veine cardinale antérieure {cote_fr}",
-   "systeme": "vasculaire",
-   "groupe": "veines",
-   "couleur": [
-    0.25,
-    0.55,
-    0.9
-   ],
-   "confiance": "bonne"
-  },
-  {
-   "motif": "posterior_?cardinal|pcv|caudal_?cardinal|postcardinal",
-   "nom": "veine_cardinale_posterieure_{cote}",
-   "nom_fr": "veine cardinale postérieure {cote_fr}",
-   "systeme": "vasculaire",
-   "groupe": "veines",
-   "couleur": [
-    0.25,
-    0.55,
-    0.9
-   ],
-   "confiance": "bonne"
-  },
-  {
-   "motif": "subcardinal|supracardinal|sacrocardinal",
-   "nom": "veine_{1}_{cote}",
-   "nom_fr": "veine {cote_fr}",
-   "systeme": "vasculaire",
-   "groupe": "veines",
-   "couleur": [
-    0.25,
-    0.55,
-    0.9
-   ],
-   "confiance": "bonne",
-   "capture": "(subcardinal|supracardinal|sacrocardinal)"
-  },
-  {
-   "motif": "cardinal",
-   "nom": "veine_cardinale_{cote}",
-   "nom_fr": "veine cardinale {cote_fr}",
-   "systeme": "vasculaire",
-   "groupe": "veines",
-   "couleur": [
-    0.25,
-    0.55,
-    0.9
-   ],
-   "confiance": "bonne"
-  },
-  {
-   "motif": "pulmonary_?vein|veine_pulm|pv(_|$)",
-   "nom": "veine_pulmonaire_{cote}",
-   "nom_fr": "veine pulmonaire {cote_fr}",
-   "systeme": "vasculaire",
-   "groupe": "veines",
-   "couleur": [
-    0.35,
-    0.45,
     0.85
    ],
    "confiance": "bonne"
@@ -689,19 +797,6 @@
     0.75
    ],
    "confiance": "moyenne"
-  },
-  {
-   "motif": "coronary_?sinus|sinus_coron",
-   "nom": "sinus_coronaire",
-   "nom_fr": "sinus coronaire",
-   "systeme": "vasculaire",
-   "groupe": "veines",
-   "couleur": [
-    0.3,
-    0.45,
-    0.85
-   ],
-   "confiance": "bonne"
   },
   {
    "motif": "coronar",
@@ -887,6 +982,30 @@
    "confiance": "bonne"
   },
   {
+   "motif": "(^|_)(uv)(_|$)|veine_ombilic",
+   "nom": "veine_ombilicale_{cote}",
+   "nom_fr": "veine ombilicale {cote_fr}",
+   "systeme": "vasculaire",
+   "groupe": "veines",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "(^|_)(vv)(_|$)|veine_vitelline",
+   "nom": "veine_vitelline_{cote}",
+   "nom_fr": "veine vitelline {cote_fr}",
+   "systeme": "vasculaire",
+   "groupe": "veines",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "(^|_)(ivc)(_|$)|inferior_?(vena_)?cav|vena_cava_inf|caval_vein_inf|infrahepatic|suprahepatic",
+   "nom": "veine_cave_inferieure",
+   "nom_fr": "veine cave inférieure",
+   "systeme": "vasculaire",
+   "groupe": "veines",
+   "confiance": "bonne"
+  },
+  {
    "motif": "arter|artery|arteries",
    "nom": "artere_{1}_{cote}",
    "nom_fr": "artère {cote_fr}",
@@ -982,7 +1101,7 @@
    "capture": "^([a-z0-9]+)"
   },
   {
-   "motif": "otic|otocyst|ear|oreille",
+   "motif": "otic|otocyst|(^|_)(inner_?)?ears?(_|$)|oreille(?!tte)",
    "nom": "vesicules_otiques",
    "nom_fr": "vésicules otiques",
    "systeme": "nerveux",
@@ -1034,7 +1153,7 @@
    "confiance": "bonne"
   },
   {
-   "motif": "vertebra|vertebr|rib|cote(s)?(_|$)|cartilag|chondro|skelet|bone",
+   "motif": "vertebra|vertebr|(^|_)ribs?(_|$)|cote(s)?(_|$)|cartilag|chondro|skelet|bone",
    "nom": "squelette_{1}",
    "nom_fr": "squelette",
    "systeme": "os_cartilages",
@@ -1378,7 +1497,7 @@
    "capture": "^([a-z0-9]+)"
   },
   {
-   "motif": "limb|bud|bourgeon|membre|arm|leg|hand|foot|palette",
+   "motif": "limb|(^|_)buds?(_|$)|bourgeon_?membre|membre|(^|_)(arm|leg|hand|foot|feet)s?(_|$)|palette",
    "nom": "membres_{cote}",
    "nom_fr": "membres {cote_fr}",
    "systeme": "appendiculaire",

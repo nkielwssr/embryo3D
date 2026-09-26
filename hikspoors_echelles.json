@@ -1,56 +1,58 @@
 {
  "_doc": [
-  "Échelle des maillages Hikspoors par stade : µm par unité U3D (hikspoors_modele.py, --um-par-unite l'emporte).",
-  "CS13 : calage sur notre modèle VHE v6 (session « Carnegie Stage 13 PDF 3D », 26/09) : 1,078 µm/unité, écart médian 41 µm.",
-  "Autres stades : 1 unité ≈ 1 µm d'après les auteurs ; CS12 et CS14 semblent dans une autre unité (à mesurer par calage sur nos volumes).",
+  "Échelle des maillages Hikspoors par stade : µm par unité U3D. Sert seulement SANS calage (hikspoors_modele.py --sans-calage, ou stade sans",
+  "calage/<nom>.json dans la banque, soit CS23 au 26/09) ; avec calage, l'échelle vient de la matrice. --um-par-unite l'emporte.",
+  "Valeurs : échelle des calages ICP de la session « Carnegie Stage 13 PDF 3D » sur nos modèles de stade (retour du relais, 26/09).",
+  "Même spécimen (CS10 6330, CS13 836, CS16 6517, CS20 462) : unité du PDF. Spécimen différent (CS9, 11, 12, 14, 15, 17, 18) : échelle effective",
+  "qui absorbe aussi l'écart de taille entre spécimens. CS12 : réflexion et autre unité ; CS14 : calé sur le modèle CS15 (pas de modèle CS14).",
   "Le cube « scale_cube_200um » des PDF n'est pas fiable (redimensionné au niveau du nœud)."
  ],
  "CS9": {
-  "um_par_unite": 1.0,
-  "statut": "à confirmer"
+  "um_par_unite": 0.986,
+  "statut": "calage sur CS09 (H712, autre spécimen), à confirmer"
  },
  "CS10": {
-  "um_par_unite": 1.0,
-  "statut": "à confirmer"
+  "um_par_unite": 0.798,
+  "statut": "calage sur CS10 (même spécimen 6330)"
  },
  "CS11": {
-  "um_par_unite": 1.0,
-  "statut": "à confirmer"
+  "um_par_unite": 0.758,
+  "statut": "calage sur CS11 (6784, autre spécimen)"
  },
  "CS12": {
-  "um_par_unite": 1.0,
-  "statut": "douteux (autre unité ?)"
+  "um_par_unite": 4.864,
+  "statut": "calage sur CS12 (8505A, autre spécimen) avec RÉFLEXION : à confirmer"
  },
  "CS13": {
-  "um_par_unite": 1.078,
-  "statut": "calé sur VHE v6 (41 µm)"
+  "um_par_unite": 1.101,
+  "statut": "calage sur CS13 (même spécimen 836) ; 1,078 avec le calage VHE v6"
  },
  "CS14": {
-  "um_par_unite": 1.0,
-  "statut": "douteux (autre unité ?)"
+  "um_par_unite": 5.79,
+  "statut": "calé sur le modèle CS15 (3512) : taille de CS15, pas de CS14 ; 6,368 avec _14.json ; à confirmer"
  },
  "CS15": {
-  "um_par_unite": 1.0,
-  "statut": "à confirmer"
+  "um_par_unite": 0.79,
+  "statut": "calage sur CS15 (3512, autre spécimen)"
  },
  "CS16": {
-  "um_par_unite": 1.0,
-  "statut": "à confirmer"
+  "um_par_unite": 1.101,
+  "statut": "calage sur CS16 (même spécimen 6517)"
  },
  "CS17": {
-  "um_par_unite": 1.0,
-  "statut": "à confirmer"
+  "um_par_unite": 0.77,
+  "statut": "calage sur CS17 (6521, autre spécimen)"
  },
  "CS18": {
-  "um_par_unite": 1.0,
-  "statut": "à confirmer"
+  "um_par_unite": 0.727,
+  "statut": "calage sur CS18 (6524, autre spécimen)"
  },
  "CS20": {
-  "um_par_unite": 1.0,
-  "statut": "à confirmer"
+  "um_par_unite": 0.97,
+  "statut": "calage sur CS20 (même spécimen 462)"
  },
  "CS23": {
   "um_par_unite": 1.0,
-  "statut": "à confirmer"
+  "statut": "pas de calage : à mesurer"
  }
 }

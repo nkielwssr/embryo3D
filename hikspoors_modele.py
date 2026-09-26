@@ -7,25 +7,30 @@ embryons_3D/modeles/<CS>_hikspoors/{<structure>.ply, manifest.json, rapport.json
         -> u3d/Carnegie_Stage_13[_NEWvalves].npz (+ _scene.json) de la banque de la session « PDF 3D » ; --banque est la valeur par défaut
     python embryo3d/hikspoors_modele.py CS13 --npz .../u3d/Carnegie_Stage_13.npz [--scene .../Carnegie_Stage_13_scene.json]
     python embryo3d/hikspoors_modele.py CS13 --glb .../glb/Carnegie_Stage_13.glb   # scène GLB (nœuds « structure~rrggbb » déjà scindés par couleur)
-    options : --um-par-unite 1.078          échelle (µm par unité U3D ; défaut : hikspoors_echelles.json puis 1.0)
-              --calage T.npy [--calage-repere modeles|pipeline]   similitude connue (13 nombres s,R,t ; ou matrice 4x4 / 3x4) unités PDF -> mm,
-                                            au lieu de l'orientation auto ; « pipeline » = repère de meshexport (X gauche→droite, indirect) remis direct.
-                                            Ex. CS13 : calage/T_CS13_hikspoors_vers_vhe_mm.npy de la banque (repère VHE v6 = pipeline).
+    options : --calage C.json|T.npy [--calage-repere modeles|pipeline]   similitude connue unités PDF -> mm au lieu de l'orientation auto :
+                                            .json (clé matrice_pdf_vers_mm, 4x4), ou 13 nombres s,R,t, 12 nombres A,t, matrice 4x4 / 3x4.
+                                            DÉFAUT : calage/<nom du npz>.json de la banque s'il existe (calage ICP de la session « PDF 3D » sur
+                                            embryons_3D/modeles/<CS>/, repère « modeles ») ; les coordonnées restent alors celles du modèle du
+                                            stade (pas de recentrage) : les structures Hikspoors se superposent à notre modèle.
+              --sans-calage                 ignorer le calage de la banque (orientation automatique)
+              --um-par-unite 1.078          échelle sans calage (µm par unité U3D ; défaut : hikspoors_echelles.json puis 1.0)
               --retourner z|y               inverse un axe après l'orientation automatique (x suit pour rester direct)
               --separer-couleurs            une partie portant plusieurs couleurs de faces (texture) est scindée par couleur
+              --sans-completer              version _NEWvalves : ne pas reprendre de l'originale les structures absentes (ex. gut à CS18)
               --sans-unions                 ne pas écrire les unions coeur / cavites_cardiaques / arteres / veines / intestin
-              --non-publiable               modèle gardé en local (champ publiable=false)
+              --publiable                   autoriser la publication (défaut : référence interne, publiable=false : atlas d'auteurs retravaillé)
               --sortie DOSSIER              défaut embryons_3D/modeles/<CS>_hikspoors
 
 Format npz de la banque (decode_u3d_local.py) : clés « FACESET_<nom>|v » (sommets float32, unités PDF), « |f » (faces int32), « |c » (couleur
-matériau, 3 flottants), « |p » (structure parente, chaîne), « |fc » (couleur par face uint8 pour les surfaces texturées : deux structures sur une
-surface, scindées avec --separer-couleurs). Les stades disponibles : 9…18, 20, 23 (+ 18/20/23 _NEWvalves, préférées).
+matériau, 3 flottants 0-1), « |p » (structure parente, chaîne), « |fc » (couleur par face uint8 0-255 pour les surfaces texturées : deux
+structures sur une surface, scindées avec --separer-couleurs). Les stades disponibles : 9…18, 20, 23 (+ 18/20/23 _NEWvalves, préférées ; les
+structures qui n'existent que dans l'originale y sont ajoutées si les deux versions sont dans le même repère).
 
-Repère de sortie (convention agrégateur) : mm, Z crânial, Y dorsal, X = Y×Z = gauche anatomique (repère direct), origine = centre du corps.
-Orientation automatique : ACP de l'ensemble des sommets (grand axe = crânio-caudal) ; dorsal = du cœur (ou intestin/foie) vers le tube neural
-(ou somites/ganglions/notochorde/aorte dorsale) ; le signe crânial est choisi par vote (cœur au-dessus du foie et de l'intestin, arcs aortiques
-au-dessus du cœur, tube neural plus large du côté crânial, structures gauches à +X…). Tout est consigné dans rapport.json et controle.png :
-VÉRIFIER la planche avant publication, corriger avec --retourner si besoin.
+Repère de sortie (convention agrégateur) : mm, Z crânial, Y dorsal, X = Y×Z = gauche anatomique (repère direct).
+Orientation automatique (repli, sans calage) : candidats Z = ±axes de l'ACP et ±axe anatomique (foie -> cœur -> arcs aortiques) ; dorsal =
+aorte dorsale, somites, veines cardinales contre le cœur, mesurés dans la tranche crânio-caudale du cœur (un embryon en C fait mentir les
+barycentres : le tube neural fait le tour du cœur) ; choix par vote (cœur au-dessus du foie, arcs au-dessus du cœur, voie efférente au-dessus du
+sinus veineux, structures gauches à +X…). Tout est consigné dans rapport.json et controle.png : VÉRIFIER la planche, corriger avec --retourner.
 """
 import argparse
 import json
@@ -101,22 +106,106 @@ def couleur_01(c):
 
 # ----------------------------------------------------------------------------------------------------------------------- lecture
 def trouver_dans_banque(banque, cs, prefere_newvalves=True):
-    """u3d/Carnegie_Stage_<n>[_NEWvalves].npz (+ _scene.json) ou glb/Carnegie_Stage_<n>.glb dans la banque ; renvoie (npz, scene, glb)"""
+    """u3d/Carnegie_Stage_<n>[_NEWvalves].npz (+ _scene.json) ou glb/Carnegie_Stage_<n>.glb dans la banque.
+    Renvoie {npz, scene, glb, base, original} (original : {npz, scene, base} de la version d'origine quand la _NEWvalves est prise) ou None."""
     n = str(norm_int(cs))
-    cands = []
-    if prefere_newvalves:
-        cands.append("Carnegie_Stage_%s_NEWvalves" % n)
-    cands.append("Carnegie_Stage_%s" % n)
-    for base in cands:
+    cands = (["Carnegie_Stage_%s_NEWvalves" % n] if prefere_newvalves else []) + ["Carnegie_Stage_%s" % n]
+
+    def npz_de(base):
         npz = os.path.join(banque, "u3d", base + ".npz")
         if os.path.exists(npz):
             sc = os.path.join(banque, "u3d", base + "_scene.json")
-            return npz, (sc if os.path.exists(sc) else None), None
+            return {"npz": npz, "scene": sc if os.path.exists(sc) else None, "glb": None, "base": base}
+        return None
+    for base in cands:
+        r = npz_de(base)
+        if r:
+            r["original"] = npz_de(base[:-len("_NEWvalves")]) if base.endswith("_NEWvalves") else None
+            return r
     for base in cands:
         glb = os.path.join(banque, "glb", base + ".glb")
         if os.path.exists(glb):
-            return None, None, glb
-    return None, None, None
+            return {"npz": None, "scene": None, "glb": glb, "base": base, "original": None}
+    return None
+
+
+def trouver_calage(banque, base):
+    """calage/<base>.json de la banque (session « PDF 3D ») ; pour une version _NEWvalves sans calage propre, celui de l'originale (signalé).
+    Renvoie (chemin | None, note)."""
+    if not banque or not base:
+        return None, ""
+    for b, note in ((base, ""), (re.sub(r"_NEWvalves$", "", base), "calage de la version d'origine")):
+        f = os.path.join(banque, "calage", b + ".json")
+        if os.path.exists(f):
+            return f, note
+    return None, ""
+
+
+CLES_MATRICE = ("matrice_pdf_vers_mm", "matrice", "matrix", "M", "T", "transformation", "transform")
+
+
+def lire_calage(chemin):
+    """.json (clé matrice_pdf_vers_mm : 4x4, unités PDF -> mm) ; .npy/.txt : 13 nombres (s, R, t), 12 (A, t), 4x4 ou 3x4.
+    Renvoie (A 3x3, t, infos) avec x_mm = A x_pdf + t ; infos : clé, clés du json, stade visé s'il est indiqué (fichier « _vers_CS15 » ou champ)."""
+    infos = {"fichier": chemin}
+    if chemin.lower().endswith(".json"):
+        j = json.load(open(chemin, encoding="utf-8"))
+        if not isinstance(j, dict):
+            raise SystemExit("calage %s : objet JSON attendu" % chemin)
+        infos["cles_json"] = sorted(j.keys())
+        cle = next((k for k in CLES_MATRICE if k in j), None)
+        if cle is None:
+            raise SystemExit("calage %s : aucune clé %s (clés : %s)" % (chemin, " / ".join(CLES_MATRICE), infos["cles_json"]))
+        infos["cle"] = cle
+        for k in ("modele", "modele_cible", "stade_modele", "cible", "reference", "vers", "stade"):
+            if isinstance(j.get(k), str) and re.search(r"CS\s*\d+", j[k], re.I):
+                infos["cible"] = j[k]
+                break
+        T = np.asarray(j[cle], float)
+    elif chemin.lower().endswith(".txt"):
+        T = np.loadtxt(chemin)
+    else:
+        T = np.load(chemin, allow_pickle=True)
+    T = np.asarray(T, float)
+    if T.shape == (4, 4) and not np.allclose(T[3], [0, 0, 0, 1]) and np.allclose(T[:, 3], [0, 0, 0, 1]):
+        T = T.T; infos["transposee"] = True                  # matrice rangée par colonnes (translation en bas)
+    if T.shape in ((4, 4), (3, 4)):
+        A, t = T[:3, :3], T[:3, 3]
+    elif T.size == 13:
+        T = T.ravel(); A, t = T[0] * T[1:10].reshape(3, 3), T[10:13]
+    elif T.size == 12:
+        T = T.ravel(); A, t = T[:9].reshape(3, 3), T[9:12]
+    else:
+        raise SystemExit("calage : forme %s non reconnue (json matrice_pdf_vers_mm ; 13 nombres s,R,t ; 12 nombres A,t ; 4x4 ou 3x4)" % (T.shape,))
+    m = re.search(r"_vers_(CS\d+)", os.path.basename(chemin), re.I)
+    if m and "cible" not in infos:
+        infos["cible"] = m.group(1)
+    return np.asarray(A, float), np.asarray(t, float), infos
+
+
+def meme_repere(pa, pb, tol=0.02):
+    """Deux versions d'un même PDF (_NEWvalves / originale) sont-elles dans le même repère ? Boîtes des parties de même nom comparées à
+    l'étendue totale. Renvoie (True | False | None, texte)."""
+    da = {normaliser(p["nom"]): p["mesh"] for p in pa}
+    db = {normaliser(p["nom"]): p["mesh"] for p in pb}
+    communs = [k for k in da if k in db]
+    if not communs:
+        return None, "aucune partie de même nom"
+    B = np.vstack([da[k].bounds for k in communs])
+    ext = max(float((B.max(0) - B.min(0)).max()), 1e-9)
+    ecarts = [float(np.abs(da[k].bounds - db[k].bounds).max()) / ext for k in communs]
+    med = float(np.median(ecarts))
+    return med < tol, "%d parties de même nom, écart médian des boîtes %.2g %% de l'étendue" % (len(communs), 100 * med)
+
+
+def completer_depuis_original(parties, originales, nomen):
+    """Parties de la version d'origine dont le nom canonique manque dans la version _NEWvalves (ex. « gut » perdu à CS18 NEWvalves) ;
+    CCS / CCS_1 ou Asc_Ao_wall / asc_Ao_wall ont le même nom canonique et ne sont pas doublés."""
+    def canon(p):
+        r = nomen.chercher(p["nom"])
+        return None if r.get("ignorer") else r["nom"]
+    presents = {canon(p) for p in parties}
+    return [dict(p, complement=os.path.basename(p["fichier"])) for p in originales if canon(p) is not None and canon(p) not in presents]
 
 
 def norm_int(cs):
@@ -364,7 +453,14 @@ class Nomenclature:
         self.ignorer = [re.compile(m, re.I) for m in self.t.get("ignorer", [])]
         self.cote_g = re.compile(self.t["cotes"]["gauche"], re.I)
         self.cote_d = re.compile(self.t["cotes"]["droit"], re.I)
-        self.regles = []
+
+        def regle(r, prefixe=""):
+            return {"motif": re.compile(r["motif"], re.I), "exige": None, "nom": r["nom"], "nom_fr": r.get("nom_fr", r["nom"]),
+                    "systeme": r.get("systeme", "autre"), "groupe": r.get("groupe"), "couleur": r.get("couleur"),
+                    "confiance": r.get("confiance", "moyenne"), "capture": re.compile(r["capture"], re.I) if r.get("capture") else None,
+                    "regle": prefixe + r["motif"]}
+        # noms réels qui contiennent « card », « atri », « ventric »… (cardinal_vein, pericard, primary_atrial_septum) : avant les règles cardiaques
+        self.regles = [regle(r, "prioritaire : ") for r in self.t.get("prioritaires", [])]
         card = self.t.get("cardiaque", {})
         for ty in card.get("types", []):
             for ch in card.get("chambres", []):
@@ -379,10 +475,7 @@ class Nomenclature:
                                     "nom_fr": cs_["nom_fr"] + " " + ch["nom_fr"], "systeme": "vasculaire", "groupe": cs_.get("groupe"), "couleur": cs_.get("couleur"),
                                     "confiance": cs_.get("confiance", "bonne"), "capture": None, "regle": "cardiaque:chambre seule %s" % ch["suffixe"]})
         for r in self.t.get("regles", []):
-            self.regles.append({"motif": re.compile(r["motif"], re.I), "exige": None, "nom": r["nom"], "nom_fr": r.get("nom_fr", r["nom"]),
-                                "systeme": r.get("systeme", "autre"), "groupe": r.get("groupe"), "couleur": r.get("couleur"),
-                                "confiance": r.get("confiance", "moyenne"), "capture": re.compile(r["capture"], re.I) if r.get("capture") else None,
-                                "regle": r["motif"]})
+            self.regles.append(regle(r))
         self.par_couleur = [dict(r, _re=re.compile(r.get("source", "."), re.I), _cap=re.compile(r["capture"], re.I) if r.get("capture") else None)
                             for r in self.t.get("par_couleur", []) if "rgb" in r]
         self.groupes = self.t.get("groupes", {})
@@ -462,7 +555,8 @@ def scinder_par_couleur(p, seuil=0.05):
         m = trimesh.Trimesh(V[idx], inv2.reshape(-1, 3), process=False)
         col = couleur_255(np.median(np.asarray(fc)[sel][:, :3], axis=0))
         out.append({"nom": "%s__c%02x%02x%02x" % (p["nom"], *col), "mesh": m, "couleur": col, "couleurs_faces": None, "fichier": p["fichier"],
-                    "source_partie": p["nom"], "couleur_scindee": col, "fraction_faces": round(float(sel.mean()), 4)})
+                    "source_partie": p["nom"], "couleur_scindee": col, "fraction_faces": round(float(sel.mean()), 4),
+                    "parent": p.get("parent", ""), "complement": p.get("complement")})
     if reste.any():                            # petites couleurs restantes : rattachées à la plus grosse sous-partie
         idx, inv2 = np.unique(F[reste].ravel(), return_inverse=True)
         out[0]["mesh"] = trimesh.util.concatenate([out[0]["mesh"], trimesh.Trimesh(V[idx], inv2.reshape(-1, 3), process=False)])
@@ -491,8 +585,52 @@ CRANIAL = [   # (A crânial à B) : motifs sur les noms canoniques, poids
     (["^myocarde_voie_efferente", "^cavite_voie_efferente", "^myocarde_ventricule", "^cavite_ventricule"], ["^myocarde_sinus_veineux", "^cavite_sinus_veineux", "^veine_vitelline", "^canal_hepatocardiaque", "^veine_cave_inferieure"], 1.0),
     (["^intestin_anterieur", "^oesophage", "^estomac", "^poumons"], ["^intestin_posterieur", "^veine_ombilicale", "^artere_ombilicale", "^cordon"], 1.0),
 ]
-DORSAUX = ["^tube_neural", "^somites", "^ganglions_spinaux", "^notochorde", "^aorte_dorsale", "^encephale", "^veine_cardinale"]
-VENTRAUX = ["^myocarde_", "^cavite_", "^coeur$", "^tube_cardiaque", "^foie$", "^intestin", "^vesicule_vitelline", "^estomac", "^pericarde", "^epicarde", "^septum_transversum"]
+# Dorsal : structures de la paroi dorsale. Le tube neural n'est qu'un repli : dans un embryon en C (CS12-CS17) il fait le tour du cœur
+# (prosencéphale ventral contre le cœur, queue relevée), son barycentre n'est pas dorsal (retour du relais, CS13).
+DORSAUX = ["^aorte_dorsale", "^somites", "^notochorde", "^ganglions_spinaux", "^veine_cardinale(?!_commune)"]
+DORSAUX_REPLI = ["^tube_neural", "^encephale"]
+CARDIAQUES = ["^myocarde_", "^cavite_", "^coeur$", "^tube_cardiaque", "^pericarde", "^epicarde", "^gelee_cardiaque"]
+VENTRAUX = CARDIAQUES + ["^foie$", "^septum_transversum", "^vesicule_vitelline"]
+
+
+def _points_par_structure(structs, motifs, n=3000):
+    return [np.vstack([_echantillon(m, n) for m in s["meshes"]]) for nom, s in structs.items() if any(re.search(mo, nom) for mo in motifs)]
+
+
+def _dorsal(structs, Z):
+    """Vecteur ventral -> dorsal (⊥ Z, non normé) : barycentre des structures dorsales, chacune restreinte à la tranche crânio-caudale du
+    cœur, moins celui des structures cardiaques (une voix par structure) ; barycentres entiers si la tranche est vide.
+    Renvoie (vecteur | None, description)."""
+    Gd, lab = _points_par_structure(structs, DORSAUX), "aorte/somites/cardinales"
+    if not Gd:
+        Gd, lab = _points_par_structure(structs, DORSAUX_REPLI), "tube neural (repli)"
+    Gv = _points_par_structure(structs, CARDIAQUES) or _points_par_structure(structs, VENTRAUX)
+    if not Gd or not Gv:
+        return None, "pas d'indice dorsal"
+    lo, hi = np.percentile(np.vstack(Gv) @ Z, [5, 95]); marge = 0.15 * (hi - lo)
+    cd = []
+    for P in Gd:
+        z = P @ Z
+        sel = (z >= lo - marge) & (z <= hi + marge)
+        if sel.sum() >= 10:
+            cd.append(P[sel].mean(0))
+    if cd:
+        lab += ", tranche du cœur"
+    else:
+        cd = [P.mean(0) for P in Gd]; lab += ", barycentres"
+    d = np.mean(cd, 0) - np.mean([P.mean(0) for P in Gv], 0)
+    d = d - (d @ Z) * Z
+    return (d if np.linalg.norm(d) > 1e-12 else None), lab
+
+
+def _axe_anatomique(structs):
+    """axe caudal -> crânial d'après les paires CRANIAL (foie -> cœur -> arcs aortiques…), ou None"""
+    v = np.zeros(3)
+    for a, b, w in CRANIAL:
+        ca, cb = _centre(structs, a), _centre(structs, b)
+        if ca is not None and cb is not None and np.linalg.norm(ca - cb) > 1e-12:
+            v += w * (ca - cb) / np.linalg.norm(ca - cb)
+    return v / np.linalg.norm(v) if np.linalg.norm(v) > 1e-9 else None
 
 
 def _score(structs, R):
@@ -508,12 +646,12 @@ def _score(structs, R):
         ok = ca[2] > cb[2]
         total += w if ok else -w
         detail.append({"indice": "crânial : %s > %s" % (a[0], b[0]), "ok": bool(ok), "ecart_mm": None, "poids": w})
-    cd, cv = c(DORSAUX), c(VENTRAUX)
-    if cd is not None and cv is not None:
-        ok = cd[1] > cv[1]
+    d, lab = _dorsal(structs, R[2])
+    if d is not None:
+        ok = float(R[1] @ d) > 0
         total += 2.0 if ok else -2.0
-        detail.append({"indice": "dorsal : tube neural/somites au-dessus (Y) du cœur/intestin", "ok": bool(ok), "poids": 2.0})
-    # tube neural plus large du côté crânial (vésicules cérébrales)
+        detail.append({"indice": "dorsal : %s au-dessus (Y) du cœur" % lab, "ok": bool(ok), "poids": 2.0})
+    # tube neural plus large du côté crânial : information seulement (faux sur l'embryon en C de CS13, retour du relais)
     if "tube_neural" in structs:
         P = R @ np.vstack([_echantillon(m, 20000) for m in structs["tube_neural"]["meshes"]]).T
         z = P[2]; lo, hi = np.percentile(z, [15, 85])
@@ -522,49 +660,56 @@ def _score(structs, R):
             return float(np.sqrt(((Q - Q.mean(1, keepdims=True)) ** 2).sum(0)).mean()) if sel.sum() > 20 else None
         r_haut, r_bas = rayon(z >= hi), rayon(z <= lo)
         if r_haut and r_bas and abs(r_haut - r_bas) > 0.15 * max(r_haut, r_bas):
-            ok = r_haut > r_bas
-            total += 1.0 if ok else -1.0
-            detail.append({"indice": "tube neural plus large en haut (encéphale)", "ok": bool(ok), "poids": 1.0, "rayon_haut": r_haut, "rayon_bas": r_bas})
-    # gauche/droite : structures appariées
-    paires = 0; dxs = []
+            detail.append({"indice": "tube neural plus large en haut (encéphale ; information, non compté)", "ok": bool(r_haut > r_bas), "poids": 0.0,
+                           "rayon_haut": r_haut, "rayon_bas": r_bas})
+    # gauche/droite : structures appariées (…_gauche / …_droit ou …_droite)
+    dxs = []
     for nom in structs:
-        if nom.endswith("_gauche") and nom[:-7] + "_droit" in structs:
+        if not nom.endswith("_gauche"):
+            continue
+        dr = next((nom[:-7] + s for s in ("_droit", "_droite") if nom[:-7] + s in structs), None)
+        if dr:
             g = R @ np.vstack([_echantillon(m) for m in structs[nom]["meshes"]]).mean(0)
-            d = R @ np.vstack([_echantillon(m) for m in structs[nom[:-7] + "_droit"]["meshes"]]).mean(0)
-            dxs.append(float(g[0] - d[0])); paires += 1
-    if paires:
+            d_ = R @ np.vstack([_echantillon(m) for m in structs[dr]["meshes"]]).mean(0)
+            dxs.append(float(g[0] - d_[0]))
+    if dxs:
         ok = np.median(dxs) > 0
         total += 2.0 if ok else -2.0
-        detail.append({"indice": "gauche à +X (%d paires)" % paires, "ok": bool(ok), "poids": 2.0, "dx_median": float(np.median(dxs))})
+        detail.append({"indice": "gauche à +X (%d paires)" % len(dxs), "ok": bool(ok), "poids": 2.0, "dx_median": float(np.median(dxs))})
     return total, detail
 
 
 def orienter(structs):
-    """Renvoie R (3x3, lignes X/Y/Z dans le repère source), le score et le détail. Candidats : Z = ±e1 (ACP), Y = indice dorsal ⊥ Z (sinon ±e2)."""
+    """Renvoie le meilleur candidat {R (3x3, lignes X/Y/Z dans le repère source), score, detail, z, y} et tous les candidats.
+    Z = ±e1, ±e2, ±e3 (ACP) et ±axe anatomique ; Y = indice dorsal ⊥ Z (sinon ±axe ACP) ; X = Y×Z. Meilleur score, e1 d'abord à égalité."""
     P = np.vstack([_echantillon(m) for s in structs.values() for m in s["meshes"]])
-    c0 = P.mean(0)
-    _, _, Vt = np.linalg.svd(P - c0, full_matrices=False)
-    e1, e2 = Vt[0], Vt[1]
-    cd, cv = _centre(structs, DORSAUX), _centre(structs, VENTRAUX)
+    _, _, Vt = np.linalg.svd(P - P.mean(0), full_matrices=False)
+    axes = [("ACP e1", Vt[0]), ("ACP e2", Vt[1]), ("ACP e3", Vt[2])]
+    a = _axe_anatomique(structs)
+    if a is not None:
+        axes.append(("axe anatomique", a))
     cand = []
-    for sz in (1, -1):
-        Z = sz * e1
-        ys = []
-        if cd is not None and cv is not None:
-            d = cd - cv; d = d - (d @ Z) * Z
-            if np.linalg.norm(d) > 1e-9:
-                ys.append(("indice dorsal", d / np.linalg.norm(d)))
-        if not ys:
-            for sy in (1, -1):
-                y = sy * e2 - ((sy * e2) @ Z) * Z
-                ys.append(("ACP e2 (%+d)" % sy, y / np.linalg.norm(y)))
-        for lab, Y in ys:
-            X = np.cross(Y, Z)
-            R = np.vstack([X, Y, Z])
-            sc, det = _score(structs, R)
-            cand.append({"R": R, "score": sc, "detail": det, "z": "ACP e1 (%+d)" % sz, "y": lab})
-    cand.sort(key=lambda c: -c["score"])
+    for lab_z, e in axes:
+        for sz in (1, -1):
+            Z = sz * e / np.linalg.norm(e)
+            d, lab_d = _dorsal(structs, Z)
+            ys = [("indice dorsal (%s)" % lab_d, d / np.linalg.norm(d))] if d is not None else []
+            if not ys:
+                autre = Vt[1] if lab_z == "ACP e1" else Vt[0]
+                for sy in (1, -1):
+                    y = sy * autre - ((sy * autre) @ Z) * Z
+                    if np.linalg.norm(y) > 1e-9:
+                        ys.append(("ACP (%+d)" % sy, y / np.linalg.norm(y)))
+            for lab, Y in ys:
+                R = np.vstack([np.cross(Y, Z), Y, Z])
+                sc, det = _score(structs, R)
+                cand.append({"R": R, "score": sc, "detail": det, "z": "%s (%+d)" % (lab_z, sz), "y": lab})
+    cand.sort(key=lambda c: -c["score"])          # tri stable : à score égal, l'ordre ci-dessus (e1 d'abord)
     return cand[0], cand
+
+
+VARIANTES = [("tel quel", np.eye(3)), ("rotation 180° autour de X", np.diag([1., -1, -1])), ("rotation 180° autour de Y", np.diag([-1., 1, -1])),
+             ("rotation 180° autour de Z", np.diag([-1., -1, 1])), ("miroir X", np.diag([-1., 1, 1]))]
 
 
 # ----------------------------------------------------------------------------------------------------------------------- unions, rendu
@@ -652,21 +797,50 @@ def planche_controle(structs_mm, chemin, titre):
     img.save(chemin)
 
 
+def verifier_sortie(sortie, manifest):
+    """verif_maillages.json dans le dossier de sortie, où qu'il soit (l'agrégateur le lit pour embryons_3D/modeles/<dossier>/)"""
+    try:
+        import verif_maillages
+    except Exception as e:
+        print("   verif_maillages :", e); return None
+    out = {}
+    for x in manifest["structures"]:
+        f = os.path.join(sortie, x["fichier"])
+        try:
+            out[x["nom"]] = verif_maillages.verifier(verif_maillages.charger(f)) if os.path.exists(f) else {"verdict": "absent", "problemes": ["fichier absent"]}
+        except Exception as e:
+            out[x["nom"]] = {"verdict": "a_corriger", "problemes": ["lecture : %s" % e]}
+    ok = sum(1 for v in out.values() if v["verdict"] == "ok")
+    res = {"dossier": os.path.basename(os.path.normpath(sortie)), "structures": out, "bilan": {"ok": ok, "total": len(out)}}
+    json.dump(res, open(os.path.join(sortie, "verif_maillages.json"), "w", encoding="utf-8"), ensure_ascii=False, indent=1)
+    print("   verif_maillages : %d/%d maillages sans erreur" % (ok, len(out)))
+    for n, v in out.items():
+        if v["verdict"] != "ok":
+            print("      %-40s %s" % (n, " ; ".join(v["problemes"])))
+    return res["bilan"]
+
+
 # ----------------------------------------------------------------------------------------------------------------------- principal
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("stade")
     ap.add_argument("--glb", help="dossier (ou fichier) de maillages GLB/PLY/OBJ/STL")
     ap.add_argument("--npz"); ap.add_argument("--scene")
-    ap.add_argument("--banque", default=BANQUE, help="banque hikspoors_maastricht (u3d/Carnegie_Stage_<n>[_NEWvalves].npz) ; utilisée sans --npz/--glb")
+    ap.add_argument("--banque", default=BANQUE, help="banque hikspoors_maastricht (u3d/Carnegie_Stage_<n>[_NEWvalves].npz, calage/*.json)")
     ap.add_argument("--sans-newvalves", action="store_true", help="prendre Carnegie_Stage_<n>.npz même si la version _NEWvalves existe")
+    ap.add_argument("--sans-completer", action="store_true", help="_NEWvalves : ne pas reprendre de l'originale les structures absentes")
     ap.add_argument("--um-par-unite", type=float, default=None)
     ap.add_argument("--echelles", default=ECHELLES)
-    ap.add_argument("--calage"); ap.add_argument("--calage-repere", default="modeles", choices=["modeles", "pipeline"])
+    ap.add_argument("--calage", help="calage explicite (.json matrice_pdf_vers_mm, .npy) ; défaut : calage/<nom du npz>.json de la banque")
+    ap.add_argument("--calage-repere", default="modeles", choices=["modeles", "pipeline"],
+                    help="repère d'arrivée du calage : modeles (défaut, calages de la banque) ; pipeline = X gauche→droite (indirect), remis direct")
+    ap.add_argument("--sans-calage", action="store_true", help="ignorer le calage de la banque : orientation automatique")
+    ap.add_argument("--recentrer", action="store_true", help="avec un calage vers les modèles : recentrer quand même (perd la superposition)")
     ap.add_argument("--retourner", default="", help="axes à inverser après l'orientation auto : z, y ou zy")
     ap.add_argument("--separer-couleurs", action="store_true")
     ap.add_argument("--sans-unions", action="store_true")
-    ap.add_argument("--non-publiable", action="store_true")
+    ap.add_argument("--publiable", action="store_true", help="autoriser la publication sur le site (défaut : référence interne)")
+    ap.add_argument("--non-publiable", action="store_true", help=argparse.SUPPRESS)       # ancien interrupteur : c'est maintenant le défaut
     ap.add_argument("--nomenclature", default=NOMENCLATURE)
     ap.add_argument("--sortie"); ap.add_argument("--session", default="Hikspoors → modèles (cloud, 26/09)")
     ap.add_argument("--faces-max", type=int, default=0, help="décimation des structures au-delà de N faces (0 = aucune)")
@@ -681,21 +855,35 @@ def main():
     sortie = a.sortie or os.path.join("embryons_3D", "modeles", cs + "_hikspoors")
     os.makedirs(sortie, exist_ok=True)
     nomen = Nomenclature(a.nomenclature)
+    rapport = {"stade": cs, "source": SOURCE}
 
-    # 1. lecture
+    # 1. lecture (+ structures de la version d'origine absentes de la _NEWvalves)
+    original = None
     if not a.npz and not a.glb:
-        npz, sc, glb = trouver_dans_banque(a.banque, cs, not a.sans_newvalves)
-        if npz:
-            a.npz, a.scene = npz, (a.scene or sc); print("   banque : %s" % os.path.basename(npz))
-        elif glb:
-            a.glb = glb; print("   banque : %s" % os.path.basename(glb))
-        else:
+        tr = trouver_dans_banque(a.banque, cs, not a.sans_newvalves)
+        if tr is None:
             ap.error("stade %s introuvable dans la banque %s (u3d/Carnegie_Stage_%d[_NEWvalves].npz ou glb/…) ; sinon --npz ou --glb" % (cs, a.banque, norm_int(cs)))
-    if a.npz:
-        parties = charger_npz(a.npz, a.scene)
-    else:
-        parties = charger_fichiers(a.glb, cs)
+        a.npz, a.glb, a.scene, original = tr["npz"], tr["glb"], a.scene or tr["scene"], tr["original"]
+        print("   banque : %s" % os.path.basename(a.npz or a.glb))
+    fichier_source = a.npz or a.glb
+    base = re.sub(r"_scene$", "", os.path.splitext(os.path.basename(fichier_source))[0]) if os.path.isfile(fichier_source) else ""
+    rapport["fichier_source"] = fichier_source
+    parties = charger_npz(a.npz, a.scene) if a.npz else charger_fichiers(a.glb, cs)
     print("%s : %d parties lues" % (cs, len(parties)))
+    meme_rep = None
+    if original:
+        parties_o = charger_npz(original["npz"], original["scene"])
+        meme_rep, txt = meme_repere(parties, parties_o)
+        rapport["version_origine"] = {"fichier": original["npz"], "meme_repere": meme_rep, "controle": txt}
+        if a.sans_completer:
+            pass
+        elif meme_rep:
+            ajout = completer_depuis_original(parties, parties_o, nomen)
+            parties += ajout
+            rapport["version_origine"]["ajoutees"] = [p["nom"] for p in ajout]
+            print("   version d'origine (%s) : %s ; ajoutées : %s" % (os.path.basename(original["npz"]), txt, [p["nom"] for p in ajout] or "aucune"))
+        else:
+            print("   ATTENTION version d'origine %s : repère différent ou non vérifiable (%s) : rien n'est repris" % (os.path.basename(original["npz"]), txt))
     if a.separer_couleurs:
         parties = [q for p in parties for q in scinder_par_couleur(p)]
         print("   après scission par couleur : %d parties" % len(parties))
@@ -706,8 +894,8 @@ def main():
         r = nomen.par_couleur_regle(p.get("source_partie", p["nom"]), p.get("couleur_scindee")) if p.get("couleur_scindee") is not None else None
         if r is None:
             r = nomen.chercher(p.get("source_partie", p["nom"]))
-        if r.get("non_reconnu") and p.get("parent"):          # nœud inconnu sous un parent connu (ex. « left » sous « ventricle »)
-            r2 = nomen.chercher(p["parent"] + "_" + p.get("source_partie", p["nom"]))
+        if r.get("non_reconnu") and p.get("parent") and normaliser(p["parent"]) != normaliser(p.get("source_partie", p["nom"])):
+            r2 = nomen.chercher(p["parent"] + "_" + p.get("source_partie", p["nom"]))    # nœud inconnu sous un parent connu
             if not r2.get("non_reconnu") and not r2.get("ignorer"):
                 r2["regle"] = "via parent « %s » : %s" % (p["parent"], r2["regle"]); r2["non_reconnu"] = True; r = r2   # à confirmer dans la table
             else:
@@ -724,59 +912,82 @@ def main():
         s["meshes"].append(p["mesh"]); s["sources"].append(p["nom"])
         if p.get("couleur") is not None:
             s["couleurs_source"].append(p["couleur"])
-        journal.append({"source": p["nom"], "parent": p.get("parent", ""), "nom": r["nom"], "regle": r["regle"], "faces": int(len(p["mesh"].faces)), "couleur_source": p.get("couleur")})
+        j = {"source": p["nom"], "parent": p.get("parent", ""), "nom": r["nom"], "regle": r["regle"], "faces": int(len(p["mesh"].faces)), "couleur_source": p.get("couleur")}
+        if p.get("complement"):
+            j["complement"] = p["complement"]
+        journal.append(j)
     if not structs:
         raise SystemExit("aucune structure retenue")
     print("   %d structures canoniques ; non reconnues : %s ; ignorées : %s" % (len(structs), non_reconnus or "aucune", ignores or "aucune"))
+    rapport.update({"non_reconnus": non_reconnus, "ignores": ignores, "journal": journal})
 
-    # 3. échelle
-    um = a.um_par_unite
-    if um is None and os.path.exists(a.echelles):
-        try:
-            um = float(json.load(open(a.echelles, encoding="utf-8")).get(cs, {}).get("um_par_unite"))
-        except Exception:
-            um = None
-    if um is None:
-        um = 1.0
-        print("   échelle inconnue : 1 unité = 1 µm supposé (option --um-par-unite ou hikspoors_echelles.json)")
-    k_mm = um / 1000.0
-
-    # 4. repère
-    rapport = {"stade": cs, "source": SOURCE, "echelle": {"um_par_unite": um}, "non_reconnus": non_reconnus, "ignores": ignores, "journal": journal}
-    if a.calage:
-        T = np.load(a.calage, allow_pickle=True)
-        if T.shape == (4, 4) or T.shape == (3, 4):
-            A = np.asarray(T, float)[:3, :3]; t_ = np.asarray(T, float)[:3, 3]
-            s_ = float(np.cbrt(abs(np.linalg.det(A)))); R_ = A / s_
-        elif T.size == 13:
-            T = T.ravel(); s_, R_, t_ = float(T[0]), T[1:10].reshape(3, 3), T[10:13]
-        elif T.size == 12:
-            T = T.ravel(); A = T[:9].reshape(3, 3); t_ = T[9:12]; s_ = float(np.cbrt(abs(np.linalg.det(A)))); R_ = A / s_
-        else:
-            raise SystemExit("calage : forme %s non reconnue (13 nombres s,R,t ; 12 nombres A,t ; matrice 4x4 ou 3x4)" % (T.shape,))
-        miroir = a.calage_repere == "pipeline"
+    # 3. calage (banque par défaut) ou échelle + orientation automatique
+    calage, note_calage, repere_calage = a.calage, "", a.calage_repere
+    if not calage and not a.sans_calage:
+        calage, note_calage = trouver_calage(a.banque, base)
+        repere_calage = "modeles"
+        if calage and note_calage and meme_rep is not True:
+            print("   calage %s ignoré : %s, mais le même repère n'est pas vérifié" % (os.path.basename(calage), note_calage))
+            calage = None
+    reflexion = False
+    if calage:
+        A, t_, infos = lire_calage(calage)
+        det_A = float(np.linalg.det(A))
+        if det_A == 0:
+            raise SystemExit("calage %s : matrice singulière" % calage)
+        s_ = float(np.cbrt(abs(det_A)))
+        miroir = repere_calage == "pipeline"
+        M = np.diag([-1.0, 1, 1]) @ A if miroir else A
+        tt = np.diag([-1.0, 1, 1]) @ t_ if miroir else t_
+        reflexion = float(np.linalg.det(M)) < 0
         um = s_ * 1000.0
-        rapport["echelle"] = {"um_par_unite": um, "source": "calage %s" % os.path.basename(a.calage)}
+        k_mm = 1.0
+        inter = None
+        mc = re.search(r"CS\s*0*(\d+)", str(infos.get("cible", "")), re.I)
+        if mc and int(mc.group(1)) != norm_int(cs):
+            inter = "CS%d" % int(mc.group(1))
         def transformer(V):
-            W = (s_ * (R_ @ V.T)).T + t_
-            if miroir:
-                W[:, 0] = -W[:, 0]
-            return W
-        # contrôle : les indices anatomiques sont-ils vérifiés tels quels, ou avec un miroir X ?
-        Rc = R_.copy()
-        if miroir:
-            Rc = np.diag([-1, 1, 1]) @ Rc
-        sc_tel, det_tel = _score(structs, Rc)
-        sc_mir, det_mir = _score(structs, np.diag([-1, 1, 1]) @ Rc)
-        rapport["orientation"] = {"methode": "calage fourni (%s, repère %s)" % (a.calage, a.calage_repere), "echelle_calage": s_,
-                                  "score": sc_tel, "indices": det_tel, "score_si_miroir_x": sc_mir, "det_R": float(np.linalg.det(R_))}
-        print("   calage fourni : échelle %.4g, repère %s, det(R) %.2f ; indices anatomiques : score %.1f tel quel, %.1f avec miroir X" % (s_, a.calage_repere, np.linalg.det(R_), sc_tel, sc_mir))
+            return V @ M.T + tt
+        Rc = M / s_
+        variantes = []
+        for lab, D in VARIANTES:
+            sc, det = _score(structs, D @ Rc)
+            variantes.append({"variante": lab, "score": sc, "indices": det})
+        sc_tel, det_tel = variantes[0]["score"], variantes[0]["indices"]
+        meilleure = max(variantes, key=lambda v: v["score"])
+        rapport["echelle"] = {"um_par_unite": um, "source": "calage %s" % os.path.basename(calage)}
+        rapport["calage"] = dict(infos, repere=repere_calage, note=note_calage, echelle_um_par_unite=um, reflexion=reflexion, inter_stades=inter,
+                                 recentre=bool(a.recentrer or repere_calage == "pipeline"))
+        rapport["orientation"] = {"methode": "calage %s (repère %s%s)" % (os.path.basename(calage), repere_calage, ", " + note_calage if note_calage else ""),
+                                  "score_indices": sc_tel, "indices": det_tel, "variantes": [{"variante": v["variante"], "score": v["score"]} for v in variantes]}
+        print("   calage : %s (%s%s) ; %.4g µm/unité ; repère %s%s" % (os.path.basename(calage), infos.get("cle", "matrice"), ", " + note_calage if note_calage else "",
+                                                                   um, repere_calage, " ; RÉFLEXION (det < 0) : faces réorientées, à confirmer" if reflexion else ""))
+        if inter:
+            print("   ATTENTION : calage vers le modèle %s, pas %s : l'échelle est celle de %s (à confirmer avec la session « PDF 3D »)" % (inter, cs, inter))
+        print("   indices anatomiques (contrôle, le calage fait foi) : score %.1f" % sc_tel)
         for d in det_tel:
             print("      %s %s" % ("OK " if d["ok"] else "NON", d["indice"]))
-        if sc_mir > sc_tel:
-            print("   ATTENTION : le miroir X vérifie mieux les indices -> essayer --calage-repere %s" % ("modeles" if miroir else "pipeline"))
-        k_mm = 1.0
+        if meilleure["score"] >= sc_tel + 2:
+            print("   ATTENTION : « %s » vérifie mieux les indices (%.1f contre %.1f) : regarder controle.png" % (meilleure["variante"], meilleure["score"], sc_tel))
+        if np.linalg.det(Rc) > 0:          # l'orientation automatique (repli des stades sans calage, CS23) jugée sur ce stade calé
+            auto, _ = orienter(structs)
+            ecart = float(np.degrees(np.arccos(np.clip((np.trace(auto["R"] @ Rc.T) - 1) / 2, -1, 1))))
+            rapport["orientation"]["controle_auto"] = {"ecart_deg": round(ecart, 1), "score": auto["score"], "z": auto["z"], "y": auto["y"]}
+            print("   orientation automatique (repli sans calage) : %.1f° du calage (score %.1f, Z %s)" % (ecart, auto["score"], auto["z"]))
     else:
+        um = a.um_par_unite
+        if um is None and os.path.exists(a.echelles):
+            try:
+                um = float(json.load(open(a.echelles, encoding="utf-8")).get(cs, {}).get("um_par_unite"))
+            except Exception:
+                um = None
+        if um is None:
+            um = 1.0
+            print("   échelle inconnue : 1 unité = 1 µm supposé (option --um-par-unite ou hikspoors_echelles.json)")
+        k_mm = um / 1000.0
+        rapport["echelle"] = {"um_par_unite": um, "source": "--um-par-unite" if a.um_par_unite else "hikspoors_echelles.json"}
+        if not a.sans_calage and not a.calage:
+            print("   pas de calage dans %s pour %s : orientation automatique" % (os.path.join(a.banque or "", "calage"), base or cs))
         meilleur, cand = orienter(structs)
         R = meilleur["R"]
         if "z" in a.retourner.lower():
@@ -788,44 +999,51 @@ def main():
             return (R @ V.T).T * k_mm
         rapport["orientation"] = {"methode": "automatique (ACP + indices anatomiques)" + (" puis --retourner " + a.retourner if a.retourner else ""),
                                   "R_lignes_XYZ_dans_repere_source": R.round(6).tolist(), "score": sc_final, "indices": det_final,
-                                  "candidats": [{"z": c["z"], "y": c["y"], "score": c["score"]} for c in cand]}
-        print("   orientation : score %.1f (%s, %s)" % (sc_final, meilleur["z"], meilleur["y"]))
+                                  "z": meilleur["z"], "y": meilleur["y"], "candidats": [{"z": c["z"], "y": c["y"], "score": c["score"]} for c in cand]}
+        print("   orientation : score %.1f (Z %s, Y %s)" % (sc_final, meilleur["z"], meilleur["y"]))
         for d in det_final:
             print("      %s %s" % ("OK " if d["ok"] else "NON", d["indice"]))
-        if not det_final:
+        if not [d for d in det_final if d["poids"] > 0]:
             print("      AUCUN indice anatomique disponible : orientation à vérifier sur controle.png (--retourner z / y)")
-    # centrage sur le centre du corps (boîte englobante de l'ensemble)
     for s in structs.values():
         s["meshes_mm"] = []
         for m in s["meshes"]:
-            s["meshes_mm"].append(trimesh.Trimesh(transformer(np.asarray(m.vertices, float)), np.asarray(m.faces), process=False))
-    if not a.calage and np.linalg.det(R) < 0:      # ne devrait pas arriver (X = Y×Z), sécurité
-        for s in structs.values():
-            for m in s["meshes_mm"]:
-                m.invert()
+            mm = trimesh.Trimesh(transformer(np.asarray(m.vertices, float)), np.asarray(m.faces), process=False)
+            if reflexion:
+                mm.invert()                    # une réflexion retourne les faces : normales remises vers l'extérieur
+            s["meshes_mm"].append(mm)
     allV = np.vstack([np.asarray(m.vertices) for s in structs.values() for m in s["meshes_mm"]])
     centre = (allV.max(0) + allV.min(0)) / 2
     etendue = allV.max(0) - allV.min(0)
-    for s in structs.values():
-        for m in s["meshes_mm"]:
-            m.apply_translation(-centre)
+    recentrer = not calage or repere_calage == "pipeline" or a.recentrer
+    if recentrer:                              # origine = centre de la boîte (le repère source n'a pas d'origine utile)
+        for s in structs.values():
+            for m in s["meshes_mm"]:
+                m.apply_translation(-centre)
     crl = CRL_MM.get(cs)
     rapport["dimensions"] = {"etendue_mm": etendue.round(3).tolist(), "hauteur_mm": round(float(etendue[2]), 3), "crl_typique_mm": crl,
                              "rapport_hauteur_crl": round(float(etendue[2]) / crl, 3) if crl else None,
+                             "centre_boite_mm": centre.round(4).tolist(), "recentre": bool(recentrer),
                              "note": "les PDF Hikspoors sont centrés sur le cœur : l'étendue n'est pas la longueur de l'embryon"}
-    print("   étendue (mm) X %.2f  Y %.2f  Z %.2f  (CRL typique %s mm)" % (*etendue, crl))
+    print("   étendue (mm) X %.2f  Y %.2f  Z %.2f  (CRL typique %s mm) ; %s" % (*etendue, crl, "recentré sur la boîte" if recentrer else
+                                                                              "coordonnées du modèle %s (centre de la boîte %s)" % (cs, centre.round(3).tolist())))
 
-    # 5. écriture des structures
+    # 4. écriture des structures
+    publiable = bool(a.publiable)
+    origine = "centre de la boîte des structures" if recentrer else "celle de embryons_3D/modeles/%s/ (calage)" % cs
     manifest = {"stade": cs, "source": SOURCE, "session": a.session, "unites": "mm",
-                "repere": "Z crânial, Y dorsal, X = Y×Z = GAUCHE anatomique (repère direct, sans miroir), origine = centre du corps",
+                "repere": "Z crânial, Y dorsal, X = Y×Z = GAUCHE anatomique (repère direct, sans miroir), origine = " + origine,
                 "specimen": "Carnegie #%s" % SPECIMENS[cs] if cs in SPECIMENS else "", "licence": LICENCE,
                 "attribution": "Hikspoors JPJM, Lamers WH et al., Maastricht University ; HDBR atlas (hdbratlas.org) ; adaptation : embryo3D (mise à l'échelle, repère, nomenclature)",
-                "statut": "externe", "publiable": not a.non_publiable, "usage": "" if not a.non_publiable else "référence interne",
+                "statut": "externe", "publiable": publiable,
+                "usage": "" if publiable else "référence interne : atlas d'auteurs retravaillé, jamais présenté comme notre modèle (harcelon.fr/3dht)",
                 "temps": {"jours_post_fecondation": next(([x[1], x[2]] for x in AXE if x[0] == cs), None)},
                 "dimensions": {"longueur_atlas_mm": None, "etendue_mm": etendue.round(3).tolist()},
-                "echelle": {"um_par_unite": um}, "orientation": {k: v for k, v in rapport["orientation"].items() if k != "candidats"},
+                "echelle": rapport["echelle"], "orientation": {k: v for k, v in rapport["orientation"].items() if k not in ("candidats", "variantes")},
                 "structures": [], "notes": "Maillages originaux des auteurs (reconstruction Amira des coupes de la collection Carnegie), seulement "
                                           "mis à l'échelle, orientés et renommés. Unions (coeur, cavites_cardiaques, arteres, veines, intestin) dérivées pour le morphing."}
+    if calage:
+        manifest["calage"] = {k: rapport["calage"].get(k) for k in ("fichier", "cle", "repere", "echelle_um_par_unite", "reflexion", "inter_stades", "note")}
     structs_mm = {}
     for nom in sorted(structs, key=lambda n: (structs[n]["meta"]["systeme"], n)):
         s = structs[nom]; r = s["meta"]
@@ -861,18 +1079,13 @@ def main():
                                            "derive": True, "composantes": membres, "note": "union dérivée (%s) pour le morphing entre stades" % methode})
             print("   union %-18s <- %d parties (%s, %d faces)" % (g, len(membres), methode, len(u.faces)))
     json.dump(manifest, open(os.path.join(sortie, "manifest.json"), "w", encoding="utf-8"), indent=1, ensure_ascii=False)
-    json.dump(rapport, open(os.path.join(sortie, "rapport.json"), "w", encoding="utf-8"), indent=1, ensure_ascii=False, default=str)
+    score = rapport["orientation"].get("score")
     planche_controle(structs_mm, os.path.join(sortie, "controle.png"),
-                     "%s — Hikspoors 2022 — %d structures — échelle %.4g µm/unité — score orientation %s" % (cs, len(structs_mm), um, rapport["orientation"].get("score", "calage")))
-    # contrôle des maillages (verif_maillages.json lu par l'agrégateur)
-    try:
-        import verif_maillages
-        rel = os.path.relpath(sortie, os.path.join("embryons_3D", "modeles"))
-        if not rel.startswith(".."):
-            verif_maillages.main(rel)
-    except Exception as e:
-        print("   verif_maillages :", e)
-    print("-> %s : %d structures, manifest.json, rapport.json, controle.png" % (sortie, len(manifest["structures"])))
+                     "%s — Hikspoors 2022 — %d structures — %.4g µm/unité — %s" % (cs, len(structs_mm), um, "orientation auto, score %s" % score if score is not None
+                                                                                 else "calage %s" % os.path.basename(calage)))
+    rapport["verif_maillages"] = verifier_sortie(sortie, manifest)       # contrôle des maillages (lu par l'agrégateur)
+    json.dump(rapport, open(os.path.join(sortie, "rapport.json"), "w", encoding="utf-8"), indent=1, ensure_ascii=False, default=str)
+    print("-> %s : %d structures, manifest.json, rapport.json, controle.png%s" % (sortie, len(manifest["structures"]), "" if publiable else " (non publiable)"))
 
 
 if __name__ == "__main__":
