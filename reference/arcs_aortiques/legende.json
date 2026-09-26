@@ -1,0 +1,587 @@
+{
+ "description": "Structures des modèles 3D du système des arcs aortiques (Rana, Sizarov, Christoffels & Moorman 2014) et correspondance avec les noms/couleurs trouvés dans les PDF 3D. Couleurs RGB 0-1 relevées à l'œil sur la légende de la figure (à affiner avec les couleurs réelles des matériaux, voir rapport d'extraction). 'motifs' : expressions régulières (insensibles à la casse) appliquées au nom du nœud 3D, anglais / néerlandais / français / abréviations. Le côté (gauche/droite) et le numéro d'arc sont lus à part dans le nom.",
+ "collection_blender": "Arcs aortiques (réf. Rana 2014)",
+ "structures": {
+  "tube_digestif": {
+   "libelle": "Tube digestif (lumière du pharynx et de l'intestin antérieur)",
+   "couleur": [
+    0.62,
+    0.62,
+    0.62
+   ],
+   "collection": "Digestif",
+   "motifs": [
+    "pharyn",
+    "\\bgut\\b",
+    "foregut",
+    "darm",
+    "digest",
+    "endoderm",
+    "oesopha",
+    "esopha",
+    "pouch",
+    "poche",
+    "\\bzak\\b",
+    "trache",
+    "\\blung",
+    "\\blong\\b",
+    "poumon"
+   ]
+  },
+  "voie_de_sortie": {
+   "libelle": "Lumière de la voie de sortie (tronc artériel)",
+   "couleur": [
+    0.47,
+    0.42,
+    0.86
+   ],
+   "collection": "Coeur",
+   "motifs": [
+    "outflow",
+    "\\boft\\b",
+    "truncus arteriosus",
+    "\\btruncus\\b",
+    "conus",
+    "uitstroom",
+    "voie de sortie",
+    "arterial pole"
+   ]
+  },
+  "sac_aortique": {
+   "libelle": "Sac aortique",
+   "couleur": [
+    1.0,
+    0.55,
+    0.12
+   ],
+   "collection": "Arcs",
+   "motifs": [
+    "aortic sac",
+    "sac aortique",
+    "aortazak",
+    "aortic horn",
+    "\\bsac\\b",
+    "corne aortique"
+   ]
+  },
+  "aorte_dorsale": {
+   "libelle": "Aorte dorsale",
+   "couleur": [
+    0.86,
+    0.1,
+    0.1
+   ],
+   "collection": "Arcs",
+   "motifs": [
+    "dorsal aort",
+    "aorta dorsalis",
+    "dorsale aort",
+    "aorte dorsale",
+    "\\bda\\b",
+    "descending aorta",
+    "aorte descendante"
+   ]
+  },
+  "arc_1": {
+   "libelle": "Artère du 1er arc pharyngien",
+   "couleur": [
+    0.87,
+    0.78,
+    0.6
+   ],
+   "collection": "Arcs",
+   "arc": 1,
+   "nerf": "V (trijumeau)"
+  },
+  "arc_2": {
+   "libelle": "Artère du 2e arc pharyngien",
+   "couleur": [
+    1.0,
+    0.9,
+    0.12
+   ],
+   "collection": "Arcs",
+   "arc": 2,
+   "nerf": "VII (facial)"
+  },
+  "arc_3": {
+   "libelle": "Artère du 3e arc pharyngien",
+   "couleur": [
+    0.2,
+    0.74,
+    0.22
+   ],
+   "collection": "Arcs",
+   "arc": 3,
+   "nerf": "IX (glosso-pharyngien)"
+  },
+  "arc_4": {
+   "libelle": "Artère du 4e arc pharyngien",
+   "couleur": [
+    0.1,
+    0.8,
+    0.86
+   ],
+   "collection": "Arcs",
+   "arc": 4,
+   "nerf": "X (vague, n. laryngé supérieur)"
+  },
+  "arc_6": {
+   "libelle": "Artère du 6e arc pharyngien (arc pulmonaire)",
+   "couleur": [
+    0.86,
+    0.14,
+    0.76
+   ],
+   "collection": "Arcs",
+   "arc": 6,
+   "nerf": "X (vague, n. laryngé récurrent)"
+  },
+  "canal_carotidien": {
+   "libelle": "Canal carotidien (aorte dorsale entre 3e et 4e arcs)",
+   "couleur": [
+    0.86,
+    0.1,
+    0.1
+   ],
+   "collection": "Arcs",
+   "motifs": [
+    "carotid duct",
+    "ductus caroticus",
+    "canal carotidien",
+    "carotis duct"
+   ]
+  },
+  "carotide_commune": {
+   "libelle": "Artère carotide commune",
+   "couleur": [
+    0.2,
+    0.74,
+    0.22
+   ],
+   "collection": "Derives",
+   "motifs": [
+    "common carotid",
+    "carotis communis",
+    "carotide commune",
+    "\\bcca\\b"
+   ]
+  },
+  "carotide_interne": {
+   "libelle": "Artère carotide interne",
+   "couleur": [
+    0.3,
+    0.8,
+    0.3
+   ],
+   "collection": "Derives",
+   "motifs": [
+    "internal carotid",
+    "carotis interna",
+    "carotide interne",
+    "\\bica\\b"
+   ]
+  },
+  "carotide_externe": {
+   "libelle": "Artère carotide externe",
+   "couleur": [
+    0.4,
+    0.85,
+    0.4
+   ],
+   "collection": "Derives",
+   "motifs": [
+    "external carotid",
+    "carotis externa",
+    "carotide externe",
+    "\\beca\\b"
+   ]
+  },
+  "subclaviere": {
+   "libelle": "Artère subclavière",
+   "couleur": [
+    0.1,
+    0.6,
+    0.7
+   ],
+   "collection": "Derives",
+   "motifs": [
+    "subclavi",
+    "sous-clavi",
+    "subclavia"
+   ]
+  },
+  "vertebrale": {
+   "libelle": "Artère vertébrale",
+   "couleur": [
+    0.7,
+    0.3,
+    0.3
+   ],
+   "collection": "Derives",
+   "motifs": [
+    "vertebral",
+    "vertebralis",
+    "vertébrale"
+   ]
+  },
+  "intersegmentaire": {
+   "libelle": "Artère intersegmentaire dorsale",
+   "couleur": [
+    0.75,
+    0.25,
+    0.25
+   ],
+   "collection": "Derives",
+   "motifs": [
+    "intersegment",
+    "segmental"
+   ]
+  },
+  "tronc_pulmonaire": {
+   "libelle": "Tronc pulmonaire",
+   "couleur": [
+    0.3,
+    0.3,
+    0.9
+   ],
+   "collection": "Derives",
+   "motifs": [
+    "pulmonary trunk",
+    "truncus pulmonalis",
+    "tronc pulmonaire",
+    "longslagader"
+   ]
+  },
+  "arteres_pulmonaires": {
+   "libelle": "Artères pulmonaires",
+   "couleur": [
+    0.45,
+    0.35,
+    0.9
+   ],
+   "collection": "Derives",
+   "motifs": [
+    "pulmonary arter",
+    "arteria pulmonalis",
+    "artère pulmonaire",
+    "arteres pulmonaires"
+   ]
+  },
+  "canal_arteriel": {
+   "libelle": "Canal artériel",
+   "couleur": [
+    0.86,
+    0.14,
+    0.76
+   ],
+   "collection": "Derives",
+   "motifs": [
+    "arterial duct",
+    "ductus arteriosus",
+    "canal artériel",
+    "canal arteriel"
+   ]
+  },
+  "aorte_ascendante": {
+   "libelle": "Aorte ascendante / crosse",
+   "couleur": [
+    0.9,
+    0.2,
+    0.15
+   ],
+   "collection": "Derives",
+   "motifs": [
+    "ascending aorta",
+    "aortic arch",
+    "arcus aortae",
+    "crosse",
+    "aorta ascendens",
+    "\\baorta\\b",
+    "\\baorte\\b"
+   ]
+  },
+  "tronc_brachiocephalique": {
+   "libelle": "Tronc brachiocéphalique",
+   "couleur": [
+    0.95,
+    0.5,
+    0.2
+   ],
+   "collection": "Derives",
+   "motifs": [
+    "brachiocephalic",
+    "brachiocephalicus",
+    "brachiocéphalique",
+    "innominate"
+   ]
+  },
+  "tube_neural": {
+   "libelle": "Tube neural",
+   "couleur": [
+    0.95,
+    0.9,
+    0.78
+   ],
+   "collection": "Contexte",
+   "motifs": [
+    "neural tube",
+    "neuralbuis",
+    "tube neural",
+    "spinal cord",
+    "brain",
+    "hersen",
+    "rhombenceph",
+    "myelencephal",
+    "\\bnt\\b"
+   ]
+  },
+  "otocyste": {
+   "libelle": "Otocyste (vésicule otique)",
+   "couleur": [
+    0.55,
+    0.35,
+    0.15
+   ],
+   "collection": "Contexte",
+   "motifs": [
+    "otocyst",
+    "otic",
+    "otique",
+    "otocyste",
+    "oorblaas",
+    "inner ear"
+   ]
+  },
+  "nerf_V": {
+   "libelle": "Nerf trijumeau (V)",
+   "couleur": [
+    1.0,
+    0.95,
+    0.5
+   ],
+   "collection": "Nerfs",
+   "motifs": [
+    "trigemin",
+    "\\bn\\.?\\s*v\\b",
+    "\\bcn\\s*v\\b",
+    "\\bv\\s*nerve",
+    "nerve\\s*v\\b"
+   ]
+  },
+  "nerf_VII": {
+   "libelle": "Nerf facial (VII)",
+   "couleur": [
+    1.0,
+    0.85,
+    0.4
+   ],
+   "collection": "Nerfs",
+   "motifs": [
+    "facial",
+    "\\bn\\.?\\s*vii\\b",
+    "\\bcn\\s*vii\\b",
+    "\\bvii\\s*nerve",
+    "nerve\\s*vii\\b"
+   ]
+  },
+  "nerf_IX": {
+   "libelle": "Nerf glosso-pharyngien (IX)",
+   "couleur": [
+    0.95,
+    0.8,
+    0.3
+   ],
+   "collection": "Nerfs",
+   "motifs": [
+    "glossophar",
+    "\\bn\\.?\\s*ix\\b",
+    "\\bcn\\s*ix\\b",
+    "\\bix\\s*nerve",
+    "nerve\\s*ix\\b"
+   ]
+  },
+  "nerf_X": {
+   "libelle": "Nerf vague (X)",
+   "couleur": [
+    0.9,
+    0.75,
+    0.2
+   ],
+   "collection": "Nerfs",
+   "motifs": [
+    "vagus",
+    "vagal",
+    "\\bn\\.?\\s*x\\b",
+    "\\bcn\\s*x\\b",
+    "\\bx\\s*nerve",
+    "nerve\\s*x\\b",
+    "recurrent laryng",
+    "laryngeal"
+   ]
+  },
+  "veines_cardinales": {
+   "libelle": "Veines cardinales",
+   "couleur": [
+    0.25,
+    0.35,
+    0.85
+   ],
+   "collection": "Contexte",
+   "motifs": [
+    "cardinal",
+    "jugular",
+    "jugulaire",
+    "\\bvein",
+    "\\bveine",
+    "\\bvena\\b",
+    "\\bader\\b"
+   ]
+  },
+  "coeur": {
+   "libelle": "Cœur (autres cavités)",
+   "couleur": [
+    0.8,
+    0.3,
+    0.3
+   ],
+   "collection": "Coeur",
+   "motifs": [
+    "heart",
+    "atri",
+    "ventric",
+    "myocard",
+    "hart",
+    "coeur",
+    "cœur"
+   ]
+  },
+  "thyroide": {
+   "libelle": "Ébauche thyroïdienne",
+   "couleur": [
+    0.6,
+    0.3,
+    0.5
+   ],
+   "collection": "Contexte",
+   "motifs": [
+    "thyro",
+    "schildklier"
+   ]
+  },
+  "notochorde": {
+   "libelle": "Notochorde",
+   "couleur": [
+    0.95,
+    0.95,
+    0.5
+   ],
+   "collection": "Contexte",
+   "motifs": [
+    "notochord",
+    "chorda",
+    "notochorde"
+   ]
+  }
+ },
+ "motifs_arcs": {
+  "description": "Un nom contenant un marqueur d'artère d'arc (PAA, arch artery, boogslagader, arc…) et un numéro (1-6, I-VI, first…sixth, 1st…) est rattaché à arc_<n>. Le 5e n'existe pas chez l'homme comme artère constante (Bamforth et al. 2013) : un « 5 » est signalé.",
+  "marqueurs": [
+   "paa",
+   "pharyngeal arch arter",
+   "arch arter",
+   "aortic arch",
+   "branchial arter",
+   "boogslagader",
+   "boog",
+   "arc aortique",
+   "artère d.arc",
+   "arc pharyngien",
+   "arcus",
+   "\\barc\\b",
+   "\\barch\\b",
+   "\\baa\\b"
+  ],
+  "ordinaux": {
+   "first": 1,
+   "second": 2,
+   "third": 3,
+   "fourth": 4,
+   "fifth": 5,
+   "sixth": 6,
+   "1st": 1,
+   "2nd": 2,
+   "3rd": 3,
+   "4th": 4,
+   "5th": 5,
+   "6th": 6,
+   "premier": 1,
+   "deuxième": 2,
+   "troisième": 3,
+   "quatrième": 4,
+   "cinquième": 5,
+   "sixième": 6,
+   "eerste": 1,
+   "tweede": 2,
+   "derde": 3,
+   "vierde": 4,
+   "vijfde": 5,
+   "zesde": 6
+  }
+ },
+ "cotes": {
+  "gauche": [
+   "left",
+   "links",
+   "linker",
+   "gauche",
+   "sinistr",
+   "\\bl\\b",
+   "_l\\b",
+   "\\bl_",
+   "\\blt\\b",
+   "\\(l\\)"
+  ],
+  "droite": [
+   "right",
+   "rechts",
+   "rechter",
+   "droit",
+   "dextr",
+   "\\br\\b",
+   "_r\\b",
+   "\\br_",
+   "\\brt\\b",
+   "\\(r\\)"
+  ]
+ },
+ "tolerance_couleur": 0.22,
+ "ordre_de_test": [
+  "nerf_V",
+  "nerf_VII",
+  "nerf_IX",
+  "nerf_X",
+  "canal_carotidien",
+  "carotide_commune",
+  "carotide_interne",
+  "carotide_externe",
+  "subclaviere",
+  "vertebrale",
+  "intersegmentaire",
+  "tronc_pulmonaire",
+  "arteres_pulmonaires",
+  "canal_arteriel",
+  "tronc_brachiocephalique",
+  "sac_aortique",
+  "voie_de_sortie",
+  "aorte_dorsale",
+  "aorte_ascendante",
+  "tube_neural",
+  "otocyste",
+  "thyroide",
+  "notochorde",
+  "veines_cardinales",
+  "tube_digestif",
+  "coeur"
+ ]
+}

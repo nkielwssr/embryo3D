@@ -1,0 +1,62 @@
+{
+ "description": "Chronologie des artères des arcs pharyngiens chez l'embryon humain, telle que décrite pour les modèles 3D de Rana et al. 2014 (équipe Moorman, AMC Amsterdam). Chaque affirmation porte sa source ; « a_verifier » = à confirmer sur les modèles extraits (stades exacts des spécimens, variabilité d'un embryon à l'autre).",
+ "sources": {
+  "R": "Rana MS, Sizarov A, Christoffels VM, Moorman AFM. Am J Med Genet A 2014;164A:1372-1383 (résumé fourni par l'utilisateur, 26/09/2026)",
+  "G": "Graham A et al. A revised terminology for the pharyngeal arches and the arch arteries. J Anat 2023 (PMC10485586), citant Rana et al. 2014",
+  "F": "Revue Frontiers in Cell and Developmental Biology 2023, 'Morphogenetic processes in the development and evolution of the arteries of the pharyngeal arches' (PMC10602722), citant Rana et al. 2014",
+  "H": "Hikspoors et al. (Maastricht), PDF 3D interactifs hdbratlas.org/hikspoors-pdf (autre série d'embryons, complément)",
+  "C": "Embryologie classique (devenir définitif des segments ; manuels de référence)"
+ },
+ "principes": [
+  {"texte": "Chaque artère d'arc se forme d'abord comme un plexus dans le mésenchyme de l'arc pharyngien, puis se canalise en un vaisseau unique.", "source": "R"},
+  {"texte": "Correspondance arc / poche / nerf : arc 1 - nerf V ; arc 2 - nerf VII ; arc 3 - nerf IX ; arc 4 - nerf X (laryngé supérieur) ; arc 6 - nerf X (laryngé récurrent). La poche pharyngienne n sépare les arcs n et n+1. Repères pour identifier chaque arc sur les coupes (le panneau CS14 montre V, VII, IX et X).", "source": "R"},
+  {"texte": "Le sac aortique et la voie de sortie se cloisonnent ; le modèle suit le devenir de chaque segment jusqu'à la disposition définitive.", "source": "R"},
+  {"texte": "La dernière paire d'artères (arc pulmonaire, 6e) se forme entre CS14 et CS15 ; l'événement est variable d'un embryon à l'autre (certaines étapes s'étalent sur deux stades de Carnegie).", "source": "G"}
+ ],
+ "stades": {
+  "CS13": {
+   "arc_1": {"etat": "présent, déjà en régression", "source": "R"},
+   "arc_2": {"etat": "présent, déjà en régression", "source": "R"},
+   "arc_3": {"etat": "présent", "source": "R"},
+   "arc_4": {"etat": "présent", "source": "R"},
+   "arc_6": {"etat": "pas encore canalisé (formé entre CS14 et CS15)", "source": "G", "a_verifier": true}
+  },
+  "CS14": {
+   "arc_1": {"etat": "disparu ou réduit à un reliquat", "source": "R"},
+   "arc_2": {"etat": "disparu ou réduit à un reliquat", "source": "R"},
+   "arc_3": {"etat": "présent", "source": "R"},
+   "arc_4": {"etat": "présent", "source": "R"},
+   "arc_6": {"etat": "en formation ou formé selon l'embryon (CS14-CS15)", "source": "G", "a_verifier": true},
+   "nerfs": {"etat": "V, VII, IX et X représentés sur le panneau CS14", "source": "R"}
+  },
+  "CS15": {
+   "arc_3": {"etat": "présent, symétrique", "source": "H"},
+   "arc_4": {"etat": "présent, symétrique", "source": "H"},
+   "arc_6": {"etat": "présent, symétrique", "source": "H"},
+   "canal_carotidien": {"etat": "calibre nettement diminué (dernier stade symétrique dans la série H)", "source": "H"}
+  },
+  "CS17": {
+   "canal_carotidien": {"etat": "disparu (involution vers CS17)", "source": "R"},
+   "arc_6_droit_dorsal": {"etat": "partie dorsale du 6e arc droit disparue (vers CS17)", "source": "R"},
+   "sac_aortique": {"etat": "partie proximale divisée en aorte et tronc pulmonaire ; partie distale en cornes droite et gauche reliées aux arcs en remodelage", "source": "F"},
+   "carotides": {"etat": "carotides commune, interne et externe identifiables", "source": "F"}
+  },
+  "apres_CS17": {
+   "aorte_dorsale_droite": {"etat": "régresse plus tard (caudalement à la subclavière droite)", "source": "R"}
+  }
+ },
+ "devenir_definitif": {
+  "arc_1": {"devenir": "reliquat (participe à l'artère maxillaire)", "source": "C"},
+  "arc_2": {"devenir": "reliquat (artères hyoïdienne / stapédienne)", "source": "C"},
+  "arc_3": {"devenir": "carotide commune et segment proximal de la carotide interne ; la carotide externe bourgeonne", "source": "C"},
+  "arc_4_gauche": {"devenir": "segment de la crosse aortique entre carotide commune gauche et subclavière gauche", "source": "C"},
+  "arc_4_droit": {"devenir": "segment proximal de l'artère subclavière droite", "source": "C"},
+  "arc_6_gauche": {"devenir": "artère pulmonaire gauche (partie proximale) et canal artériel", "source": "C"},
+  "arc_6_droit": {"devenir": "artère pulmonaire droite (partie proximale) ; la partie dorsale disparaît", "source": "C"},
+  "sac_aortique": {"devenir": "corne droite : tronc brachiocéphalique ; corne gauche : partie de la crosse aortique", "source": "C"},
+  "canal_carotidien": {"devenir": "disparaît", "source": "C"},
+  "aorte_dorsale_droite": {"devenir": "disparaît caudalement à l'origine de la subclavière droite", "source": "C"},
+  "aorte_dorsale_gauche": {"devenir": "aorte descendante", "source": "C"},
+  "voie_de_sortie": {"devenir": "aorte ascendante et tronc pulmonaire après cloisonnement", "source": "C"}
+ }
+}

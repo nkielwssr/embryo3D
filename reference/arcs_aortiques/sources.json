@@ -1,0 +1,31 @@
+{
+ "principale": {
+  "reference": "Rana MS, Sizarov A, Christoffels VM, Moorman AFM. Development of the human aortic arch system captured in an interactive three-dimensional reference model. Am J Med Genet A. 2014;164A:1372-1383.",
+  "doi": "10.1002/ajmg.a.35881",
+  "pmid": "23613216",
+  "equipe": "Department of Anatomy, Embryology & Physiology, Heart Failure Research Center, Academic Medical Center (AMC), Université d'Amsterdam (A.F.M. Moorman)",
+  "page_article": "https://onlinelibrary.wiley.com/doi/10.1002/ajmg.a.35881",
+  "donnees": "Matériel supplémentaire (onglet « Supporting Information ») : PDF 3D interactifs, un modèle par stade de Carnegie, reconstruits à partir de coupes histologiques sériées (collection Carnegie et collections néerlandaises) ; structures colorées selon la légende (voir legende.json).",
+  "recuperation": "Télécharger chaque fichier du supplément depuis la page de l'article (navigateur, les liens « downloadSupplement » de Wiley refusent souvent les téléchargements scriptés), les déposer dans reference/arcs_aortiques/pdf/ puis lancer extraire.py. Garder les noms de fichiers d'origine : le stade est lu dans le nom du fichier, le titre de l'annotation 3D, le texte de la page ou les noms des nœuds.",
+  "fichiers_attendus": "noms inconnus à ce jour (à compléter après téléchargement, voir extraits/index.json)"
+ },
+ "complements": [
+  {
+   "reference": "Hikspoors JPJM, Kruepunga N, Mommen GMC, Köhler SE, Anderson RH, Lamers WH. A pictorial account of the human embryonic heart between 3.5 and 8 weeks of development. Commun Biol. 2022;5:226.",
+   "donnees": "PDF 3D interactifs par stade (autre série d'embryons, Maastricht), pages hdbratlas.org/hikspoors-pdf/JH_CS13.html, JH_CS14.html, JH_CS15.html, …",
+   "url": "https://hdbratlas.org/hikspoors-pdf/JH_CS13.html",
+   "usage": "Contrôle croisé de la chronologie (symétrie des arcs à CS15, canaux carotidiens) ; mêmes outils d'extraction (U3D ou PRC)."
+  },
+  {
+   "reference": "de Bakker BS, de Jong KH, Hagoort J, et al. An interactive three-dimensional digital atlas and quantitative database of human development. Science. 2016;354(6315):aag0053.",
+   "donnees": "3D Atlas of Human Embryology (AMC), modèles par stade CS7-CS23 dont le système cardiovasculaire, PDF 3D téléchargeables.",
+   "url": "https://www.3dembryoatlas.com/",
+   "usage": "Contexte (cœur entier, veines) aux mêmes stades que nos embryons."
+  },
+  {
+   "reference": "de Boer BA, Soufan AT, Hagoort J, et al. The interactive presentation of 3D information obtained from reconstructed datasets and 3D placement of single histological sections with the 3D portable document format. Development. 2011;138:159-167.",
+   "usage": "Méthode de fabrication des PDF 3D de l'équipe (Amira puis Adobe Acrobat 9 Pro Extended) : explique la structure des fichiers (U3D ou PRC, noms des nœuds, vues)."
+  }
+ ],
+ "reseau": "Dans l'environnement cloud de cette session, onlinelibrary.wiley.com, hdbratlas.org et 3dembryoatlas.com sont bloqués par la politique réseau : les PDF doivent être téléchargés sur le PC (ou les domaines ajoutés à la liste autorisée de l'environnement)."
+}
