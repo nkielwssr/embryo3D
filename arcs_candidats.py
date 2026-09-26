@@ -77,12 +77,12 @@ def graine_auto(work, SH, dens):
     D[~(fen & ndi.binary_dilation(m[lo[0]:hi[0], lo[1]:hi[1], lo[2]:hi[2]], iterations=2))] = np.inf
     return np.unravel_index(np.argmin(D), D.shape) + lo, f'{src}, coupe crâniale s={s0}'
 
-def attendus(cs, cote, chemin=os.path.join(HERE, 'vaisseaux_points', 'calendrier_arcs.json')):
-    """(tous les arcs attendus au stade, arcs « présents » seuls) d'après le calendrier ; clé latéralisée prioritaire"""
-    if not os.path.exists(chemin): return list(ARCS), list(ARCS)
+def attendus(cs, cote, base='arc_aortique', nums=ARCS, chemin=os.path.join(HERE, 'vaisseaux_points', 'calendrier_arcs.json')):
+    """(tous les numéros attendus au stade, numéros « présents » seuls) d'après le calendrier ; clé latéralisée prioritaire"""
+    if not os.path.exists(chemin): return list(nums), list(nums)
     cal = json.load(open(chemin, encoding='utf-8')).get('stades', {}).get(cs, {})
-    st = {k: cal.get(f'arc_aortique_{k}_{cote}', cal.get(f'arc_aortique_{k}')) for k in ARCS}
-    return [k for k in ARCS if st[k] in ('present', 'formation', 'regression')], [k for k in ARCS if st[k] == 'present']
+    st = {k: cal.get(f'{base}_{k}_{cote}', cal.get(f'{base}_{k}')) for k in nums}
+    return [k for k in nums if st[k] in ('present', 'formation', 'regression')], [k for k in nums if st[k] == 'present']
 
 def prefixe(a, b, tol=1.5):
     """longueur du début du chemin a qui reste à moins de tol voxels du chemin b"""
@@ -312,11 +312,11 @@ def planche(res, ctx, chemin):
     cv2.imwrite(chemin, np.vstack([haut, g])); print('planche', chemin)
 
 # ---------------------------------------------------------------- fusion des propositions validées
-def fusionner(proposes, cible=None):
+def fusionner(proposes, cible=None, prefixes=('arc_aortique_', 'sac_aortique', 'tronc_arteriel'), dossier='vaisseaux_points'):
     P = json.load(open(proposes, encoding='utf-8'))
-    cible = cible or os.path.join(HERE, 'vaisseaux_points', f"{P['stade']}.json")
+    cible = cible or os.path.join(HERE, dossier, f"{P['stade']}.json")
     T = json.load(open(cible, encoding='utf-8'))
-    ok = [s for s in P['segments'] if s['nom'].startswith(('arc_aortique_', 'sac_aortique', 'tronc_arteriel'))]
+    ok = [s for s in P['segments'] if s['nom'].startswith(prefixes)]
     ignores = [s['nom'] for s in P['segments'] if s not in ok]
     noms = {s['nom'] for s in ok}
     T['segments'] = [s for s in T['segments'] if s['nom'] not in noms] + [{k: v for k, v in s.items() if k not in ('qualite', 'note')} for s in ok]

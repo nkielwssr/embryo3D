@@ -232,11 +232,23 @@ les séparent. La chaîne `tubes_morph.py` les prend en charge comme tubes suppl
   force une paroi (> 3 voxels) devient `arc_candidat_douteux_<i>_<côté>`. **Validation obligatoire** sur la planche : renommer ou supprimer les
   candidats, couper le sac au bout de la voie de sortie (le reste = `tronc_arteriel`), corriger des points au besoin, puis
   `python embryo3d/arcs_candidats.py fusionner embryo3d/vaisseaux_points/CS13_arcs_proposes.json` (recopie `arc_aortique_*`, `sac_aortique`,
-  `tronc_arteriel` dans `vaisseaux_points/CS13.json`, sans les blocs `qualite`) et `digestif_build.py … --sortie cardio`. Les poches restent à
-  relever à la main (planches `digestif_planches.py`, composantes de `digestif_lumieres.py`).
+  `tronc_arteriel` dans `vaisseaux_points/CS13.json`, sans les blocs `qualite`) et `digestif_build.py … --sortie cardio`.
+- **Relevé semi-automatique du pharynx et des poches** (une fois l'œsophage tracé ; à faire avant les arcs, dont il améliore les exclusions) :
+  `python embryo3d/pharynx_candidats.py CS13.f4v/work CS13 [--pas 2]` part du début (crânial) de l'œsophage recalé (`digestif/chemins.json`) et
+  prend la lumière pâle connexe au-dessus (seuil calé sur l'œsophage ; exclus : hors enveloppe, cœur, cavité péricardique, vaisseaux, ventricules,
+  yeux, vésicules otiques). Pharynx = chemin de moindre coût dans cette lumière, centré (distance aux parois + écart au plan médian, pris au milieu
+  des aortes dorsales, car le pharynx est aplati) jusqu'au point le plus éloigné sur la ligne médiane (fond de la cavité buccale), écrit de haut en
+  bas et fini sur le premier point de l'œsophage. Poches = maxima, de chaque côté, de l'extension latérale de la lumière le long du pharynx
+  (au-dessus de la demi-largeur médiane du pharynx), chacune de l'axe du pharynx à son fond latéral ; numérotées d'après le calendrier comme les
+  arcs, sinon `poche_candidat_<i>_<côté>` ; pas de recherche aux stades sans poche attendue. Sorties : `digestif_points/<CS>_pharynx_proposes.json`
+  et `<work>/digestif/pharynx_candidats.png` (face, profil médian, contour de la lumière retenue). Validation sur la planche, puis
+  `python embryo3d/pharynx_candidats.py fusionner embryo3d/digestif_points/CS13_pharynx_proposes.json` et
+  `digestif_build.py <work> embryo3d/digestif_points/CS13.json`.
 - **Tests sans données** : `python embryo3d/test_tubes_morph_synthetique.py` (chaîne `tubes_morph` + planche : présences, raccords des absents,
   calendrier, mésos) et `python embryo3d/test_arcs_candidats_synthetique.py` (volume synthétique CS13 avec leurres : pharynx, poches, veines
-  cardinales, cavité péricardique, intersegmentaire, kyste) ; chacun finit par « OK : … réussi ». Dépendances : numpy, scipy, opencv, scikit-image.
+  cardinales, cavité péricardique, intersegmentaire, kyste) et `python embryo3d/test_pharynx_candidats_synthetique.py` (pharynx aplati et courbé,
+  4 poches à gauche et 3 à droite, bourgeon pulmonaire, ventricule cérébral) ; chacun finit par « OK : … réussi ». Dépendances : numpy, scipy,
+  opencv, scikit-image.
 - **Morphing** : un arc absent (pas encore formé ou régressé) est réduit sur la fin du sac aortique, sinon sur le début de l'arc voisin le plus
   proche du même côté, sinon sur l'aorte dorsale : il pousse ou se résorbe depuis son origine ventrale pendant la transition. Une poche absente est
   réduite sur le pharynx à sa hauteur attendue (1/5 … 4/5 de sa longueur). Sous-collections Blender « Arcs aortiques, sac aortique, tronc artériel »
@@ -258,7 +270,8 @@ les séparent. La chaîne `tubes_morph.py` les prend en charge comme tubes suppl
 - **Non modélisé** : 5e arc (transitoire) ; régression des segments intermédiaires des aortes dorsales (canal carotidien entre arcs 3 et 4 vers
   CS17, aorte dorsale droite caudale vers CS19) — les aortes dorsales restent des lignes uniques, à découper en segments si l'on veut les faire
   disparaître un à un ; artères pulmonaires, carotides externes, intersegmentaires. Aucun arc ni poche n'est tracé à ce jour : la chaîne est prête,
-  les points restent à relever (CS13 et CS14 d'abord, où la dynamique est la plus riche), avec `arcs_candidats.py` pour les arcs et le sac.
+  les points restent à relever (CS13 et CS14 d'abord, où la dynamique est la plus riche), avec `pharynx_candidats.py` pour le pharynx et les
+  poches, puis `arcs_candidats.py` pour les arcs et le sac.
   Calendrier aligné le 26/09 sur le résumé de Rana 2014 (arcs 1 et 2 déjà en régression à CS13, disparus ou réduits à des reliquats à CS14) et
   sur Graham 2023 (6e arc formé entre CS14 et CS15 selon l'embryon).
 
