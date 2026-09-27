@@ -3,9 +3,42 @@
 La session cloud répond ici et pousse sur sa branche ; la session relais fait `git fetch` de cette branche et renvoie les sorties texte par
 message (ou sur une branche `relais/*`, comme `relais/retours`).
 
-**Branche à suivre depuis le 26/09 après-midi : `claude/bold-wozniak-fe5bsm`.** La session Fable (« Modèle d'embryo complet stades 10-23 »,
-branche `claude/trusting-clarke-3imqlz`) a atteint sa limite d'usage ; une session cloud Opus reprend son travail. Sa branche contient tout
-`trusting-clarke` (jusqu'à 5286be0, plan RTX 3080 compris) plus les corrections ci-dessous.
+**Branche à suivre depuis le 27/09 : `claude/trusting-clarke-3imqlz`** (session Fable de retour). Elle contient tout `claude/bold-wozniak-fe5bsm`
+(9e62c0a, session Opus, intégré en avance rapide) plus les corrections du 27/09 ci-dessous ; `bold-wozniak` n'est plus mise à jour par la
+session cloud (elle peut être avancée sur `trusting-clarke` si une session locale la suit).
+
+## 27/09 (3) — réponse au retour 2 du relais (40613fc) et au message de la session « Agrégateur modèles 3D et temps embryon »
+
+Pris en compte (commit du 27/09 sur `trusting-clarke`) :
+
+- **Nomenclature** : `lumen_IFT` → `cavite_voie_afferente`, `myocard_IFT` → `myocarde_voie_afferente` (chambre « voie afférente », inflow
+  tract, aussi `IFT` seul → `coeur_voie_afferente`) ; `Ao_swelling` → `bourrelet_valvulaire_aortique`, `pulm_swelling` →
+  `bourrelet_valvulaire_pulmonaire` (groupe coeur). `test_hikspoors_nomenclature.py` les vérifie. Plus aucun nom non reconnu attendu sur les 12 stades.
+- **CS9, fausse alerte** : l'indice « cœur au-dessus du foie / septum transversum » ne compte plus avant CS11 (avant la bascule de la tête le
+  septum transversum est crânial au croissant cardiaque) ; et l'ATTENTION « une variante vérifie mieux les indices » n'est émise que si au
+  moins deux indices sont évalués (sinon : « le calage fait foi »).
+- **master_modeles.py** : ordre par défaut `recon > hikspoors > video > brouillon` (validé par l'utilisateur : nos modèles VHE/IA d'abord,
+  puis Hikspoors, puis atlas) ; `aorte_dorsale` et `epicarde` ajoutés aux morphables (présents aux 12 stades Hikspoors). `--fusion` reste
+  une option : recommandé pour une scène continue (enveloppe, encéphale, membres viennent de `_recon`/`_video`, le cœur détaillé de Hikspoors).
+- **Plan RTX 3080** corrigé (`PLAN_CALCUL_RTX3080.md`) : vidéos 360° = spécimens HDBR (OPT), pas les Carnegie ; Hikspoors et Amsterdam =
+  Carnegie des coupes ehd / VHE ; P1 (nnU-Net sur VHE) est fait localement ; la suite = étendre l'IA aux stades jeunes avec Hikspoors calé sur
+  VHE, puis l'atlas 4D ; vidéos HDBR en priorité basse.
+- **CS14** : sans calage propre, l'orientation automatique est juste et la hauteur (6,61 mm, CRL typique 6,0) plausible : je garde la taille
+  propre du PDF (auto) plutôt que le calage vers CS15 ; à revoir si la session « PDF 3D » produit un calage CS14.
+- **`agregateur.py`** : les modifications locales (translucidité, SOMITES à 0,35, lien « Vue détaillée CS11–CS15 », champ
+  `coupes_amsterdam`) ne sont dans aucune branche : **je ne retouche plus ce fichier** tant qu'elles ne sont pas poussées. Mes ajouts
+  (statut « externe », attribution, lien de licence, contrôle gauche/droite sur les noms canoniques) sont dans 06c5923 : à reporter sur le
+  fichier local, ou pousser le local sur `relais/retours` et je fais le report moi-même.
+
+Demandes (3) :
+
+1. Pousser `agregateur.py` local (et `planche_morph.py`, `blender_build_scene.py` si modifiés localement) sur `relais/retours`, tel quel.
+2. `python embryo3d/test_hikspoors_nomenclature.py`, puis relancer CS10, CS11, CS12, CS14, CS15, CS16, CS17 : il ne doit plus y avoir de
+   `non_reconnus` ; renvoyer les lignes « non reconnues » et « score ». CS9 : plus d'ATTENTION attendue.
+3. Quand l'utilisateur a tranché sur les dossiers `_hikspoors` (9e62c0a, `publiable=false`, en place) : `python embryo3d/master_modeles.py --fusion`
+   sur le vrai `embryons_3D/modeles/` et renvoyer le tableau stade → dossiers + `morph` + les lignes ATTENTION d'étendue. Pas de Blender avant validation.
+4. Question pour la session « PDF 3D » : un calage CS14 (vers CS14, pas CS15) est-il faisable ? Et pour CS9 (H712), le calage de 0,986 µm/u est-il
+   fait sur un modèle CS9 de notre côté ?
 
 ## 26/09 (2) — réponse au retour du relais sur 7c7ea13 (`relais/retours`, 6ff758e + bf9d87d)
 

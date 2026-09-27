@@ -215,7 +215,7 @@ python embryo3d/hikspoors_modele.py CS23 --separer-couleurs      # pas de calage
 python embryo3d/hikspoors_modele.py CS13 --separer-couleurs --sans-calage --sortie ...   # forcer l'orientation automatique (comparaison)
 python embryo3d/hikspoors_modele.py CS14 --glb ".../glb/Carnegie_Stage_14.glb" --um-par-unite 1.05 --retourner z    # scène GLB ; échelle imposée ; axe crânial inversé
 python embryo3d/video_vers_modele.py CS19_f4v                                        # nos reconstructions vidéo -> modeles/CS19_video/ (miroir X, noms canoniques)
-python embryo3d/master_modeles.py [--fusion]                                         # -> embryons_3D/master_CS10-CS23.json (priorité hikspoors > video > recon > brouillon)
+python embryo3d/master_modeles.py [--fusion]                                         # -> embryons_3D/master_CS10-CS23.json (priorité recon > hikspoors > video > brouillon)
 blender -b -P embryo3d/blender_build_scene.py -- embryons_3D/master_CS10-CS23.json embryons_3D/embryon_CS10-CS23.blend
 python embryo3d/agregateur.py                                                        # statut « externe » (bleu plein) pour les maillages d'auteurs
 python embryo3d/test_hikspoors_nomenclature.py                                       # table de nomenclature sur les 105 noms réels inventoriés par le relais

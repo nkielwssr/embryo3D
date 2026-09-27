@@ -579,11 +579,14 @@ def _centre(structs, motifs):
     return np.mean(pts, 0) if pts else None
 
 
-CRANIAL = [   # (A crânial à B) : motifs sur les noms canoniques, poids
-    (["^myocarde_", "^cavite_", "^coeur$", "^tube_cardiaque", "^myocarde_coeur"], ["^foie$", "^septum_transversum", "^intestin_moyen", "^intestin_posterieur", "^veine_ombilicale", "^artere_ombilicale", "^cordon"], 2.0),
-    (["^arc_aortique", "^arcs_aortiques", "^sac_aortique", "^carotide", "^pharynx", "^encephale", "^yeux", "^vesicules_otiques"], ["^myocarde_", "^cavite_", "^coeur$", "^foie$", "^intestin"], 2.0),
-    (["^myocarde_voie_efferente", "^cavite_voie_efferente", "^myocarde_ventricule", "^cavite_ventricule"], ["^myocarde_sinus_veineux", "^cavite_sinus_veineux", "^veine_vitelline", "^canal_hepatocardiaque", "^veine_cave_inferieure"], 1.0),
-    (["^intestin_anterieur", "^oesophage", "^estomac", "^poumons"], ["^intestin_posterieur", "^veine_ombilicale", "^artere_ombilicale", "^cordon"], 1.0),
+STADE_COURANT = None      # numéro du stade en cours (fixé par main) : certains indices ne valent qu'à partir d'un stade
+CRANIAL = [   # (A crânial à B) : motifs sur les noms canoniques, poids, stade minimal où l'indice est valable
+    # cœur au-dessus du foie / septum transversum : FAUX avant la bascule de la tête (CS9-CS10 : le septum transversum est encore crânial au
+    # croissant cardiaque ; fausse alerte CS9 du relais, 26/09) -> compté à partir de CS11
+    (["^myocarde_", "^cavite_", "^coeur$", "^tube_cardiaque", "^myocarde_coeur"], ["^foie$", "^septum_transversum", "^intestin_moyen", "^intestin_posterieur", "^veine_ombilicale", "^artere_ombilicale", "^cordon"], 2.0, 11),
+    (["^arc_aortique", "^arcs_aortiques", "^sac_aortique", "^carotide", "^pharynx", "^encephale", "^yeux", "^vesicules_otiques"], ["^myocarde_", "^cavite_", "^coeur$", "^foie$", "^intestin"], 2.0, 0),
+    (["^myocarde_voie_efferente", "^cavite_voie_efferente", "^myocarde_ventricule", "^cavite_ventricule"], ["^myocarde_sinus_veineux", "^cavite_sinus_veineux", "^veine_vitelline", "^canal_hepatocardiaque", "^veine_cave_inferieure"], 1.0, 0),
+    (["^intestin_anterieur", "^oesophage", "^estomac", "^poumons"], ["^intestin_posterieur", "^veine_ombilicale", "^artere_ombilicale", "^cordon"], 1.0, 0),
 ]
 # Dorsal : structures de la paroi dorsale. Le tube neural n'est qu'un repli : dans un embryon en C (CS12-CS17) il fait le tour du cœur
 # (prosencéphale ventral contre le cœur, queue relevée), son barycentre n'est pas dorsal (retour du relais, CS13).
@@ -626,7 +629,9 @@ def _dorsal(structs, Z):
 def _axe_anatomique(structs):
     """axe caudal -> crânial d'après les paires CRANIAL (foie -> cœur -> arcs aortiques…), ou None"""
     v = np.zeros(3)
-    for a, b, w in CRANIAL:
+    for a, b, w, smin in CRANIAL:
+        if STADE_COURANT is not None and STADE_COURANT < smin:
+            continue
         ca, cb = _centre(structs, a), _centre(structs, b)
         if ca is not None and cb is not None and np.linalg.norm(ca - cb) > 1e-12:
             v += w * (ca - cb) / np.linalg.norm(ca - cb)
@@ -639,7 +644,9 @@ def _score(structs, R):
         v = _centre(structs, motifs)
         return None if v is None else R @ v
     detail = []; total = 0.0
-    for a, b, w in CRANIAL:
+    for a, b, w, smin in CRANIAL:
+        if STADE_COURANT is not None and STADE_COURANT < smin:
+            continue
         ca, cb = c(a), c(b)
         if ca is None or cb is None:
             continue
@@ -852,6 +859,8 @@ def main():
     if not os.path.exists(a.nomenclature):
         a.nomenclature = abs0(a.nomenclature)
     cs = stade_norme(a.stade)
+    global STADE_COURANT
+    STADE_COURANT = norm_int(cs)
     sortie = a.sortie or os.path.join("embryons_3D", "modeles", cs + "_hikspoors")
     os.makedirs(sortie, exist_ok=True)
     nomen = Nomenclature(a.nomenclature)
@@ -967,8 +976,10 @@ def main():
         print("   indices anatomiques (contrôle, le calage fait foi) : score %.1f" % sc_tel)
         for d in det_tel:
             print("      %s %s" % ("OK " if d["ok"] else "NON", d["indice"]))
-        if meilleure["score"] >= sc_tel + 2:
+        if meilleure["score"] >= sc_tel + 2 and len(det_tel) >= 2:
             print("   ATTENTION : « %s » vérifie mieux les indices (%.1f contre %.1f) : regarder controle.png" % (meilleure["variante"], meilleure["score"], sc_tel))
+        elif len(det_tel) < 2:
+            print("   (%d indice évalué seulement : pas de verdict, le calage fait foi ; regarder controle.png)" % len(det_tel))
         if np.linalg.det(Rc) > 0:          # l'orientation automatique (repli des stades sans calage, CS23) jugée sur ce stade calé
             auto, _ = orienter(structs)
             ecart = float(np.degrees(np.arccos(np.clip((np.trace(auto["R"] @ Rc.T) - 1) / 2, -1, 1))))

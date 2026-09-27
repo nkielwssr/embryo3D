@@ -53,6 +53,9 @@ ATTENDU = {
     "Aortic_arch_3_left": "arc_aortique_3_gauche", "Septum_transversum": "septum_transversum", "Liver": "foie",
     # pièges des anciens motifs (\w* traverse '_', « ear » dans heart, « card » dans cardinal)
     "heart_tube": "coeur_tube_cardiaque", "myocardium": "myocarde_coeur", "atrial_septum": "septum_interatrial",
+    # retour 2 du relais (26/09 soir) : CS10-CS12 et CS14-CS17
+    "lumen_IFT": "cavite_voie_afferente", "myocard_IFT": "myocarde_voie_afferente", "IFT": "coeur_voie_afferente",
+    "Ao_swelling": "bourrelet_valvulaire_aortique", "pulm_swelling": "bourrelet_valvulaire_pulmonaire", "scale_cube___200um": IGNORER,
 }
 SYSTEMES = {"pericard": "annexes", "epicard": "vasculaire", "L_spinal_ganglia": "nerveux", "NCCs": "tissus", "coelom": "annexes",
             "lung_lobes": "respiratoire", "R_cardinal_vein": "vasculaire"}

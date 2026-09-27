@@ -10,7 +10,7 @@
   "Section 'video' : correspondance des labels de notre pipeline vidéo (meshexport.py) vers les mêmes noms canoniques (video_vers_modele.py).",
   "'prioritaires' : noms réels des PDF (inventaire du relais, CS9/13/18/20/23) qui contiennent « card », « atri », « ventric »… et seraient sinon pris par les règles cardiaques (cardinal_vein, pericard, epicard, endocardial_cushion, cardiac_jelly, primary_atrial_septum…). Motifs en [a-z0-9]* et non \\w* : '_' est un caractère de mot."
  ],
- "version": "26/09/2026 (2)",
+ "version": "27/09/2026",
  "ignorer": [
   "scale_cube",
   "scalecube",
@@ -35,6 +35,32 @@
   "droit": "(^|_)(r|right|rt|rechts|droit|d)(_|$)|(^|_)(r)(v|a)(_|$)"
  },
  "prioritaires": [
+  {
+   "motif": "(^|_)(ao|aortic|aort)_?swelling",
+   "nom": "bourrelet_valvulaire_aortique",
+   "nom_fr": "bourrelet valvulaire aortique (swelling)",
+   "systeme": "vasculaire",
+   "groupe": "coeur",
+   "confiance": "bonne",
+   "_doc": "Ao_swelling (CS14-CS17) : bourrelet des valves artérielles, retour 2 du relais"
+  },
+  {
+   "motif": "pulm[a-z]*_?swelling",
+   "nom": "bourrelet_valvulaire_pulmonaire",
+   "nom_fr": "bourrelet valvulaire pulmonaire (swelling)",
+   "systeme": "vasculaire",
+   "groupe": "coeur",
+   "confiance": "bonne"
+  },
+  {
+   "motif": "swelling",
+   "nom": "bourrelet_{1}",
+   "nom_fr": "bourrelet",
+   "systeme": "vasculaire",
+   "groupe": "coeur",
+   "confiance": "moyenne",
+   "capture": "^([a-z0-9]+)"
+  },
   {
    "motif": "loop_?wire|central_?thread|central_?line|fil_central|axis_of_heart|heart_axis|midline_of_heart",
    "nom": "axe_tube_cardiaque",
@@ -516,6 +542,11 @@
     "motif": "(^|_)sv(_|$)|sinus_?venos|sinus_?veineux|venous_?sinus|sinus_horn|corne",
     "suffixe": "sinus_veineux",
     "nom_fr": "du sinus veineux"
+   },
+   {
+    "motif": "(^|_)ift(_|$)|inflow|afferent|voie_aff",
+    "suffixe": "voie_afferente",
+    "nom_fr": "de la voie afférente (inflow tract)"
    },
    {
     "motif": "atri|auricul|oreillette",

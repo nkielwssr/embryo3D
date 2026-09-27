@@ -3,11 +3,11 @@
 multi-stades pour blender_build_scene.py (shape keys entre stades sur les structures de même nom, slider « stage »).
 
     python embryo3d/master_modeles.py [--sortie embryons_3D/master_CS10-CS23.json] [--stades CS10,CS11,...,CS23]
-                                      [--priorite hikspoors,video,recon,brouillon] [--fusion] [--sans-brouillons] [--publiables-seuls]
+                                      [--priorite recon,hikspoors,video,brouillon] [--fusion] [--sans-brouillons] [--publiables-seuls]
     "C:/Program Files/Blender Foundation/Blender 5.2/blender.exe" -b -P embryo3d/blender_build_scene.py -- embryons_3D/master_CS10-CS23.json embryons_3D/embryon_CS10-CS23.blend
 
-Par stade : les dossiers dont le manifest porte ce stade sont classés par --priorite (suffixe du dossier : _hikspoors, _video, _recon, sans
-suffixe = brouillon atlas ou livraison directe). Sans --fusion, seul le premier est pris ; avec --fusion, les structures des dossiers suivants
+Par stade : les dossiers dont le manifest porte ce stade sont classés par --priorite (suffixe du dossier : _recon = nos modèles VHE/IA,
+_hikspoors, _video = reconstruction vidéo, sans suffixe = brouillon atlas ou livraison directe). Ordre validé le 27/09 : recon > hikspoors > atlas. Sans --fusion, seul le premier est pris ; avec --fusion, les structures des dossiers suivants
 dont le nom canonique manque encore sont ajoutées (ex. enveloppe, membres, yeux de la vidéo à côté du cœur Hikspoors). Tous les dossiers
 doivent être dans le repère des modèles (mm, Z crânial, Y dorsal, X gauche) : l'assemblage ne recale pas, il signale les écarts d'étendue.
 Les dossiers « publiable": false » (Hikspoors par défaut : atlas d'auteurs retravaillé) sont pris : la scène Blender reste locale ;
@@ -30,7 +30,7 @@ from agregateur import AXE, SYSTEMES, VUE_SEULE, MODELES, norm
 LIBELLE = {i: l for i, l, _ in SYSTEMES + VUE_SEULE}
 ALPHA = {"enveloppe": 0.25, "amnios": 0.2, "pericarde": 0.3, "coelome": 0.3, "vesicule_vitelline": 0.5, "cavites_cardiaques": 0.6}
 # structures « blob » raisonnables pour des shape keys (Shrinkwrap) ; les tubes fins et les pièces multiples restent affichées par stade
-MORPHABLES = {"enveloppe", "foie", "coeur", "cavites_cardiaques", "tube_neural", "encephale", "intestin", "estomac", "poumons", "vesicule_vitelline",
+MORPHABLES = {"enveloppe", "foie", "coeur", "cavites_cardiaques", "tube_neural", "encephale", "intestin", "estomac", "poumons", "vesicule_vitelline", "aorte_dorsale", "epicarde",
               "septum_transversum", "yeux", "vesicules_otiques", "pericarde", "myocarde_coeur", "myocarde_ventricule_gauche", "myocarde_ventricule_droit",
               "myocarde_oreillette_gauche", "myocarde_oreillette_droite", "myocarde_voie_efferente", "myocarde_ventricules", "myocarde_oreillettes",
               "myocarde_tube_cardiaque", "notochorde", "intestin_anterieur", "intestin_moyen", "intestin_posterieur", "oesophage", "duodenum"}
@@ -84,7 +84,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--sortie", default=os.path.join("embryons_3D", "master_CS10-CS23.json"))
     ap.add_argument("--stades", default=",".join(cs for cs, *_ in AXE if 10 <= norm(cs) <= 23))
-    ap.add_argument("--priorite", default="hikspoors,video,recon,brouillon")
+    ap.add_argument("--priorite", default="recon,hikspoors,video,brouillon")
     ap.add_argument("--fusion", action="store_true"); ap.add_argument("--sans-brouillons", action="store_true")
     ap.add_argument("--publiables-seuls", action="store_true", help="écarter les dossiers publiable=false (Hikspoors par défaut)")
     a = ap.parse_args()
