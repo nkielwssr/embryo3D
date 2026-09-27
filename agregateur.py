@@ -150,7 +150,7 @@ def controle_orientation(dossier, structures):
         return np.mean(pts, 0) if pts else None
     n, c = centre(RE_NERF), centre(RE_COEUR)
     dy = None if n is None or c is None else round(float(c[1] - n[1]), 3)
-    vg, vd = centre(r"^left_ventricle$"), centre(r"^right_ventricle$")
+    vg, vd = centre(r"^(left_ventricle|myocarde_ventricule_gauche|cavite_ventricule_gauche|coeur_ventricule_gauche)$"), centre(r"^(right_ventricle|myocarde_ventricule_droit|cavite_ventricule_droit|coeur_ventricule_droit)$")
     dx = None if vg is None or vd is None else round(float(vg[0] - vd[0]), 3)     # attendu > 0 : +X = gauche anatomique
     rot = bool(dy is not None and dy > 0.2)                                          # marge 0,2 mm contre les cas limites
     res = {"rot_z_180": rot, "dy_coeur_nerf_mm": dy, "dx_vg_vd_mm": dx,
@@ -224,7 +224,9 @@ def lire_dossier(cs, nom_dossier):
                         "ca": coupes_ams(x.get("coupes_amsterdam"))})
     return {"source": m.get("source", ""), "session": m.get("session", ""), "notes": m.get("notes", ""), "structures": structs,
             "dossier": nom_dossier, "publiable": m.get("publiable", True) is not False, "usage": m.get("usage", ""),
-            "brouillon": m.get("statut") == "brouillon", "verif": (verif or {}).get("bilan"), "coupes_ams": m.get("coupes_amsterdam"),
+            "brouillon": m.get("statut") == "brouillon", "externe": m.get("statut") == "externe", "attribution": m.get("attribution", ""),
+            "echelle": m.get("echelle") or {}, "orientation_auto": m.get("orientation") or {},
+            "verif": (verif or {}).get("bilan"), "coupes_ams": m.get("coupes_amsterdam"),
             "orientation": controle_orientation(nom_dossier, structs),
             "specimen": m.get("specimen", ""), "licence": m.get("licence", ""), "temps": m.get("temps") or {}, "dimensions": m.get("dimensions") or {},
             "date": datetime.fromtimestamp(os.path.getmtime(f)).strftime("%d/%m %H:%M")}
@@ -244,7 +246,9 @@ def statut_systeme(mod, sid, cs=""):
     if not xs:
         return "a_faire"
     if any(x["confiance"] in ("bonne", "moyenne") for x in xs):
-        return "brouillon" if mod.get("brouillon") else "fait"
+        if mod.get("brouillon"):
+            return "brouillon"
+        return "externe" if mod.get("externe") else "fait"
     return "partiel"
 
 
@@ -259,7 +263,7 @@ def taches(lignes):
     add("haute", "tous", "Définir la méthode des nouveaux modèles (source par stade, repère, échelle)",
         "convention de livraison : embryons_3D/modeles/CSxx/manifest.json (voir en-tête d'embryo3d/agregateur.py)")
     for l in lignes:
-        manque = [dict((s[0], s[1]) for s in SYSTEMES)[k] for k, v in l["systemes"].items() if v not in ("fait", "na")]
+        manque = [dict((s[0], s[1]) for s in SYSTEMES)[k] for k, v in l["systemes"].items() if v not in ("fait", "externe", "na")]
         if not l["modele"]:
             src = l["sources"]
             dispo = ", ".join(x for x, ok in (("coupes ehd", src["coupes"]), ("vidéo 360°", src["videos360"]), ("VOKA (regard)", src["voka"])) if ok) or "aucune source locale"
@@ -466,7 +470,7 @@ def construire(publiable_seul=False):
         print("disque CS8 : échec", e)
     complements(lignes)
     cellules = sum(1 for l in lignes for v in l["systemes"].values() if v != "na")
-    faites = sum(1 for l in lignes for v in l["systemes"].values() if v == "fait")
+    faites = sum(1 for l in lignes for v in l["systemes"].values() if v in ("fait", "externe"))
     etat = json.load(open(ETAT, encoding="utf-8")) if os.path.exists(ETAT) else {}
     todo = taches(lignes)
     for t in todo:
@@ -495,7 +499,7 @@ h2{font-size:13px;letter-spacing:.06em;text-transform:uppercase;color:var(--mut)
 table{border-collapse:collapse;width:100%;min-width:900px}th,td{padding:7px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:middle}
 th{font-size:11px;color:var(--mut);font-weight:600;background:var(--panel);position:sticky;top:0}
 td.c{text-align:center;width:74px}.dot{display:inline-block;width:14px;height:14px;border-radius:4px;background:var(--no)}
-.dot.fait{background:var(--ok)}.dot.brouillon{background:repeating-linear-gradient(45deg,#7fb3e6 0 3px,#cfe3f7 3px 6px)}
+.dot.fait{background:var(--ok)}.dot.brouillon{background:repeating-linear-gradient(45deg,#7fb3e6 0 3px,#cfe3f7 3px 6px)}.dot.externe{background:#2f6fb5}
 .badge{font-size:11px;font-weight:600;padding:1px 7px;border-radius:9px;background:#dbe9f8;color:#1d4d80;margin-left:6px}.dot.na{background:transparent;border:1px dashed var(--mut)}.dot.partiel{background:var(--mid)}.src{font-size:12px;color:var(--mut)}.src b{color:var(--ink);font-weight:600}
 tr.has td:first-child{box-shadow:inset 3px 0 0 var(--ok)}.st{font-weight:700}.mut{color:var(--mut);font-size:12px}
 .todo td{font-size:13px}.pill{font-size:11px;padding:1px 7px;border-radius:9px;background:var(--no)}.pill.haute{background:#f3d3d5;color:#7a1d22}
@@ -528,7 +532,7 @@ tr.has td:first-child{box-shadow:inset 3px 0 0 var(--ok)}.st{font-weight:700}.mu
 
 <h2>Contenu et reste à faire, par stade et par système</h2>
 <div class="wrap"><table id="mat"></table></div>
-<p class="mut">Vert : système modélisé par notre code · hachuré bleu : brouillon tiré de l'atlas d'Amsterdam, en attente de notre reconstruction · jaune : partiel ou faible · gris : à faire · pointillé : pas encore formé à ce stade. Sources : coupes légendées ehd (nombre d'images), vidéo 360° ehd, VOKA (regard seulement, à partir de J28), référence du 24/09.</p>
+<p class="mut">Vert : système modélisé par notre code · bleu plein : maillages d'auteurs intégrés (Hikspoors et al. 2022, HDBR atlas, CC BY-NC-SA) · hachuré bleu : brouillon tiré de l'atlas d'Amsterdam, en attente de notre reconstruction · jaune : partiel ou faible · gris : à faire · pointillé : pas encore formé à ce stade. Sources : coupes légendées ehd (nombre d'images), vidéo 360° ehd, VOKA (regard seulement, à partir de J28), référence du 24/09.</p>
 
 <h2>Tâches</h2>
 <div class="wrap"><table class="todo" id="todo"></table></div>
@@ -538,13 +542,13 @@ tr.has td:first-child{box-shadow:inset 3px 0 0 var(--ok)}.st{font-weight:700}.mu
 <script>
 const D=JSON.parse(document.getElementById('data').textContent);const $=id=>document.getElementById(id);
 const SYS=D.systemes;const avec=D.lignes.filter(l=>l.modele);
-const nb=avec.filter(l=>l.modele.brouillon).length;
-$('kpi').innerHTML=`<div><b>${avec.length} / ${D.lignes.length}</b><span>stades avec un modèle${nb?` (dont ${nb} brouillon${nb>1?'s':''})`:''}</span></div><div><b>${D.progression.faites} / ${D.progression.cellules}</b><span>cases stade × système modélisées</span></div><div><b>${D.todo.length}</b><span>tâches ouvertes</span></div>`;
+const nb=avec.filter(l=>l.modele.brouillon).length;const nx=avec.filter(l=>l.modele.externe).length;
+$('kpi').innerHTML=`<div><b>${avec.length} / ${D.lignes.length}</b><span>stades avec un modèle${nb?` (dont ${nb} brouillon${nb>1?'s':''})`:''}${nx?` (dont ${nx} externe${nx>1?'s':''} Hikspoors)`:''}</span></div><div><b>${D.progression.faites} / ${D.progression.cellules}</b><span>cases stade × système modélisées</span></div><div><b>${D.todo.length}</b><span>tâches ouvertes</span></div>`;
 // matrice
 let h='<tr><th>Stade</th><th>Jours · CRL</th><th>Sources disponibles</th>'+SYS.map(s=>`<th style="text-align:center">${s.lbl}</th>`).join('')+'</tr>';
 for(const l of D.lignes){const s=l.sources;const src=[s.coupes?`<b>${s.coupes}</b> coupe${s.coupes>1?'s':''} légendée${s.coupes>1?'s':''}`:'',s.videos360?'<b>vidéo 360°</b>':'',s.voka?'VOKA':'',s.reference_2409?`<a href="${D.ref_url}">réf. 24/09</a>`:''].filter(Boolean).join(' · ')||'—';
- h+=`<tr class="${l.modele?'has':''}"><td><span class="st">${l.stade}</span><div class="mut">${l.reperes}</div></td><td class="src">J${l.j[0]}–${l.j[1]}<br>${l.crl[0]}–${l.crl[1]} mm</td><td class="src">${src}${l.modele?`<div class="mut">${l.modele.brouillon?'<span class="badge">brouillon</span> ':''}modèle : ${(l.modele.source||'?').split(' — ')[0]} · ${l.modele.date}</div>`:''}</td>`+
- SYS.map(sy=>`<td class="c" title="${sy.lbl} : ${({fait:'modélisé',brouillon:'brouillon (atlas)',partiel:'partiel',a_faire:'à faire',na:'pas encore formé'})[l.systemes[sy.id]]}"><span class="dot ${l.systemes[sy.id]}"></span></td>`).join('')+'</tr>';}
+ h+=`<tr class="${l.modele?'has':''}"><td><span class="st">${l.stade}</span><div class="mut">${l.reperes}</div></td><td class="src">J${l.j[0]}–${l.j[1]}<br>${l.crl[0]}–${l.crl[1]} mm</td><td class="src">${src}${l.modele?`<div class="mut">${l.modele.brouillon?'<span class="badge">brouillon</span> ':''}${l.modele.externe?'<span class="badge">externe</span> ':''}modèle : ${(l.modele.source||'?').split(' — ')[0]} · ${l.modele.date}</div>`:''}</td>`+
+ SYS.map(sy=>`<td class="c" title="${sy.lbl} : ${({fait:'modélisé',externe:'maillages d\'auteurs (Hikspoors)',brouillon:'brouillon (atlas)',partiel:'partiel',a_faire:'à faire',na:'pas encore formé'})[l.systemes[sy.id]]}"><span class="dot ${l.systemes[sy.id]}"></span></td>`).join('')+'</tr>';}
 $('mat').innerHTML=h;
 // tâches (état partagé publié par le lanceur, rafraîchi toutes les 20 s)
 function rendreTaches(etat){let t='<tr><th>Priorité</th><th>Stade</th><th>Action</th><th>Instance</th><th>Statut</th></tr>';
@@ -626,7 +630,7 @@ if(avec.length){
   const m=l.modele,t=m.temps||{},dm=m.dimensions||{};const par={};m.structures.forEach(x=>(par[x.systeme]=par[x.systeme]||[]).push(x));
   document.getElementById('fiche').innerHTML=`<div class="mut" style="margin:8px 0">${t.jours_post_fecondation?`J${t.jours_post_fecondation.join('–')} · `:''}${dm.longueur_atlas_mm?`${dm.longueur_atlas_mm} mm · `:''}${dm.paires_somites?`${dm.paires_somites} paires de somites · `:''}${m.specimen?`spécimen ${m.specimen} · `:''}${m.vitellus?`vésicule vitelline : ${m.vitellus.source} · `:''}${m.amnios?`amnios : ${m.amnios.source} · `:''}${m.orientation&&m.orientation.rot_z_180?'<b>orientation corrigée à l\'affichage (demi-tour, le cœur était dorsal)</b> · ':''}${t.reperes_stade||''}</div>`+
    Object.entries(par).map(([sid,xs])=>`<details><summary><b>${LBL[sid]||sid}</b> <span class="mut">(${xs.length})</span></summary><ul style="margin:4px 0 8px;padding-left:18px">${xs.map(x=>`<li><b>${x.nom_fr}</b>${x.confiance==='faible'?' <span class="pill">faible, non affiché</span>':''}${x.verif==='a_corriger'?` <span class="pill haute" title="${(x.verif_pb||[]).join(' ; ')}">maillage à corriger</span>`:''}${x.legende?` — <span class="mut">${x.legende}</span>`:''}${x.ca?`<br><span class="mut" style="font-size:.92em">coupes Amsterdam : ${x.ca.l} (coupes ${x.ca.a}–${x.ca.b}, max en ${x.ca.c})${x.ca.g?' <i>via la géométrie</i>':''}${x.ca.d?' <span class="pill">nom et géométrie en désaccord</span>':''}</span>`:''}</li>`).join('')}</ul></details>`).join('')+
-   (m.verif?`<p class="mut" style="margin:8px 0 0">Contrôle des maillages : <b>${m.verif.ok} / ${m.verif.total}</b> sans erreur (étanchéité, arêtes, faces dégénérées ou en double).</p>`:'')+(m.brouillon?`<p style="margin:10px 0 0"><span class="badge">BROUILLON</span> <span class="mut">Modèle provisoire tiré de l'atlas, en attendant la reconstruction par notre code.</span></p>`:'')+(!m.publiable?`<p class="mut" style="margin-top:10px"><b>Référence interne, non publiable</b>${m.usage?' ('+m.usage+')':''} : visible seulement en local.</p>`:'')+(m.licence?`<p class="mut" style="margin-top:10px">Source : ${m.source}. Licence ${m.licence} — <a href="https://creativecommons.org/licenses/by-nc-nd/4.0/deed.fr" target="_blank">conditions</a>. Géométrie originale des auteurs, seulement mise à l'échelle et positionnée ; couleurs par système.</p>`:'');
+   (m.verif?`<p class="mut" style="margin:8px 0 0">Contrôle des maillages : <b>${m.verif.ok} / ${m.verif.total}</b> sans erreur (étanchéité, arêtes, faces dégénérées ou en double).</p>`:'')+(m.brouillon?`<p style="margin:10px 0 0"><span class="badge">BROUILLON</span> <span class="mut">Modèle provisoire tiré de l'atlas, en attendant la reconstruction par notre code.</span></p>`:'')+(!m.publiable?`<p class="mut" style="margin-top:10px"><b>Référence interne, non publiable</b>${m.usage?' ('+m.usage+')':''} : visible seulement en local.</p>`:'')+(m.licence?`<p class="mut" style="margin-top:10px">Source : ${m.source}. Licence ${m.licence} — <a href="https://creativecommons.org/licenses/${/by-nc-sa/i.test(m.licence)?'by-nc-sa':/by-sa/i.test(m.licence)?'by-sa':/by-nc-nd/i.test(m.licence)?'by-nc-nd':'by'}/4.0/deed.fr" target="_blank">conditions</a>. ${m.attribution?`Attribution : ${m.attribution}. `:''}Géométrie originale des auteurs, seulement mise à l'échelle et positionnée ; couleurs par système.${m.echelle&&m.echelle.um_par_unite?` Échelle ${m.echelle.um_par_unite} µm/unité.`:''}${m.orientation_auto&&m.orientation_auto.score!==undefined?` Orientation automatique (score ${m.orientation_auto.score}) : vérifier controle.png.`:''}</p>`:'');
   const nS=l.modele.structures.filter(x=>x.ok&&x.confiance!=='faible').length,tt=l.modele.temps||{},dd=l.modele.dimensions||{};
   document.getElementById('leg').textContent=`${l.stade} · ${nS} structures · source : ${l.modele.source||'?'}${l.modele.session?' · '+l.modele.session:''}`;
   document.getElementById('ovst').textContent=l.stade+(l.modele.brouillon?' · brouillon':'');
