@@ -14,6 +14,7 @@ pas versés dans le dépôt** (article et chapitre sous copyright, manuscrit non
 | Pellerin P. *Creating an Atlas of Growing Skull Templates in Vestibular Orientation for Analysis of Craniofacial Malformations.* J Craniofac Surg 2026;37:16-19 | article, 4 p. | définition opérationnelle de l'orientation vestibulaire, protocole 3D Slicer, atlas 3D de 19 gabarits (181 scanners, 0 à ~18 ans) |
 | Captier G., Boë L.-J. *Croissance générale et céphalique.* Chapitre de *Chirurgie plastique de l'enfant et de l'adolescent* (p. 75-93) | chapitre, 19 p. | modèle à deux unités (crâne cérébral / crâne facial), figures 13-18 des neuf âges de Fenart, profils de vitesse, organisation modulaire du crâne |
 | Captier G., Subsol G., Laporte M., Boë L.-J. (+ Barbier G.) *3D ontogenetic trajectories of the human skull from prenatal to adulthood: heterochrony.* Manuscrit (titre provisoire) | brouillon .docx | matériel et méthode de la base Fenart (9 stades, 142 points), tableau des points, distances/âges à 90 %, ACP, discussion Hox/non-Hox |
+| `docs/coordonnees_fenart.csv` (fourni par l'utilisateur le 01/10/2026, d'après la base de Fenart) | table ; **versé dans le dépôt** | coordonnées vestibulaires (x, y, z, mm) des 87 points aux 9 stades : la donnée quantitative du modèle (§ 2.4) |
 
 Le manuscrit est un brouillon de travail : plusieurs chiffres y sont marqués « à vérifier » par les auteurs
 (notamment les pourcentages de l'ACP et certaines colonnes du tableau 2). Ils sont repris ici tels quels, avec la
@@ -141,12 +142,60 @@ Le chapitre numérote différemment 20 points principaux (figure 13) : 1 condyli
 nasale antérieure, 12 nasion, 13 glabelle, 14 bregma, 17 lambda, 19 inion, 20 opisthion ; **points 1-12 = unité
 faciale F, points 12-20 = unité cérébrale EC**.
 
-### 2.3 Ce que les documents ne contiennent pas
+### 2.3 Ce que les trois documents ne contiennent pas
 
-Les **coordonnées (x, y, z) des 142 points aux neuf stades** ne figurent dans aucun des trois documents : elles sont
-« publiées et disponibles » (Fenart et Biecq-Sellier 2004, *International Orthodontics* 2(4):265-278 ; Fenart 2006,
-*Ontogenèse craniométrique vestibulaire*, chez l'auteur / Reproflash, Lille) et dans les fichiers de Captier et Boë
-(figures Matlab). Sans elles, le modèle ci-dessous reste qualitatif + quelques distances. Voir § 7.4.
+Les **coordonnées (x, y, z) des points aux neuf stades** ne figurent dans aucun des trois documents (elles sont
+publiées dans Fenart et Biecq-Sellier 2004 et Fenart 2006). Elles ont été fournies ensuite sous forme de table
+(§ 2.4) ; c'est elle qui rend le modèle quantitatif.
+
+### 2.4 La table de coordonnées `docs/coordonnees_fenart.csv`
+
+Fichier à séparateur `;`, une ligne par (point, stade), 783 lignes = **87 points × 9 stades** (32 points médians
++ 55 points pairs, un seul hémicrâne : le compte du manuscrit). Colonnes :
+
+| Colonne | Contenu |
+|---|---|
+| `point` | abréviation du point (voir ci-dessous) |
+| `pair` | 1 = point bilatéral (donné d'un seul côté, z ≥ 0), 0 = point médian (z = 0) |
+| `region` | `F` face (massif facial, orbites, 24 points), `U` voûte (calvaria, 22), `M` mandibule (13), `B` base du crâne (28) |
+| `fiable` | 1 / 0 ; les 12 points notés 0 sont des points endocrâniens ou des foramens (asti, pii, pti, fsh, per, spi, tda, tdp, VII, VIII, XIIe, XIIi) |
+| `stade` | `A B C D1 D2 E F G Ad` ; **attention, codage différent du manuscrit** : `D1` = D (8 mois ½), `D2` = E (2 ans), `E` = F (4 ans), `F` = G (8 ans ½), `G` = H (14 ans) |
+| `ans_depuis_conception` | 0,416 · 0,586 · 0,756 (naissance ≈ J276) · 1,456 · 2,756 · 4,756 · 9,256 · 14,756 · 30,756 (adulte posé à 30 ans) |
+| `x_mm`, `y_mm`, `z_mm` | coordonnées dans le **repère vestibulaire** : x antéro-postérieur (**négatif = avant**), y vertical (positif = haut), z transversal (demi-largeur) |
+
+Le repère est bien celui de Fenart (§ 1.1) et non celui de Francfort : l'axe transversal (x = y = 0) porte les points
+`VIII` (méat acoustique interne), `vi` et `ve` (points vestibiens interne et externe, intersections de l'axe de Perez
+avec les tables interne et externe du crâne) ; l'axe horizontal antéro-postérieur (y = z = 0) porte `pv`
+(pré-vestibion, en avant) et `rv` (rétro-vestibion, en arrière) ; l'axe vertical (x = z = 0) porte `ac` (point vestibien
+du sommet, le « vertex vestibien » du manuscrit). Le porion `po` n'est pas à l'origine : il s'écarte de 16,5 à 56 mm
+du plan sagittal en gardant x ≈ −4, y ≈ −4.
+
+Identification des abréviations. Sûres (tableau 1 du manuscrit, chapitre) : `gl` glabelle, `pv` pré-vestibion,
+`ant` frontal antérieur vestibien, `br` bregma, `L` lambda, `opc` opisthocrânion, `eu` euryon, `na` nasion, `S` selle
+turcique, `ba` basion, `I` inion, `op` opisthion, `po` porion, `mas` mastoïde, `tda`/`tdp` trous déchirés antérieur /
+postérieur, `VIII` méat acoustique interne, `ena` épine nasale antérieure, `rh` rhinion, `mmi` maxillo-zygomatique,
+`nm` naso-maxillaire, `nae` narinaire, `mac`/`mi` largeurs maxillaires, `pr` prosthion, `oex`/`oif`/`om`/`oit`/`os`
+points orbitaires, `id` infradentale, `pog` pogonion, `si` symphyse, `ce` condyle externe, `go` gonion.
+Probables (abréviations craniométriques usuelles, **à confirmer sur la source**) : `ac` vertex vestibien, `vx` vertex,
+`rv` rétro-vestibion, `ve`/`vi` vestibiens externe / interne, `bri`/`Li`/`ei` bregma / lambda / inion endocrâniens,
+`ast`/`asti` astérion externe / interne, `pt`/`pti` ptérion, `mf` métopion, `pp` épine nasale postérieure (palatin
+postérieur), `za`/`zm` zygomatiques, `fzp` fronto-zygomatique, `so` sous-orbitaire, `A`/`B` points A et B, `cor`
+coronoïde, `ci`/`cm` condyle interne / médian, `spx` épine de Spix, `tm` trou mentonnier, `coe`/`coi` condyle occipital
+externe / interne, `ov` foramen ovale, `car` canal carotidien, `J` foramen jugulaire, `VII`/`XIIe`/`XIIi` foramens des
+nerfs crâniens, `hoi`/`hoe` hormion, `cra`/`crp` crista galli, `fsh` fosse hypophysaire, `gr` grande aile, `sp`/`spi`
+foramen spinosum. Non identifiés : `ae`, `ai`, `cpp`, `py`, `me` (bilatéral, mandibule), `pai`, `pie`/`pii`, `post`,
+`per`, `top`.
+
+Outils : `fenart_croissance.py` (bibliothèque standard seulement) lit la table, la vérifie, interpole les coordonnées
+à un âge quelconque (linéaire par morceaux en log-âge, option miroir pour les deux côtés), calcule déplacements, âges à
+50/90 % et similitudes par unité (§ 4.4) et trace les planches `docs/fenart_trajets_profil.svg` et
+`docs/fenart_trajets_face.svg` ; `docs/fenart_derive.json` est sa sortie complète.
+
+```bash
+python embryo3d/fenart_croissance.py                                   # contrôle + tableaux
+python embryo3d/fenart_croissance.py --age 6 --postnatal [--json]      # coordonnées à 6 ans postnatals
+python embryo3d/fenart_croissance.py --derive docs/fenart_derive.json --svg docs
+```
 
 ---
 
@@ -248,7 +297,46 @@ Lecture : la **voûte** (Br, Ve, La) a fait 90 % de son chemin **avant 2 ans** ;
 grands déplacements et finit vers 19 ans ; le condyle a le plus petit déplacement transversal. Les autres colonnes du
 tableau (vitesses max 1 et 2) sont vides dans le brouillon.
 
-### 4.3 Proportions corporelles (rappels du chapitre, utiles pour l'axe du viewer)
+### 4.3 Vérification du modèle sur la table de coordonnées (`fenart_croissance.py`)
+
+Similitude plane (homothétie k + rotation θ autour de l'origine vestibulaire) qui envoie au mieux les points du stade
+A (5 mois fœtal) sur ceux de chaque stade, par unité ; θ < 0 = le haut bascule vers l'arrière et l'occiput vers le
+bas, θ > 0 = le bas bascule vers l'arrière. Résidu rms en mm.
+
+| Unité (n points) | k naissance | k 2 ans | k 4 ans | k 14 ans | k adulte | θ adulte | rms adulte |
+|---|---|---|---|---|---|---|---|
+| Face F (24) | 1,54 | 1,98 | 2,15 | 2,45 | **2,70** | +8,7° | 8,8 |
+| Mandibule M (13) | 1,56 | 2,01 | 2,30 | 2,77 | **3,21** | **+19,5°** | 10,1 |
+| Voûte U (22) | 1,61 | 2,09 | 2,21 | 2,27 | **2,32** | **−3,3°** | 13,2 |
+| Voûte postérieure (12) | 1,68 | 2,18 | 2,28 | 2,36 | 2,43 | **−5,9°** | 11,0 |
+| Voûte antérieure (10) | 1,56 | 2,03 | 2,16 | 2,22 | 2,26 | −1,5° | 14,2 |
+| Base B (28) | 1,52 | 1,95 | 2,12 | 2,37 | **2,54** | +0,1° | 8,9 |
+
+Lecture, en regard des § 3 et 4 :
+
+- **Base** : homothétie quasi pure (rotation nulle, plus petit résidu). En frontal elle s'élargit plus que la voûte
+  (facteur largeur 2,9 contre 2,35) : descente et écartement de la mastoïde.
+- **Voûte** : facteur d'échelle presque atteint à 2 ans (2,09 sur 2,32, soit 90 %), puis quasi stable : c'est le profil
+  neural. La rotation est faible mais du bon signe, et portée par la **voûte postérieure** (−5,9°) : bascule du
+  sommet vers l'arrière et de l'occiput vers le bas, absente au front (−1,5°). Le résidu élevé vient de l'euryon
+  (trajet en crochet : il monte puis redescend après 2 ans) et des points temporaux.
+- **Face** : homothétie dominante jusqu'à 4 ans (|θ| ≤ 1,5°), avec une légère rotation (+8,7°) qui n'apparaît qu'à
+  l'adolescence ; facteur 2,70 encore loin d'être atteint à 14 ans (2,45) : croissance prolongée.
+- **Mandibule** : plus grand facteur (3,21) et forte rotation positive (+19,5°) : la croissance du ramus est plus
+  verticale que l'expansion radiale (gonion : 13 mm vers l'arrière, 48 mm vers le bas).
+- **Déplacements 5 mois → adulte** (mm, repère vestibulaire) : pogonion 92, symphyse 90, trou mentonnier 81,
+  infradentale 78, prosthion 69, glabelle 61, bregma 59, nasion 59, lambda 54, opisthocrânion 54, inion 47, mastoïde
+  49, porion 40, condyle externe 38, opisthion 28, basion 17,5, selle 19.
+- **Âge postnatal à 90 % du chemin** (interpolation linéaire, non sigmoïde) : bregma 2,8 ans, vertex 2,9, lambda 5,2,
+  métopion 3,6 ; face et mandibule 18-23 ans. Pour les points qui croissent encore après 14 ans, cette valeur est une
+  borne haute : le dernier intervalle (14 → 30 ans) est étiré linéairement, d'où des âges plus tardifs que les
+  ajustements sigmoïdes du manuscrit (Pr 17,6, Oif 15,4, Na 11,75).
+- **Écart avec le tableau 2 du manuscrit** : les distances du brouillon (Gl 104, Br 108, Pg 132, Mas 37, Co 22, Po 0)
+  ne se retrouvent ni dans le repère vestibulaire (Gl 61, Br 59, Pg 92, Mas 49, Ce 38, Po 40) ni en coordonnées
+  relatives au porion (Gl 71, Br 74, Pg 96, Mas 27, Ce 6,5, Po 0) ; aucun facteur constant ne les relie. Le tableau 2
+  est l'une des parties marquées « à vérifier » : **la table CSV fait foi** pour nos usages.
+
+### 4.4 Proportions corporelles (rappels du chapitre, utiles pour l'axe du viewer)
 
 - Tête + cou = moitié de la longueur du corps chez l'embryon de 3 semaines ; hauteur de la tête = 1/4 de la taille
   à la naissance et jusqu'à 1 an, 1/3 (sic, tel quel dans le chapitre) à 3 ans, 1/6 à 5 ans, 1/7 à 10 ans, 1/8 adulte.
@@ -325,34 +413,32 @@ Fenart apporte neuf jalons de **J140 à l'adulte** pour la tête seule (voir tab
 rien dans nos sources : la biométrie fœtale (Guihard-Costa et Larroche 1995) et la céphalométrie fœtale de Captier
 (2009, 2011 ; Herlin et al. 2011 pour la base) sont les pistes citées par le chapitre.
 
-### 7.3 Règles à encoder pour une tête « qui grandit » après CS23
+### 7.3 Une tête « qui grandit » après CS23 : la table est directement exploitable
 
-Avec les seules données disponibles (qualitatif + tableau 2), un premier modèle paramétrique de la tête peut être :
+Avec la table de coordonnées, le modèle n'a plus besoin d'être paramétrique : `fenart_croissance.interpoler(pts, âge,
+miroir=True)` donne les 142 points (87 + miroirs) à tout âge de 5 mois fœtal à l'adulte, dans le repère vestibulaire,
+en mm. Usage prévu :
 
-1. Repère vestibulaire ou de Francfort, origine Po (ou milieu de l'axe de Perez).
-2. Unité F (points en avant de la verticale de Po, sous Na) : **homothétie centrée Po**, facteur s(t) tiré d'une
-   double logistique (pics vers 8 mois postnatals et vers 15-16 ans), déplacements totaux du tableau 2 pour caler
-   l'amplitude (Pg 132 mm, SI 128 mm, Pr 111 mm, Oif 86 mm) ; directions rectilignes.
-3. Unité EC postérieure (de Br à Opt) : homothétie **plus rotation** d'angle θ(t) autour de Po, θ positif vers
-   l'arrière-bas, le gros de la rotation entre la naissance et 4 ans puis après 14 ans ; amplitudes du tableau 2
-   (Br 108, Ve 109, La 97, Opt 96, In 80, Opc 45 mm) avec 90 % du chemin atteint à 1,75-1,9 ans pour la voûte.
-4. Front (Ant, Gl, Na) : homothétie seule (pas de rotation), mais tardive pour Gl (sinus frontal, 90 % à 15 ans).
-5. De face : largeur inter-orbitaire constante ; élargissement homogène ; euryon rotation vers le bas après 2 ans ;
-   mandibule élargie après 14 ans.
-6. Contrainte globale : hauteur faciale sous Francfort 25 % → 40 % de la hauteur totale ; mi-chemin à 4 ans.
+1. **Gabarit de tête par âge** : les points servent de cibles à un maillage de crâne à topologie fixe (déformation par
+   plaques minces ou par pondération radiale depuis l'origine), ou de squelette de contrôle pour les systèmes déjà
+   modélisés (encéphale dans la voûte, yeux dans les orbites, labyrinthe sur l'axe de Perez).
+2. **Courbes de croissance par système** : facteurs k(t) par unité (§ 4.3) pour piloter l'échelle du neurocrâne
+   (profil neural, 90 % à 2 ans) séparément de celle de la face et de la mandibule (profil somatique, pic pubertaire).
+3. **Raccord avec l'embryon** : le stade A (5 mois) est le plus jeune ; entre CS23 (J56) et J152 il faut encore une
+   source (§ 7.2). Le raccord géométrique passe par le repère vestibulaire commun (§ 7.1).
 
-Ces règles sont reprises sous forme structurée dans `docs/modele_croissance_fenart.json` (stades, points, tableau 2,
-phases de vitesse, règles par unité) pour qu'un script puisse les lire.
+Si l'on veut malgré tout une version compacte (sans les 87 points), les similitudes du § 4.3 donnent un modèle à
+quatre blocs : base = homothétie k_B(t) ; voûte = homothétie k_U(t) + rotation −3° portée par la moitié postérieure ;
+face = homothétie k_F(t) ; mandibule = homothétie k_M(t) + rotation +20° ; le tout autour de l'origine vestibulaire.
+Ces paramètres sont dans `docs/fenart_derive.json` (clé `ajustements`).
 
-### 7.4 Ce qu'il faut obtenir pour passer au quantitatif
+### 7.4 Ce qui manque encore
 
-- Les **coordonnées des 142 points × 9 stades** : article Fenart et Biecq-Sellier 2004 (*International
-  Orthodontics*), ouvrage Fenart 2006, ou fichiers de Captier/Boë (les figures 1-2 et 7-8 du manuscrit sont tracées
-  à partir de ces fichiers).
 - Les **gabarits .mrb de Pellerin** (19 âges, 0 à ~18 ans) pour une surface 3D moyenne du crâne par âge, dans le même
-  repère.
-- Pour la période J60-J140 : céphalométrie fœtale de Captier (2009, 2011) et modèles géométriques encéphale /
+  repère ; la table de Fenart ne donne que des points.
+- Pour la période J60-J150 : céphalométrie fœtale de Captier (2009, 2011) et modèles géométriques encéphale /
   base du crâne de Captier et al. 2013 (*Morphologie* 97:38-47).
+- L'identification de dix abréviations de la table (§ 2.4) et la confirmation des « probables ».
 
 ### 7.5 Limites et biais à garder en tête
 

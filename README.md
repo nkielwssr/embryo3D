@@ -187,6 +187,9 @@ fœtal à l'adulte placés sur l'axe « jours post-fécondation », 40 points de
 parcourues et âge à 90 %, phases de vitesse, règles par unité EC / F, correspondance avec nos labels). Points clés :
 expansion radiale depuis le porion pour toute la tête, rotation arrière-bas du seul neurocrâne postérieur, voûte à
 90 % de son trajet avant 2 ans, mandibule jusqu'à ~19 ans, écart inter-orbitaire constant. Piste retenue pour un repère
-commun embryon → adulte : l'axe de Perez porté par les deux `vesicules_otiques` (§ 7.1 du document). Les coordonnées
-des 142 points de Fenart ne sont pas dans les documents lus : à obtenir (Fenart & Biecq-Sellier 2004, Fenart 2006).
-Les sources elles-mêmes (copyright, brouillon) ne sont pas versées dans le dépôt.
+commun embryon → adulte : l'axe de Perez porté par les deux `vesicules_otiques` (§ 7.1 du document).
+Les **coordonnées vestibulaires des 87 points × 9 stades** sont dans `docs/coordonnees_fenart.csv` ;
+`fenart_croissance.py` (bibliothèque standard) les vérifie, interpole à tout âge (`--age 6 --postnatal`), calcule
+déplacements et similitudes par unité (face = homothétie ×2,7 ; mandibule ×3,2 + rotation 20° ; voûte ×2,3 atteinte à
+90 % à 2 ans, bascule arrière −3° ; base ×2,5 sans rotation) et trace `docs/fenart_trajets_{profil,face}.svg` ;
+sortie complète dans `docs/fenart_derive.json`. Les trois documents sources (copyright, brouillon) ne sont pas versés.

@@ -1,5 +1,5 @@
 {
- "_description": "Modèle de croissance céphalique de Fenart (référentiel vestibulaire) relu par Captier & Boë : stades, points de repère, distances parcourues, phases de vitesse et règles qualitatives par unité de croissance. Voir docs/modele_croissance_fenart.md pour le contexte, les sources et les réserves. Les coordonnées des 142 points ne sont PAS dans ce fichier (non fournies par les sources lues).",
+ "_description": "Modèle de croissance céphalique de Fenart (référentiel vestibulaire) relu par Captier & Boë : stades, points de repère, distances parcourues, phases de vitesse et règles qualitatives par unité de croissance. Les coordonnées des 87 points aux 9 stades sont dans docs/coordonnees_fenart.csv (lues par fenart_croissance.py) ; leurs dérivés (déplacements, similitudes par unité) dans docs/fenart_derive.json. Voir docs/modele_croissance_fenart.md pour le contexte, les sources et les réserves.",
  "version": "2026-10-01",
  "sources": [
   {
@@ -27,6 +27,11 @@
    "id": "fenart2006",
    "type": "ouvrage (non lu, source des coordonnées)",
    "ref": "Fenart R. Ontogenèse craniométrique vestibulaire. Lille, Reproflash, 2006"
+  },
+  {
+   "id": "coordonnees_csv",
+   "type": "table (versée dans le dépôt)",
+   "ref": "docs/coordonnees_fenart.csv — coordonnées vestibulaires des 87 points × 9 stades, fournie le 01/10/2026 d'après la base de Fenart"
   }
  ],
  "reperes": {
@@ -75,56 +80,72 @@
    "label": "5 mois fœtal",
    "age_ans": -0.35,
    "jours_post_fecondation_approx": 140,
-   "denture": null
+   "denture": null,
+   "code_csv": "A",
+   "age_csv_ans_depuis_conception": 0.416
   },
   {
    "code": "B",
    "label": "7 mois fœtal",
    "age_ans": -0.19,
    "jours_post_fecondation_approx": 196,
-   "denture": null
+   "denture": null,
+   "code_csv": "B",
+   "age_csv_ans_depuis_conception": 0.586
   },
   {
    "code": "C",
    "label": "naissance",
    "age_ans": 0.0,
    "jours_post_fecondation_approx": 266,
-   "denture": null
+   "denture": null,
+   "code_csv": "C",
+   "age_csv_ans_depuis_conception": 0.756
   },
   {
    "code": "D",
    "label": "8 mois 1/2",
    "age_ans": 0.71,
    "jours_post_fecondation_approx": 525,
-   "denture": "temporaire en constitution"
+   "denture": "temporaire en constitution",
+   "code_csv": "D1",
+   "age_csv_ans_depuis_conception": 1.456
   },
   {
    "code": "E",
    "label": "2 ans",
    "age_ans": 2.0,
    "jours_post_fecondation_approx": 996,
-   "denture": "temporaire stable"
+   "denture": "temporaire stable",
+   "code_csv": "D2",
+   "age_csv_ans_depuis_conception": 2.756
   },
   {
    "code": "F",
    "label": "4 ans",
    "age_ans": 4.0,
    "jours_post_fecondation_approx": 1726,
-   "denture": "temporaire stable"
+   "denture": "temporaire stable",
+   "code_csv": "E",
+   "age_csv_ans_depuis_conception": 4.756
   },
   {
    "code": "G",
    "label": "8 ans 1/2",
    "age_ans": 8.5,
    "jours_post_fecondation_approx": 3370,
-   "denture": "mixte"
+   "denture": "mixte",
+   "code_csv": "F",
+   "age_csv_ans_depuis_conception": 9.256
   },
   {
    "code": "H",
    "label": "14 ans",
    "age_ans": 14.0,
    "jours_post_fecondation_approx": 5380,
-   "denture": "adolescente (M2)"
+   "denture": "adolescente (M2)",
+   "code_csv": "G",
+   "age_csv_ans_depuis_conception": 14.756
   },
   {
    "code": "Ad",
@@ -132,10 +153,12 @@
    "age_ans": 65.0,
    "jours_post_fecondation_approx": null,
    "denture": "adulte",
-   "note": "crânes d'environ 65 ans (manuscrit) : remodelage sénile de l'orbite"
+   "note": "crânes d'environ 65 ans (manuscrit) : remodelage sénile de l'orbite",
+   "code_csv": "Ad",
+   "age_csv_ans_depuis_conception": 30.756
   }
  ],
- "stades_note": "age_ans négatif = prénatal (années avant la naissance, naissance à J266 post-fécondation) ; jours = mois fœtaux comptés depuis la fécondation, pour placer les stades sur l'axe J0-J91 du viewer, pas pour dater finement",
+ "stades_note": "age_ans négatif = prénatal (années avant la naissance, naissance à J266 post-fécondation) ; jours = mois fœtaux comptés depuis la fécondation, pour placer les stades sur l'axe J0-J91 du viewer, pas pour dater finement ; code_csv / age_csv : codage et âge (ans depuis la conception, naissance à 0,756) utilisés dans docs/coordonnees_fenart.csv",
  "unites": {
   "EC": {
    "nom": "crâne cérébral (calvaria + encéphale)",
@@ -699,8 +722,91 @@
   "enveloppe": "seule trace du dermatocrâne et de la face ; mandibule et os de membrane non segmentés"
  },
  "manques": [
-  "coordonnées (x,y,z) des 142 points aux 9 stades (Fenart 2004/2006, fichiers Captier-Boë)",
   "gabarits 3D .mrb de Pellerin (19 âges)",
-  "données tête pour J60-J140 (céphalométrie fœtale de Captier 2009/2011, Herlin 2011, Captier et al. 2013)"
- ]
+  "données tête pour J60-J150 (céphalométrie fœtale de Captier 2009/2011, Herlin 2011, Captier et al. 2013)",
+  "identification de 10 abréviations de la table (ae, ai, cpp, py, me, pai, pie/pii, post, per, top) et confirmation des « probables »"
+ ],
+ "coordonnees_csv": {
+  "fichier": "docs/coordonnees_fenart.csv",
+  "separateur": ";",
+  "lignes": 783,
+  "points": 87,
+  "medians": 32,
+  "pairs": 55,
+  "colonnes": [
+   "point",
+   "pair",
+   "region",
+   "fiable",
+   "stade",
+   "ans_depuis_conception",
+   "x_mm",
+   "y_mm",
+   "z_mm"
+  ],
+  "repere": {
+   "type": "vestibulaire",
+   "origine": "milieu de l'axe de Perez (points VIII, vi, ve sur x = y = 0)",
+   "x": "antéro-postérieur, négatif = avant",
+   "y": "vertical, positif = haut",
+   "z": "transversal, demi-largeur, un seul hémicrâne"
+  },
+  "regions": {
+   "F": "face (24 points)",
+   "U": "voûte (22)",
+   "M": "mandibule (13)",
+   "B": "base du crâne (28)"
+  },
+  "fiable_0": [
+   "asti",
+   "pii",
+   "pti",
+   "fsh",
+   "per",
+   "spi",
+   "tda",
+   "tdp",
+   "VII",
+   "VIII",
+   "XIIe",
+   "XIIi"
+  ],
+  "outil": "fenart_croissance.py (charger, interpoler, deplacements, ajustements, planches SVG)",
+  "derive": "docs/fenart_derive.json"
+ },
+ "verification_sur_table": {
+  "_description": "similitude plane (k, θ) du stade A vers l'adulte autour de l'origine vestibulaire, par unité ; θ < 0 = haut vers l'arrière / occiput vers le bas",
+  "face_F": {
+   "k_adulte": 2.7,
+   "theta_adulte_deg": 8.7,
+   "k_2ans": 1.98,
+   "k_14ans": 2.45
+  },
+  "mandibule_M": {
+   "k_adulte": 3.21,
+   "theta_adulte_deg": 19.5,
+   "k_2ans": 2.01,
+   "k_14ans": 2.77
+  },
+  "voute_U": {
+   "k_adulte": 2.32,
+   "theta_adulte_deg": -3.3,
+   "k_2ans": 2.09,
+   "k_14ans": 2.27
+  },
+  "voute_posterieure": {
+   "k_adulte": 2.43,
+   "theta_adulte_deg": -5.9
+  },
+  "voute_anterieure": {
+   "k_adulte": 2.26,
+   "theta_adulte_deg": -1.5
+  },
+  "base_B": {
+   "k_adulte": 2.54,
+   "theta_adulte_deg": 0.1,
+   "k_largeur_frontal_adulte": 2.9
+  },
+  "tableau2_manuscrit": "non reproduit par la table (ni repère vestibulaire ni relatif au porion, pas de facteur constant) : la table fait foi"
+ }
 }
