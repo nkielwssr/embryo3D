@@ -6,6 +6,7 @@ Bibliothèque standard seulement (pas de numpy) : utilisable tel quel sur n'impo
 
     python embryo3d/fenart_croissance.py                       # contrôle du fichier + tableaux (déplacements, ajustements)
     python embryo3d/fenart_croissance.py --age 6.5             # coordonnées interpolées à 6,5 ans depuis la conception
+    python embryo3d/fenart_croissance.py --volumes                 # volumes d'enveloppe par secteur anatomique, aires par secteur angulaire
     python embryo3d/fenart_croissance.py --derive docs/fenart_derive.json --svg docs   # exports (JSON dérivé, planches SVG)
 
 Repère (vestibulaire, cf. docs/modele_croissance_fenart.md § 1 et § 2.4) : origine au milieu de l'axe de Perez ;
@@ -166,6 +167,169 @@ def ajustements(pts):
     return out
 
 
+# ---------------------------------------------------------------- volumes par secteur (enveloppes convexes)
+SECTEURS = {
+    "face (F)": ("F",), "mandibule (M)": ("M",), "voute (U)": ("U",), "base (B)": ("B",),
+    "neurocrane (U+B)": ("U", "B"), "viscerocrane (F+M)": ("F", "M"), "total": ("F", "U", "M", "B"),
+}
+
+
+def _cross(a, b):
+    return (a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0])
+
+
+def _sub(a, b):
+    return (a[0] - b[0], a[1] - b[1], a[2] - b[2])
+
+
+def _dot(a, b):
+    return a[0] * b[0] + a[1] * b[1] + a[2] * b[2]
+
+
+def enveloppe_convexe(points, eps=1e-9):
+    """Enveloppe convexe 3D d'une liste de points (algorithme incrémental, O(n²), suffisant pour ~200 points).
+    → liste de faces (i, j, k) orientées vers l'extérieur. Points coplanaires ou confondus tolérés."""
+    P = [tuple(float(c) for c in p) for p in points]
+    n = len(P)
+    if n < 4:
+        return []
+    # tétraèdre initial non dégénéré
+    i0 = 0
+    i1 = max(range(n), key=lambda i: _dot(_sub(P[i], P[i0]), _sub(P[i], P[i0])))
+    d01 = _sub(P[i1], P[i0])
+    i2 = max(range(n), key=lambda i: _dot(_cross(d01, _sub(P[i], P[i0])), _cross(d01, _sub(P[i], P[i0]))))
+    nrm = _cross(d01, _sub(P[i2], P[i0]))
+    if _dot(nrm, nrm) < eps:
+        return []
+    i3 = max(range(n), key=lambda i: abs(_dot(nrm, _sub(P[i], P[i0]))))
+    if abs(_dot(nrm, _sub(P[i3], P[i0]))) < eps:
+        return []
+    faces = [(i0, i1, i2), (i0, i2, i3), (i0, i3, i1), (i1, i3, i2)]
+    cen = tuple(sum(P[i][c] for i in (i0, i1, i2, i3)) / 4 for c in range(3))
+
+    def orient(f):
+        a, b, c = (P[i] for i in f)
+        return f if _dot(_cross(_sub(b, a), _sub(c, a)), _sub(a, cen)) > 0 else (f[0], f[2], f[1])
+
+    faces = [orient(f) for f in faces]
+
+    def visible(f, p):
+        a, b, c = (P[i] for i in f)
+        nf = _cross(_sub(b, a), _sub(c, a))
+        return _dot(nf, _sub(p, a)) > eps * math.sqrt(_dot(nf, nf))
+
+    for k in range(n):
+        if k in (i0, i1, i2, i3):
+            continue
+        vis = [f for f in faces if visible(f, P[k])]
+        if not vis:
+            continue
+        aretes = {}
+        for f in vis:
+            for e in ((f[0], f[1]), (f[1], f[2]), (f[2], f[0])):
+                aretes[e] = aretes.get(e, 0) + 1
+        horizon = [e for e in aretes if (e[1], e[0]) not in aretes]
+        faces = [f for f in faces if f not in vis] + [(u, v, k) for u, v in horizon]
+    return faces
+
+
+def volume_faces(points, faces):
+    """Volume (mm³) d'une surface fermée orientée vers l'extérieur."""
+    P = [tuple(float(c) for c in p) for p in points]
+    return abs(sum(_dot(P[a], _cross(P[b], P[c])) for a, b, c in faces)) / 6.0
+
+
+def volumes_par_secteur(pts):
+    """Volume de l'enveloppe convexe des points de chaque secteur (points pairs reflétés), à chaque stade.
+    Ce sont des volumes d'enveloppes de points de repère, pas des volumes anatomiques : sens relatif seulement."""
+    out = {}
+    for nom, regs in SECTEURS.items():
+        sel = [p for p in pts.values() if p["region"] in regs]
+        vols = []
+        for i in range(len(STADES)):
+            Q = []
+            for p in sel:
+                x, y, z = p["xyz"][i]
+                Q.append((x, y, z))
+                if p["pair"]:
+                    Q.append((x, y, -z))
+            vols.append(volume_faces(Q, enveloppe_convexe(Q)))
+        vA, vAd = vols[0], vols[-1]
+        out[nom] = {"n_points_hemicrane": len(sel), "volume_mm3": [round(v) for v in vols],
+                    "rapport_a_5mois": [round(v / vA, 3) if vA else None for v in vols],
+                    "fraction_adulte": [round(v / vAd, 3) if vAd else None for v in vols],
+                    "facteur_lineaire_equivalent": [round((v / vA) ** (1 / 3), 3) if vA else None for v in vols]}
+    tot = out["total"]["volume_mm3"]
+    for nom in out:
+        out[nom]["part_du_total"] = [round(v / t, 3) if t else None for v, t in zip(out[nom]["volume_mm3"], tot)]
+    return out
+
+
+# ---------------------------------------------------------------- aires par secteur angulaire (plan sagittal)
+SECTEURS_ANGULAIRES = [  # (nom, angle début, angle fin) en degrés, 0 = vers l'avant, 90 = vers le haut, sens trigonométrique
+    ("avant-bas (face inf., mandibule)", -90, -30), ("avant (face sup.)", -30, 30), ("avant-haut (front)", 30, 90),
+    ("arrière-haut (voûte post.)", 90, 150), ("arrière (occiput)", 150, 210), ("bas (base)", 210, 270),
+]
+
+
+def _hull2d(points):
+    pts2 = sorted(set(points))
+    if len(pts2) < 3:
+        return pts2
+    def cr(o, a, b): return (a[0] - o[0]) * (b[1] - o[1]) - (a[1] - o[1]) * (b[0] - o[0])
+    lo, up = [], []
+    for p in pts2:
+        while len(lo) >= 2 and cr(lo[-2], lo[-1], p) <= 0: lo.pop()
+        lo.append(p)
+    for p in reversed(pts2):
+        while len(up) >= 2 and cr(up[-2], up[-1], p) <= 0: up.pop()
+        up.append(p)
+    return lo[:-1] + up[:-1]
+
+
+def _clip(poly, a, b):
+    """Sutherland–Hodgman : garde la partie du polygone à gauche de la droite orientée a→b."""
+    def inside(p): return (b[0] - a[0]) * (p[1] - a[1]) - (b[1] - a[1]) * (p[0] - a[0]) >= 0
+    def inter(p, q):
+        d1 = (b[0] - a[0]) * (p[1] - a[1]) - (b[1] - a[1]) * (p[0] - a[0])
+        d2 = (b[0] - a[0]) * (q[1] - a[1]) - (b[1] - a[1]) * (q[0] - a[0])
+        t = d1 / (d1 - d2)
+        return (p[0] + t * (q[0] - p[0]), p[1] + t * (q[1] - p[1]))
+    out = []
+    for i, q in enumerate(poly):
+        p = poly[i - 1]
+        if inside(q):
+            if not inside(p): out.append(inter(p, q))
+            out.append(q)
+        elif inside(p):
+            out.append(inter(p, q))
+    return out
+
+
+def _aire(poly):
+    return abs(sum(poly[i - 1][0] * poly[i][1] - poly[i][0] * poly[i - 1][1] for i in range(len(poly)))) / 2
+
+
+def aires_par_secteur_angulaire(pts):
+    """Aire de l'enveloppe convexe du profil (tous les points, projection sagittale) découpée en secteurs angulaires
+    autour de l'origine vestibulaire : où la croissance se dépose, en mm² et en part de l'aire totale, par stade."""
+    out = {"secteurs": [n for n, _, _ in SECTEURS_ANGULAIRES], "stades": []}
+    for i, (code, _, age, lib) in enumerate(STADES):
+        prof = [(-p["xyz"][i][0], p["xyz"][i][1]) for p in pts.values()]   # u = vers l'avant, v = vers le haut
+        H = _hull2d(prof)
+        tot = _aire(H)
+        aires = []
+        for _, a0, a1 in SECTEURS_ANGULAIRES:
+            r = 1000.0
+            d0 = (r * math.cos(math.radians(a0)), r * math.sin(math.radians(a0)))
+            d1 = (r * math.cos(math.radians(a1)), r * math.sin(math.radians(a1)))
+            poly = _clip(_clip(H, (0.0, 0.0), d0), d1, (0.0, 0.0))
+            aires.append(_aire(poly))
+        out["stades"].append({"stade": code, "age": age, "libelle": lib, "aire_totale_mm2": round(tot),
+                              "aires_mm2": [round(a) for a in aires], "parts": [round(a / tot, 3) for a in aires]})
+    return out
+
+
 def _svg_trajets(pts, plan, chemin):
     """Planche SVG des trajets 5 mois → adulte : plan 'profil' (x,y) ou 'face' (z,y, avec miroir). Couleur par région."""
     coul = {"F": "#d62828", "U": "#2f6fd6", "M": "#2a9d3f", "B": "#8c5a2b"}
@@ -212,6 +376,7 @@ def main(argv=None):
     ap.add_argument("--postnatal", action="store_true", help="--age est un âge postnatal (ans après la naissance)")
     ap.add_argument("--derive", help="écrit le JSON dérivé (déplacements, ajustements) à ce chemin")
     ap.add_argument("--svg", help="dossier où écrire fenart_trajets_profil.svg et fenart_trajets_face.svg")
+    ap.add_argument("--volumes", action="store_true", help="volumes d'enveloppe convexe par secteur anatomique et aires par secteur angulaire")
     ap.add_argument("--json", action="store_true", help="sortie JSON au lieu des tableaux texte")
     a = ap.parse_args(argv)
     pts = charger(a.csv)
@@ -224,17 +389,33 @@ def main(argv=None):
             for nom in sorted(q): print(f"{nom:7s} {q[nom][0]:7.1f} {q[nom][1]:7.1f} {q[nom][2]:7.1f}")
         return 0
     dep, aj = deplacements(pts), ajustements(pts)
+    vol, sect = volumes_par_secteur(pts), aires_par_secteur_angulaire(pts)
     if a.derive:
         with open(a.derive, "w", encoding="utf-8") as f:
             json.dump({"_source": os.path.relpath(a.csv, ICI), "_description": "Dérivés du fichier de coordonnées de Fenart (fenart_croissance.py) : déplacements et âges à 50/90 % par point, similitudes par unité et stade.",
                        "stades": [{"code_csv": c, "code_manuscrit": m, "age_conception": ag, "libelle": l} for c, m, ag, l in STADES],
-                       "n_points": len(pts), "n_medians": n_med, "n_pairs": n_pair, "deplacements": dep, "ajustements": aj}, f, ensure_ascii=False, indent=1)
+                       "n_points": len(pts), "n_medians": n_med, "n_pairs": n_pair, "deplacements": dep, "ajustements": aj,
+                       "volumes_par_secteur": vol, "aires_par_secteur_angulaire": sect}, f, ensure_ascii=False, indent=1)
         print(f"→ {a.derive}")
     if a.svg:
         for plan in ("profil", "face"):
             ch = os.path.join(a.svg, f"fenart_trajets_{plan}.svg"); _svg_trajets(pts, plan, ch); print(f"→ {ch}")
     if a.json:
-        print(json.dumps({"deplacements": dep, "ajustements": aj}, ensure_ascii=False, indent=1)); return 0
+        print(json.dumps({"deplacements": dep, "ajustements": aj, "volumes_par_secteur": vol, "aires_par_secteur_angulaire": sect}, ensure_ascii=False, indent=1)); return 0
+    if a.volumes:
+        print("Volumes des enveloppes convexes des points de repère par secteur (cm³ ; points pairs reflétés). Enveloppes de points, pas volumes anatomiques :"
+              " seuls les rapports ont un sens. k_eq = (V/V_5mois)^(1/3), à comparer au facteur k des similitudes.")
+        codes = [st[0] for st in STADES]
+        for nom, v in vol.items():
+            print(f"\n{nom} — {v['n_points_hemicrane']} points (hémicrâne)")
+            print(f"{'stade':6s} {'âge':>6s} {'V cm³':>7s} {'V/V_A':>6s} {'%adulte':>7s} {'k_eq':>6s} {'%total':>6s}")
+            for i, c in enumerate(codes):
+                print(f"{c:6s} {STADES[i][2]:6.2f} {v['volume_mm3'][i] / 1000:7.1f} {v['rapport_a_5mois'][i]:6.2f} {100 * v['fraction_adulte'][i]:7.1f} {v['facteur_lineaire_equivalent'][i]:6.3f} {100 * v['part_du_total'][i]:6.1f}")
+        print("\nAire du profil (enveloppe convexe sagittale de tous les points) par secteur angulaire autour de l'origine vestibulaire (cm² et % de l'aire) :")
+        print(f"{'stade':6s} {'total':>6s}  " + "  ".join(f"{n.split(' (')[0]:>12s}" for n in sect["secteurs"]))
+        for l in sect["stades"]:
+            print(f"{l['stade']:6s} {l['aire_totale_mm2'] / 100:6.1f}  " + "  ".join(f"{a / 100:5.1f} {100 * p:4.0f}%" for a, p in zip(l["aires_mm2"], l["parts"])))
+        return 0
     print(f"{len(pts)} points ({n_med} médians, {n_pair} pairs), {len(STADES)} stades, fichier cohérent.\n")
     print("Déplacements 5 mois fœtal → adulte (mm) et âge postnatal (ans) à 50 % / 90 % du chemin, par région :")
     for r, lib in REGIONS.items():

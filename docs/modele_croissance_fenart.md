@@ -188,12 +188,14 @@ foramen spinosum. Non identifiés : `ae`, `ai`, `cpp`, `py`, `me` (bilatéral, m
 
 Outils : `fenart_croissance.py` (bibliothèque standard seulement) lit la table, la vérifie, interpole les coordonnées
 à un âge quelconque (linéaire par morceaux en log-âge, option miroir pour les deux côtés), calcule déplacements, âges à
-50/90 % et similitudes par unité (§ 4.4) et trace les planches `docs/fenart_trajets_profil.svg` et
-`docs/fenart_trajets_face.svg` ; `docs/fenart_derive.json` est sa sortie complète.
+50/90 %, similitudes par unité (§ 4.3), volumes d'enveloppe convexe par secteur et aires par secteur angulaire
+(§ 4.4) et trace les planches `docs/fenart_trajets_profil.svg` et `docs/fenart_trajets_face.svg` ;
+`docs/fenart_derive.json` est sa sortie complète.
 
 ```bash
 python embryo3d/fenart_croissance.py                                   # contrôle + tableaux
 python embryo3d/fenart_croissance.py --age 6 --postnatal [--json]      # coordonnées à 6 ans postnatals
+python embryo3d/fenart_croissance.py --volumes                         # volumes par secteur, aires par secteur angulaire
 python embryo3d/fenart_croissance.py --derive docs/fenart_derive.json --svg docs
 ```
 
@@ -336,7 +338,58 @@ Lecture, en regard des § 3 et 4 :
   relatives au porion (Gl 71, Br 74, Pg 96, Mas 27, Ce 6,5, Po 0) ; aucun facteur constant ne les relie. Le tableau 2
   est l'une des parties marquées « à vérifier » : **la table CSV fait foi** pour nos usages.
 
-### 4.4 Proportions corporelles (rappels du chapitre, utiles pour l'axe du viewer)
+### 4.4 Volumes par secteur (`fenart_croissance.py --volumes`)
+
+Volume de l'**enveloppe convexe des points de repère** de chaque secteur, points pairs reflétés, à chaque stade. Ce
+sont des enveloppes de points, pas des volumes anatomiques (l'enveloppe des 22 points de la voûte vaut 890 cm³ chez
+l'adulte, contre ~1 400 cm³ de capacité crânienne réelle, et celle de la base est une lame mince) : **seuls les
+rapports ont un sens**. k_eq = (V/V_5 mois)^1/3 est le facteur linéaire équivalent, à comparer au k des similitudes
+(§ 4.3).
+
+| Secteur | V 5 mois → adulte (cm³) | × | % du volume adulte à la naissance / 2 ans / 4 ans / 14 ans | part du total 5 mois → adulte | k_eq | k (§ 4.3) |
+|---|---|---|---|---|---|---|
+| Voûte U | 75 → 889 | 11,9 | 32 / **73** / 84 / 91 | **70 % → 48 %** | 2,28 | 2,32 |
+| Base B | 4 → 168 | 39 | 11 / 24 / 33 / 66 | 4 % → 9 % | 3,40 | 2,54 |
+| Face F | 11 → 280 | 25 | 13 / 30 / 43 / 70 | 10 % → 15 % | 2,94 | 2,70 |
+| Mandibule M | 6 → 301 | 48 | 10 / 24 / 37 / 71 | 6 % → 16 % | 3,63 | 3,21 |
+| Neurocrâne U+B | 84 → 1 203 | 14,3 | 26 / 60 / 70 / 85 | 78 % → 66 % | 2,43 | — |
+| Viscérocrâne F+M | 18 → 604 | 34 | 12 / 28 / 41 / 71 | **16 % → 33 %** | 3,24 | — |
+| Total | 107 → 1 834 | 17,1 | 22 / 51 / 62 / 82 | 100 % | 2,58 | — |
+
+Lecture :
+
+- La **voûte** a fait les trois quarts de sa croissance volumique à 2 ans et 90 % à 14 ans ; son k_eq (2,28) coïncide
+  avec le k de la similitude (2,32) : croissance **isotrope**, l'homothétie décrit bien ce secteur.
+- Le **viscérocrâne double sa part** du volume total (16 % → 33 %) ; à 2 ans il n'en est qu'à 28 % de son volume
+  adulte, à 4 ans 41 %, et la **moitié de sa croissance se fait après 7 ans**. C'est l'expression volumique du passage
+  de 25 % à 40 % de hauteur faciale sous Francfort (§ 3.2).
+- Face et mandibule ont un k_eq **supérieur** à leur k de similitude (2,94 contre 2,70 ; 3,63 contre 3,21) : leur
+  volume croît plus vite qu'une homothétie, parce que leur croissance est **anisotrope**, surtout verticale (en
+  frontal, hauteur × 3,6 contre largeur × 2,4 pour la face).
+- La **base** : le facteur 39 et k_eq 3,40 sont des artefacts de la lame mince (la descente de la mastoïde et des
+  condyles épaissit l'enveloppe) ; retenir plutôt sa part stable (4 → 9 %) et le k planaire de 2,54.
+- Le **total** atteint la moitié de son volume adulte à 2 ans, mais ce chiffre mélange une voûte presque finie et une
+  face à peine commencée : c'est l'hétérochronie du § 4.1 vue en volume.
+
+Aire du profil (enveloppe convexe sagittale de tous les points) par **secteur angulaire autour de l'origine
+vestibulaire**, en part de l'aire totale (0° = vers l'avant, sens trigonométrique) :
+
+| Secteur (angles) | 5 mois | naissance | 4 ans | 14 ans | adulte |
+|---|---|---|---|---|---|
+| avant-bas, face inférieure et mandibule (−90° à −30°) | 11 % | 11 % | 15 % | 19 % | **23 %** |
+| avant, face supérieure (−30° à 30°) | 27 % | 25 % | 23 % | 23 % | 23 % |
+| avant-haut, front (30° à 90°) | **33 %** | 32 % | 29 % | 26 % | 23 % |
+| arrière-haut, voûte postérieure (90° à 150°) | 24 % | 26 % | 22 % | 20 % | 18 % |
+| arrière, occiput (150° à 210°) | 4 % | 5 % | 7 % | 7 % | 8 % |
+| bas, base (210° à 270°) | 1 % | 2 % | 3 % | 4 % | 5 % |
+| aire totale (cm²) | 34 | 87 | 185 | 217 | 252 |
+
+Vu de l'origine vestibulaire, la croissance **se dépose en avant-bas** (le secteur mandibulaire double sa part) et
+dans la moitié inférieure en général (occiput, base), aux dépens des secteurs frontal et pariétal postérieur : la tête
+fœtale « trapézoïde à base supérieure » devient l'ovoïde adulte (§ 3.3). Le secteur de la face supérieure (nasion,
+orbites, piriforme) garde une part constante, en accord avec l'écart inter-orbitaire fixe.
+
+### 4.5 Proportions corporelles (rappels du chapitre, utiles pour l'axe du viewer)
 
 - Tête + cou = moitié de la longueur du corps chez l'embryon de 3 semaines ; hauteur de la tête = 1/4 de la taille
   à la naissance et jusqu'à 1 an, 1/3 (sic, tel quel dans le chapitre) à 3 ans, 1/6 à 5 ans, 1/7 à 10 ans, 1/8 adulte.
@@ -430,7 +483,7 @@ en mm. Usage prévu :
 Si l'on veut malgré tout une version compacte (sans les 87 points), les similitudes du § 4.3 donnent un modèle à
 quatre blocs : base = homothétie k_B(t) ; voûte = homothétie k_U(t) + rotation −3° portée par la moitié postérieure ;
 face = homothétie k_F(t) ; mandibule = homothétie k_M(t) + rotation +20° ; le tout autour de l'origine vestibulaire.
-Ces paramètres sont dans `docs/fenart_derive.json` (clé `ajustements`).
+Ces paramètres sont dans `docs/fenart_derive.json` (clés `ajustements`, `volumes_par_secteur`, `aires_par_secteur_angulaire`).
 
 ### 7.4 Ce qui manque encore
 

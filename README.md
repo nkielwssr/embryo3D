@@ -191,5 +191,6 @@ commun embryon → adulte : l'axe de Perez porté par les deux `vesicules_otique
 Les **coordonnées vestibulaires des 87 points × 9 stades** sont dans `docs/coordonnees_fenart.csv` ;
 `fenart_croissance.py` (bibliothèque standard) les vérifie, interpole à tout âge (`--age 6 --postnatal`), calcule
 déplacements et similitudes par unité (face = homothétie ×2,7 ; mandibule ×3,2 + rotation 20° ; voûte ×2,3 atteinte à
-90 % à 2 ans, bascule arrière −3° ; base ×2,5 sans rotation) et trace `docs/fenart_trajets_{profil,face}.svg` ;
-sortie complète dans `docs/fenart_derive.json`. Les trois documents sources (copyright, brouillon) ne sont pas versés.
+90 % à 2 ans, bascule arrière −3° ; base ×2,5 sans rotation), les volumes d'enveloppe par secteur (`--volumes` : la
+voûte a fait 73 % de son volume à 2 ans, le viscérocrâne passe de 16 % à 33 % du total) et trace
+`docs/fenart_trajets_{profil,face}.svg` ; sortie complète dans `docs/fenart_derive.json`. Les trois documents sources (copyright, brouillon) ne sont pas versés.
