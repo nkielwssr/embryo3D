@@ -179,3 +179,14 @@ Si `out/topographie/video360/etages_imposes.json` existe (session Extraction squ
 
 ## Membres séparés
 `split_membres.py <stade>` sépare le label `membres` en `membre_sup_gauche`, `membre_sup_droit`, `membre_inf_gauche`, `membre_inf_droit` (2 plus grosses composantes de chaque côté du plan médian, la plus crâniale = supérieur) dans `labels.npz` ; `meshexport` les exporte (collection Membres) et la scène maître les morphe pièce par pièce. Contrôle du morphing : `planche_morph.py sortie.png [stades]` ; vidéo : `blender_render_anim.py` (séquence PNG, caméra fixe cadrée sur CS20, option `--suivre`) puis `encode_frames.py`.
+
+## Modèle de croissance céphalique au-delà de CS23 (Fenart, référentiel vestibulaire — 01/10/2026)
+Synthèse des trois documents fournis (Pellerin 2026, chapitre Captier & Boë, manuscrit Captier et al.) dans
+`docs/modele_croissance_fenart.md` ; données structurées dans `docs/modele_croissance_fenart.json` (9 stades de 5 mois
+fœtal à l'adulte placés sur l'axe « jours post-fécondation », 40 points de repère par unité anatomique, distances
+parcourues et âge à 90 %, phases de vitesse, règles par unité EC / F, correspondance avec nos labels). Points clés :
+expansion radiale depuis le porion pour toute la tête, rotation arrière-bas du seul neurocrâne postérieur, voûte à
+90 % de son trajet avant 2 ans, mandibule jusqu'à ~19 ans, écart inter-orbitaire constant. Piste retenue pour un repère
+commun embryon → adulte : l'axe de Perez porté par les deux `vesicules_otiques` (§ 7.1 du document). Les coordonnées
+des 142 points de Fenart ne sont pas dans les documents lus : à obtenir (Fenart & Biecq-Sellier 2004, Fenart 2006).
+Les sources elles-mêmes (copyright, brouillon) ne sont pas versées dans le dépôt.

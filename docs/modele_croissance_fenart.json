@@ -1,0 +1,706 @@
+{
+ "_description": "Modèle de croissance céphalique de Fenart (référentiel vestibulaire) relu par Captier & Boë : stades, points de repère, distances parcourues, phases de vitesse et règles qualitatives par unité de croissance. Voir docs/modele_croissance_fenart.md pour le contexte, les sources et les réserves. Les coordonnées des 142 points ne sont PAS dans ce fichier (non fournies par les sources lues).",
+ "version": "2026-10-01",
+ "sources": [
+  {
+   "id": "pellerin2026",
+   "type": "article",
+   "ref": "Pellerin P. Creating an Atlas of Growing Skull Templates in Vestibular Orientation for Analysis of Craniofacial Malformations. J Craniofac Surg 2026;37:16-19",
+   "doi": "10.1097/SCS.0000000000012132"
+  },
+  {
+   "id": "captier_boe_chapitre",
+   "type": "chapitre",
+   "ref": "Captier G., Boë L.-J. Croissance générale et céphalique. In: Chirurgie plastique de l'enfant et de l'adolescent, p. 75-93"
+  },
+  {
+   "id": "captier_manuscrit",
+   "type": "manuscrit (brouillon, chiffres à vérifier)",
+   "ref": "Captier G., Subsol G., Laporte M., Boë L.-J. 3D ontogenetic trajectories of the human skull from prenatal to adulthood: heterochrony (titre provisoire)"
+  },
+  {
+   "id": "fenart2004",
+   "type": "article (non lu, source des coordonnées)",
+   "ref": "Fenart R., Biecq-Sellier M. Trajets ontogéniques des points du squelette céphalique. International Orthodontics 2004;2(4):265-278"
+  },
+  {
+   "id": "fenart2006",
+   "type": "ouvrage (non lu, source des coordonnées)",
+   "ref": "Fenart R. Ontogenèse craniométrique vestibulaire. Lille, Reproflash, 2006"
+  }
+ ],
+ "reperes": {
+  "vestibulaire": {
+   "horizontal": "plan des deux canaux semi-circulaires latéraux",
+   "axe_perez": "droite joignant les deux canaux semi-circulaires latéraux (gauche-droite)",
+   "frontal": "orthogonal à l'horizontal, contenant l'axe de Perez",
+   "sagittal": "orthogonal aux deux autres, par le milieu de l'axe de Perez",
+   "origine": "milieu de l'axe de Perez",
+   "utilise_par": [
+    "fenart2004",
+    "fenart2006",
+    "pellerin2026"
+   ]
+  },
+  "francfort": {
+   "horizontal": "deux porions + deux points orbitaires inférieurs",
+   "frontal": "orthogonal, par les deux porions",
+   "sagittal": "par les points impairs médians",
+   "origine": "porion (chapitre) ou intersection des plans (manuscrit)",
+   "utilise_par": [
+    "captier_boe_chapitre",
+    "captier_manuscrit"
+   ],
+   "note": "obtenu par rotation rigide des données vestibulaires de Fenart ; les trajets sont inchangés à cette rotation près"
+  },
+  "embryo3d_equivalent_propose": {
+   "axe_perez": "droite joignant les centres des deux labels vesicules_otiques",
+   "sagittal": "plan médian de notochorde / ventricules",
+   "horizontal": "plan contenant l'axe de Perez et l'extrémité rostrale de la notochorde (région hypophysaire)",
+   "statut": "proposition, non implémentée"
+  }
+ },
+ "echantillon": {
+  "type": "transversal, crânes secs entiers avec mandibule, sans distinction de sexe",
+  "laboratoire": "Craniologie comparée, Faculté libre de médecine de Lille",
+  "n_points_total": 142,
+  "n_points_impairs": 32,
+  "n_paires": 55,
+  "n_points_analyses_hemicrane": 87,
+  "individus_par_stade": "environ 30 (à préciser selon le manuscrit)"
+ },
+ "stades": [
+  {
+   "code": "A",
+   "label": "5 mois fœtal",
+   "age_ans": -0.35,
+   "jours_post_fecondation_approx": 140,
+   "denture": null
+  },
+  {
+   "code": "B",
+   "label": "7 mois fœtal",
+   "age_ans": -0.19,
+   "jours_post_fecondation_approx": 196,
+   "denture": null
+  },
+  {
+   "code": "C",
+   "label": "naissance",
+   "age_ans": 0.0,
+   "jours_post_fecondation_approx": 266,
+   "denture": null
+  },
+  {
+   "code": "D",
+   "label": "8 mois 1/2",
+   "age_ans": 0.71,
+   "jours_post_fecondation_approx": 525,
+   "denture": "temporaire en constitution"
+  },
+  {
+   "code": "E",
+   "label": "2 ans",
+   "age_ans": 2.0,
+   "jours_post_fecondation_approx": 996,
+   "denture": "temporaire stable"
+  },
+  {
+   "code": "F",
+   "label": "4 ans",
+   "age_ans": 4.0,
+   "jours_post_fecondation_approx": 1726,
+   "denture": "temporaire stable"
+  },
+  {
+   "code": "G",
+   "label": "8 ans 1/2",
+   "age_ans": 8.5,
+   "jours_post_fecondation_approx": 3370,
+   "denture": "mixte"
+  },
+  {
+   "code": "H",
+   "label": "14 ans",
+   "age_ans": 14.0,
+   "jours_post_fecondation_approx": 5380,
+   "denture": "adolescente (M2)"
+  },
+  {
+   "code": "Ad",
+   "label": "adulte",
+   "age_ans": 65.0,
+   "jours_post_fecondation_approx": null,
+   "denture": "adulte",
+   "note": "crânes d'environ 65 ans (manuscrit) : remodelage sénile de l'orbite"
+  }
+ ],
+ "stades_note": "age_ans négatif = prénatal (années avant la naissance, naissance à J266 post-fécondation) ; jours = mois fœtaux comptés depuis la fécondation, pour placer les stades sur l'axe J0-J91 du viewer, pas pour dater finement",
+ "unites": {
+  "EC": {
+   "nom": "crâne cérébral (calvaria + encéphale)",
+   "points_chapitre": "12-20",
+   "moteur": "croissance encéphalique (supra- et infra-tentoriel)",
+   "profil": "rapide et précoce ; 90 % du trajet de la voûte avant 2 ans",
+   "mouvement_profil": "expansion radiale depuis le porion + rotation : arrière pour vertex/lambda, bas pour opisthocrânion/inion/opisthion ; pas de rotation au front",
+   "mouvement_face": "expansion radiale ; euryon tourne vers le bas après 2 ans ; de 4 à 14 ans croissance latérale seulement, sommet fixe"
+  },
+  "F": {
+   "nom": "crâne facial (massif facial + mandibule)",
+   "points_chapitre": "1-12",
+   "moteur": "alimentation, ventilation, parole ; maintien de l'occlusion",
+   "profil": "lent et prolongé jusqu'à la fin de l'adolescence",
+   "mouvement_profil": "expansion radiale quasi exclusive, en bas et en avant ; trajets rectilignes ; divergence autour de la cavité nasale (fronto-nasal vers le haut, maxillo-mandibulaire vers le bas) ; gonion vertical après la naissance",
+   "mouvement_face": "déplacements verticaux > neurocrâne ; écart inter-orbitaire constant ; piriforme peu élargi ; gonion et orbites élargis après 14 ans"
+  },
+  "base": {
+   "nom": "base du crâne (socle commun)",
+   "profil": "lente, génétique, sensible à la GH ; synchondrose sphéno-occipitale active jusqu'à la puberté (bas-arrière) ; mastoïde descend et s'écarte jusqu'à 14 ans puis se médialise"
+  }
+ },
+ "proportions": {
+  "hauteur_face_sous_francfort_sur_hauteur_tete": {
+   "naissance": 0.25,
+   "adulte": 0.4,
+   "mi_chemin_ans": 4
+  },
+  "hauteur_tete_sur_stature": {
+   "naissance": 0.25,
+   "1_an": 0.25,
+   "3_ans": 0.333,
+   "5_ans": 0.167,
+   "10_ans": 0.143,
+   "adulte": 0.125,
+   "note": "valeurs telles que données dans le chapitre (1/4, 1/3 sic, 1/6, 1/7, 1/8)"
+  },
+  "forme_face": {
+   "foetus": "trapézoïde à base supérieure",
+   "adulte": "ovoïde allongé"
+  }
+ },
+ "acp_manuscrit_a_verifier": {
+  "variance_2_composantes": ">= 0.985",
+  "profil": {
+   "PC1": {
+    "part": 0.84,
+    "sens": "expansion radiale"
+   },
+   "PC2": {
+    "part": 0.12,
+    "sens": "rotation postérieure (dorsale et caudale) du neurocrâne"
+   }
+  },
+  "face": {
+   "PC1": {
+    "sens": "composante verticale, plus marquée au maxillo-facial"
+   },
+   "PC2": {
+    "sens": "composante transversale, élargissement homogène, inter-orbitaire et nez inchangés"
+   }
+  }
+ },
+ "phases_vitesse": [
+  {
+   "stades": "A-B",
+   "ages_ans": [
+    -0.35,
+    -0.19
+   ],
+   "type": "synchrone",
+   "description": "toutes les vitesses ralentissent jusqu'à 7 mois fœtal puis remontent vers la naissance"
+  },
+  {
+   "stades": "B-G",
+   "ages_ans": [
+    -0.19,
+    8.5
+   ],
+   "type": "asynchrone",
+   "description": "accélération jusque vers 7-8 mois postnatals (vertex, lambda les plus rapides), décroissance jusqu'à 8,5 ans, regain discret à 4 ans (symphyse, nasion), gonion quasi constant"
+  },
+  {
+   "stades": "G-Ad",
+   "ages_ans": [
+    8.5,
+    20
+   ],
+   "type": "synchrone",
+   "description": "pic pubertaire après 14 ans (symphyse >> inion, nasion, lambda, vertex, ant) puis chute jusqu'à la taille adulte ; le manuscrit écrit 'à part l'inion' mais la courbe de l'inion montre aussi un pic : à trancher"
+  }
+ ],
+ "reperes_generaux": {
+  "cerveau": "très rapide chez le nourrisson, ralentit fortement à 2,5 ans, 95 % à 7 ans, pas de pic pubertaire (profil neural de Scammon)",
+  "calvaria": "rapide, dépend de l'encéphale",
+  "base": "lente, génétique",
+  "face": "lente, prolongée, multifactorielle (occlusion)",
+  "chondrocrane": "mature et continu à CS23 ; croissance prénatale multidirectionnelle depuis la synchondrose intra-sphénoïdale ; fixe largeur et longueur de la base",
+  "limite_hox": "tuberculum sellae : champ facial non-Hox en avant, champ vertébral Hox+ en arrière"
+ },
+ "points": [
+  {
+   "unite": "calvaria",
+   "nom": "Glabelle",
+   "abr": "Gl",
+   "median": true,
+   "bilateral": false,
+   "remarque": null
+  },
+  {
+   "unite": "calvaria",
+   "nom": "Pré-vestibion",
+   "abr": "PV",
+   "median": true,
+   "bilateral": false,
+   "remarque": "construit"
+  },
+  {
+   "unite": "calvaria",
+   "nom": "Frontal antérieur vestibien",
+   "abr": "Ant",
+   "median": true,
+   "bilateral": false,
+   "remarque": "construit"
+  },
+  {
+   "unite": "calvaria",
+   "nom": "Bregma exocrânien",
+   "abr": "Br",
+   "median": true,
+   "bilateral": false,
+   "remarque": null
+  },
+  {
+   "unite": "calvaria",
+   "nom": "Vertex vestibien",
+   "abr": "Ve",
+   "median": true,
+   "bilateral": false,
+   "remarque": "construit"
+  },
+  {
+   "unite": "calvaria",
+   "nom": "Lambda exocrânien",
+   "abr": "La",
+   "median": true,
+   "bilateral": false,
+   "remarque": null
+  },
+  {
+   "unite": "calvaria",
+   "nom": "Opisthocrânion",
+   "abr": "Opc",
+   "median": true,
+   "bilateral": false,
+   "remarque": null
+  },
+  {
+   "unite": "calvaria",
+   "nom": "Euryon",
+   "abr": "Eu",
+   "median": false,
+   "bilateral": true,
+   "remarque": null
+  },
+  {
+   "unite": "calvaria",
+   "nom": "non identifié dans le brouillon",
+   "abr": "Cr",
+   "median": false,
+   "bilateral": true,
+   "remarque": null
+  },
+  {
+   "unite": "base",
+   "nom": "Nasion",
+   "abr": "Na",
+   "median": true,
+   "bilateral": false,
+   "remarque": null
+  },
+  {
+   "unite": "base",
+   "nom": "Centre de la selle turcique",
+   "abr": "S",
+   "median": true,
+   "bilateral": false,
+   "remarque": "noté SI dans le brouillon (homonyme de la symphyse)"
+  },
+  {
+   "unite": "base",
+   "nom": "Basion",
+   "abr": "Ba",
+   "median": true,
+   "bilateral": false,
+   "remarque": null
+  },
+  {
+   "unite": "base",
+   "nom": "Inion",
+   "abr": "In",
+   "median": true,
+   "bilateral": false,
+   "remarque": null
+  },
+  {
+   "unite": "base",
+   "nom": "Opisthion",
+   "abr": "Opt",
+   "median": true,
+   "bilateral": false,
+   "remarque": null
+  },
+  {
+   "unite": "base",
+   "nom": "Porion",
+   "abr": "Po",
+   "median": false,
+   "bilateral": true,
+   "remarque": "origine du repère de Francfort, déplacement nul"
+  },
+  {
+   "unite": "base",
+   "nom": "Processus mastoïde",
+   "abr": "Mas",
+   "median": false,
+   "bilateral": true,
+   "remarque": null
+  },
+  {
+   "unite": "base",
+   "nom": "Foramen lacerum",
+   "abr": "tda",
+   "median": false,
+   "bilateral": true,
+   "remarque": null
+  },
+  {
+   "unite": "base",
+   "nom": "Foramen jugulaire",
+   "abr": "tdp",
+   "median": false,
+   "bilateral": true,
+   "remarque": null
+  },
+  {
+   "unite": "base",
+   "nom": "Méat acoustique interne",
+   "abr": "VIII",
+   "median": false,
+   "bilateral": true,
+   "remarque": null
+  },
+  {
+   "unite": "face",
+   "nom": "Épine nasale antérieure",
+   "abr": "ENA",
+   "median": true,
+   "bilateral": false,
+   "remarque": null
+  },
+  {
+   "unite": "face",
+   "nom": "Épine nasale postérieure",
+   "abr": null,
+   "median": true,
+   "bilateral": false,
+   "remarque": null
+  },
+  {
+   "unite": "face",
+   "nom": "Rhinion",
+   "abr": "Rh",
+   "median": true,
+   "bilateral": false,
+   "remarque": null
+  },
+  {
+   "unite": "face",
+   "nom": "Maxillo-zygomatique",
+   "abr": "MMI",
+   "median": false,
+   "bilateral": true,
+   "remarque": null
+  },
+  {
+   "unite": "face",
+   "nom": "Naso-maxillaire",
+   "abr": "NM",
+   "median": false,
+   "bilateral": true,
+   "remarque": null
+  },
+  {
+   "unite": "face",
+   "nom": "Narinaire",
+   "abr": "Nae",
+   "median": false,
+   "bilateral": true,
+   "remarque": null
+  },
+  {
+   "unite": "face",
+   "nom": "Largeur maxillaire maximale",
+   "abr": "Mac",
+   "median": false,
+   "bilateral": true,
+   "remarque": null
+  },
+  {
+   "unite": "face",
+   "nom": "Largeur maxillaire canine-incisive",
+   "abr": "Mi",
+   "median": false,
+   "bilateral": true,
+   "remarque": null
+  },
+  {
+   "unite": "face",
+   "nom": "Prosthion",
+   "abr": "Pr",
+   "median": true,
+   "bilateral": false,
+   "remarque": null
+  },
+  {
+   "unite": "orbite",
+   "nom": "Orbitaire externe",
+   "abr": "Oex",
+   "median": false,
+   "bilateral": true,
+   "remarque": null
+  },
+  {
+   "unite": "orbite",
+   "nom": "Orbitaire inférieur",
+   "abr": "Oif",
+   "median": false,
+   "bilateral": true,
+   "remarque": "plan de Francfort"
+  },
+  {
+   "unite": "orbite",
+   "nom": "Orbitaire médian",
+   "abr": "Om",
+   "median": false,
+   "bilateral": true,
+   "remarque": null
+  },
+  {
+   "unite": "orbite",
+   "nom": "Orbitaire interne (dacryon)",
+   "abr": "Oit",
+   "median": false,
+   "bilateral": true,
+   "remarque": null
+  },
+  {
+   "unite": "orbite",
+   "nom": "Orbitaire supérieur",
+   "abr": "Os",
+   "median": false,
+   "bilateral": true,
+   "remarque": null
+  },
+  {
+   "unite": "mandibule",
+   "nom": "non identifié dans le brouillon",
+   "abr": "De",
+   "median": true,
+   "bilateral": false,
+   "remarque": null
+  },
+  {
+   "unite": "mandibule",
+   "nom": "Infradentale",
+   "abr": "Id",
+   "median": true,
+   "bilateral": false,
+   "remarque": null
+  },
+  {
+   "unite": "mandibule",
+   "nom": "Pogonion",
+   "abr": "Pg",
+   "median": true,
+   "bilateral": false,
+   "remarque": null
+  },
+  {
+   "unite": "mandibule",
+   "nom": "Menton",
+   "abr": "Me",
+   "median": true,
+   "bilateral": false,
+   "remarque": null
+  },
+  {
+   "unite": "mandibule",
+   "nom": "Symphyse",
+   "abr": "SI",
+   "median": true,
+   "bilateral": false,
+   "remarque": null
+  },
+  {
+   "unite": "mandibule",
+   "nom": "Condyle externe",
+   "abr": "Ce",
+   "median": false,
+   "bilateral": true,
+   "remarque": "noté Co dans le tableau 2"
+  },
+  {
+   "unite": "mandibule",
+   "nom": "Gonion",
+   "abr": "Go",
+   "median": false,
+   "bilateral": true,
+   "remarque": null
+  }
+ ],
+ "numerotation_chapitre_fig13": {
+  "1": "condylion",
+  "2": "gonion",
+  "3": "symphyse",
+  "9": "épine nasale antérieure",
+  "12": "nasion",
+  "13": "glabelle",
+  "14": "bregma",
+  "17": "lambda",
+  "19": "inion",
+  "20": "opisthion",
+  "unite_F": "1-12",
+  "unite_EC": "12-20"
+ },
+ "deplacements_5mois_foetal_adulte": {
+  "_unites": {
+   "deplacement_mm": "distance totale parcourue par le point entre le stade A et l'adulte",
+   "age_90pct_ans": "âge auquel 90 % de ce trajet est accompli (ajustement sigmoïde)"
+  },
+  "Gl": {
+   "deplacement_mm": 104,
+   "age_90pct_ans": 15.16
+  },
+  "Br": {
+   "deplacement_mm": 108,
+   "age_90pct_ans": 1.75
+  },
+  "Ve": {
+   "deplacement_mm": 109,
+   "age_90pct_ans": 1.75
+  },
+  "La": {
+   "deplacement_mm": 97,
+   "age_90pct_ans": 1.91
+  },
+  "Opt": {
+   "deplacement_mm": 96,
+   "age_90pct_ans": 7.75
+  },
+  "Na": {
+   "deplacement_mm": 98,
+   "age_90pct_ans": 11.75
+  },
+  "In": {
+   "deplacement_mm": 80,
+   "age_90pct_ans": 14.91
+  },
+  "Opc": {
+   "deplacement_mm": 45,
+   "age_90pct_ans": 15.6
+  },
+  "Po": {
+   "deplacement_mm": 0,
+   "age_90pct_ans": null
+  },
+  "Mas": {
+   "deplacement_mm": 37,
+   "age_90pct_ans": 20.58
+  },
+  "Pr": {
+   "deplacement_mm": 111,
+   "age_90pct_ans": 17.58
+  },
+  "Id": {
+   "deplacement_mm": 118,
+   "age_90pct_ans": 18.25
+  },
+  "Pg": {
+   "deplacement_mm": 132,
+   "age_90pct_ans": 18.75
+  },
+  "SI": {
+   "deplacement_mm": 128,
+   "age_90pct_ans": 19.25
+  },
+  "Co": {
+   "deplacement_mm": 22,
+   "age_90pct_ans": 18.08
+  },
+  "Oif": {
+   "deplacement_mm": 86,
+   "age_90pct_ans": 15.42
+  }
+ },
+ "regles_modele_parametrique_propose": [
+  {
+   "cible": "F (face, mandibule)",
+   "transformation": "homothétie centrée sur le porion",
+   "facteur": "double logistique, pics ~8 mois postnatals et ~15-16 ans",
+   "amplitude": "déplacements du tableau (Pg 132, SI 128, Pr 111, Oif 86 mm)",
+   "direction": "rectiligne, bas et avant"
+  },
+  {
+   "cible": "EC postérieur (Br → Opt)",
+   "transformation": "homothétie + rotation autour du porion",
+   "rotation": "arrière-bas ; essentiel entre naissance et 4 ans puis après 14 ans",
+   "amplitude": "Br 108, Ve 109, La 97, Opt 96, In 80, Opc 45 mm ; 90 % avant 2 ans pour la voûte"
+  },
+  {
+   "cible": "front (Ant, Gl, Na)",
+   "transformation": "homothétie seule",
+   "note": "tardive pour Gl (sinus frontal, 90 % à 15 ans)"
+  },
+  {
+   "cible": "face (vue frontale)",
+   "contraintes": [
+    "écart inter-orbitaire constant",
+    "élargissement transversal homogène",
+    "euryon vers le bas après 2 ans",
+    "gonion et orbites élargis après 14 ans"
+   ]
+  },
+  {
+   "cible": "global",
+   "contraintes": [
+    "hauteur faciale sous Francfort 25 % → 40 %",
+    "mi-chemin à 4 ans"
+   ]
+  }
+ ],
+ "atlas_pellerin_2026": {
+  "n_scanners": 184,
+  "n_exploitables": 181,
+  "n_gabarits": 19,
+  "nommage": "Skull Atlas <âge min jours>-<âge max jours>d",
+  "exemple": "645-765d",
+  "logiciel": "3D Slicer / SlicerMorph : seuil os 250 UH, décimation 0.8, DeCA (modèle moyen), Surface Toolbox (lissage), GPA (ellipses équiprobables), FastModelAlign (Procuste), Transform (superposition vestibulaire)",
+  "format": ".mrb (modèle moyen + repères + trois plans vestibulaires)",
+  "disponibilite": "sur demande à l'auteur",
+  "contact": "philippepellerin@me.com",
+  "tutoriel": "https://youtu.be/Bs4GWLrFQfA"
+ },
+ "correspondance_labels_embryo3d": {
+  "vesicules_otiques": "capsule otique, parachordale, Hox+ ; porte l'axe de Perez",
+  "yeux / cristallins": "capsule optique, préchordale, non-Hox ; orbite",
+  "chondrocrane": "base du crâne ; partie antérieure préchordale, postérieure parachordale ; mature à CS23",
+  "squelette_axial_cartilage / notochorde": "champ vertébral Hox+, continuité avec la base parachordale ; extrémité rostrale de la notochorde ≈ région hypophysaire (limite Hox)",
+  "snc / ventricules / prosencephale-mesencephale-rhombencephale": "encéphale, moteur de l'unité EC",
+  "enveloppe": "seule trace du dermatocrâne et de la face ; mandibule et os de membrane non segmentés"
+ },
+ "manques": [
+  "coordonnées (x,y,z) des 142 points aux 9 stades (Fenart 2004/2006, fichiers Captier-Boë)",
+  "gabarits 3D .mrb de Pellerin (19 âges)",
+  "données tête pour J60-J140 (céphalométrie fœtale de Captier 2009/2011, Herlin 2011, Captier et al. 2013)"
+ ]
+}
