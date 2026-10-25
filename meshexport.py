@@ -17,7 +17,10 @@ CONFIANCE = {'enveloppe': 'bonne', 'snc': 'faible', 'ventricules': 'bonne', 'gan
  'somites': 'moyenne', 'notochorde': 'faible', 'corps_vertebraux': 'moyenne', 'arcs_neuraux': 'moyenne', 'cotes': 'faible',
  'ventricule_prosencephale': 'bonne', 'ventricule_mesencephale': 'moyenne', 'ventricule_rhombencephale': 'bonne', 'canal_central': 'moyenne',
  'prosencephale': 'moyenne', 'mesencephale': 'moyenne', 'rhombencephale': 'moyenne', 'moelle': 'moyenne', 'moelle_rachidienne': 'moyenne',
- 'meninges_mesenchyme_cranien': 'faible', 'epiderme_cranien': 'moyenne'}
+ 'meninges_mesenchyme_cranien': 'faible', 'epiderme_cranien': 'moyenne',
+ # crête neurale (crete_neurale.py) : origine, gaine entérique et bulbe calés sur des labels existants ; trajets de migration schématiques
+ 'crete_origine': 'moyenne', 'crete_craniale': 'faible', 'crete_cardiaque': 'faible', 'crete_vagale': 'faible', 'crete_enterique': 'moyenne',
+ 'crete_tronc': 'faible', 'crete_sympathique': 'faible', 'crete_sacree': 'faible', 'crete_bulbe_cardiaque': 'moyenne'}
 # nom -> (collection, couleur RGB 0-1, alpha, faces cible, sigma lissage)
 STYLE = {
  'enveloppe':                 ('Enveloppe',   (0.93, 0.78, 0.70), 0.25, 150000, 1.5),
@@ -72,6 +75,16 @@ STYLE = {
  'somites':                   ('Squelette',   (0.70, 0.80, 0.95), 1.0, 200000, 0.8),
  'notochorde':                ('Squelette',   (0.95, 0.95, 0.50), 1.0, 60000, 0.9),
  'sclerotomes':               ('Squelette',   (0.80, 0.85, 0.95), 1.0, 150000, 0.8),
+ # crête neurale : violets (origine sombre, trajets clairs, gaine entérique translucide)
+ 'crete_origine':             ('Crete neurale', (0.45, 0.10, 0.60), 1.0, 60000, 0.8),
+ 'crete_craniale':            ('Crete neurale', (0.80, 0.35, 0.90), 1.0, 40000, 0.8),
+ 'crete_cardiaque':           ('Crete neurale', (0.95, 0.30, 0.60), 1.0, 30000, 0.8),
+ 'crete_vagale':              ('Crete neurale', (0.60, 0.45, 0.95), 1.0, 30000, 0.8),
+ 'crete_enterique':           ('Crete neurale', (0.55, 0.35, 0.90), 0.55, 80000, 1.0),
+ 'crete_tronc':               ('Crete neurale', (0.70, 0.55, 1.00), 1.0, 60000, 0.8),
+ 'crete_sympathique':         ('Crete neurale', (0.85, 0.60, 0.95), 1.0, 40000, 0.8),
+ 'crete_sacree':              ('Crete neurale', (0.50, 0.25, 0.70), 1.0, 30000, 0.8),
+ 'crete_bulbe_cardiaque':     ('Crete neurale', (0.90, 0.45, 0.70), 0.8, 30000, 0.9),
 }
 
 def mask_to_mesh(mask, scale_mm, sigma=1.2, target_faces=None, min_faces_component=60, pad=3, iso=0.5):

@@ -81,6 +81,7 @@ VUE_SEULE = [
 SYS_IDS = [s[0] for s in SYSTEMES]
 TOUS_IDS = SYS_IDS + [s[0] for s in VUE_SEULE]
 RECLASSEMENT = [   # (motif sur le nom, système) — première correspondance
+    (r"^crete_", "nerveux"),                      # crête neurale (crete_neurale.py) : origine, trajets, gaine entérique, bulbe
     (r"^(skin|peau|nipples|ectoderme_epidermique|epidermal_ectoderm)", "derme"),
     (r"(amnion|amnios|amniotic|yolk_sac|vesicule_vitelline|allanto|connecting_stalk|pedicule_fixation|exocoelom|extra_embryonic|trophoblast)", "annexes"),
     (r"(pericardial_cavity|cavite_pericardique|pericardioperitoneal|pericardo_peritoneaux|peritoneal_cavity|pleural_cavity|intra_embryonic_coelom|vesicules_coelomiques)", "annexes"),

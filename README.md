@@ -179,3 +179,57 @@ Si `out/topographie/video360/etages_imposes.json` existe (session Extraction squ
 
 ## Membres séparés
 `split_membres.py <stade>` sépare le label `membres` en `membre_sup_gauche`, `membre_sup_droit`, `membre_inf_gauche`, `membre_inf_droit` (2 plus grosses composantes de chaque côté du plan médian, la plus crâniale = supérieur) dans `labels.npz` ; `meshexport` les exporte (collection Membres) et la scène maître les morphe pièce par pièce. Contrôle du morphing : `planche_morph.py sortie.png [stades]` ; vidéo : `blender_render_anim.py` (séquence PNG, caméra fixe cadrée sur CS20, option `--suivre`) puis `encode_frames.py`.
+
+## Crête neurale (`crete_neurale.py`, 25/10/2026)
+
+Pourquoi un module à part : le tube neural, le tube digestif et les aortes se mettent en place de façon synchrone sans lien mécanique
+direct ; ce sont les cellules de la **crête neurale** (le « quatrième feuillet » : population transitoire, multipotente, migratoire,
+née de la bordure de la plaque neurale) qui relient fonctionnellement ces trois systèmes et sculptent la figure :
+
+- **Face** : la crête crâniale (diencéphale → rhombencéphale) migre en masse vers l'avant et forme la quasi-totalité du squelette
+  de la face, les cartilages des arcs pharyngiens, le tissu conjonctif et le derme faciaux (ectomésenchyme). Sans elle, pas de visage structuré.
+- **Cœur et aortes** : la crête cardiaque (post-otique, somites 1-3) gagne le pôle artériel par les arcs pharyngiens 3, 4 et 6 : septation
+  du bulbe (septum aortico-pulmonaire) et paroi des arcs aortiques (syndrome de DiGeorge quand elle fait défaut).
+- **Tube digestif** : les crêtes vagale (somites 1-7) et sacrée (au-delà de S28) colonisent la paroi intestinale et forment le système
+  nerveux entérique (« deuxième cerveau ») ; la colonisation vagale progresse de l'œsophage vers le colon de la 4e à la 7e semaine.
+- **Tronc** : voie ventro-latérale vers les ganglions rachidiens (neurones sensitifs, glie) puis la chaîne sympathique le long de l'aorte
+  dorsale ; voie dorso-latérale sous l'ectoderme pour les mélanocytes (non modélisée).
+- Mécanisme : transition épithélio-mésenchymateuse (les cellules quittent l'épithélium du toit du tube pour devenir mobiles), puis
+  migration guidée dans le mésenchyme ; des travaux récents (laboratoire MSC, 02/2026) décrivent des oscillations électriques et des
+  micro-contractions de type musculaire qui les aident à se frayer un chemin dans la matrice.
+
+Ce que fait le script (lecture seule de `work/labels.npz`, comme la topographie) :
+
+```bash
+python embryo3d/crete_neurale.py CS17_f4v [--F 4] [--rayon-mm 0.06] [--diag] [--sans-ply]
+python embryo3d/crete_neurale.py CS17_f4v --fusion     # écrit aussi les labels crete_* dans labels.npz (sauvegarde labels_avant_crete.npz) + maillages + NRRD
+```
+
+1. **Abscisse curviligne du tube neural** : graphe 26-connexe du tube rempli (snc ∪ moelle ∪ encéphale fin ∪ ventricules, grille /F),
+   distance géodésique depuis le télencéphale (centroïde du prosencéphale, sinon pôle ventro-rostral de la tête). Niveau otique = point
+   du tube le plus proche des vésicules otiques (sinon 22 % de l'arc) ; pas somitique ≈ (arc − otique) / 40. Les fenêtres d'origine
+   (crâniale, cardiaque, vagale, tronc, sacrée) sont exprimées en pas somitiques à partir de l'otique, donc robustes à l'enroulement.
+2. **`crete_origine`** : bande dorsale du tube = surface du tube la plus proche de l'ectoderme (par coupe, moitié de la section opposée
+   au centre du corps, tolérance 0,2 × rayon équivalent), télencéphale exclu (pas de crête sur la crête neurale antérieure).
+3. **Trajets de migration** : plus courts chemins pondérés (Dijkstra, scipy) dans le mésenchyme = enveloppe − tube neural − organes −
+   membres, coût 1 + 4·(densité / p90)² (épithéliums denses pénalisés), rasterisés en tubes de 0,06 mm :
+   `crete_craniale` (3 bandes rostro-caudales par côté → cœur du mésenchyme facial ventral à l'encéphale, à distance du cœur et des yeux ;
+   + un trajet par ganglion crânien), `crete_cardiaque` (→ `crete_bulbe_cardiaque` = cœur au contact de l'aorte commune, sinon
+   sommet du cœur), `crete_vagale` (→ œsophage ou quart crânial du tube digestif), `crete_sacree` (→ intestin postérieur),
+   `crete_tronc` (un trajet par composante de `ganglions` depuis l'origine au même s ± 0,7 pas), `crete_sympathique` (ganglion → aorte
+   dorsale au même niveau).
+4. **`crete_enterique`** : gaine de 0,05 mm autour du tube digestif limitée au front de colonisation du stade (segments colonisés :
+   CS13 œsophage + estomac, CS14 + duodénum, CS15-16 + intestin moyen, CS17+ tout ; sans segmentation : 35/50/65/80 % crâniaux puis tout).
+
+Sorties : `work/crete_neurale/crete_neurale.npz` (masques packbits) et `chemins.json` (trajets en voxels et en mm Blender, repères,
+phase du stade), `out/crete_neurale/<CS>_crete_*.ply` + `manifest_crete_neurale.json` (même format que cardio/digestif : couleur,
+confiance, volume, nombre de trajets, dérivés déjà présents dans les labels : ganglions, chondrocrâne, paroi des arcs aortiques…),
+`controle_crete_neurale.png` (projections sagittale et frontale). Collection Blender « Crete neurale », violets (`meshexport.STYLE`) ;
+l'agrégateur classe `crete_*` dans le système nerveux.
+
+Confiance : `crete_origine`, `crete_enterique`, `crete_bulbe_cardiaque` « moyenne » (calées sur des labels existants) ; les trajets
+« faible » par défaut (schémas de routes, pas des cellules observées — l'agrégateur ne les affiche donc pas en 3D ; `--confiance-trajets
+moyenne` ou `work/confiance.json` pour les montrer). Tout ce qui manque à un stade (pas de ganglions, d'aorte, de tube digestif…) est
+simplement sauté. Testé sur un embryon synthétique en C (CS17, 52 trajets) ; à valider sur les vrais stades : vérifier sur la planche
+que les trajets cardiaques passent latéralement au pharynx et que la bande d'origine reste sur le toit du tube aux stades très
+recourbés (CS13-CS15). Ne pas lancer `--fusion` en parallèle d'un autre script qui écrit `labels.npz`.
